@@ -1,0 +1,121 @@
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+    	<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+    	<a href="{:url('add')}" class="btn btn-success"><i class="iconfont icon-jia"></i>添加</a>
+    	<a href="javascript:void(0);" onclick="deleteAll('{:url('delete')}')" class="btn btn-danger "><i class="fa fa-trash-o fa-fw"></i>批量删除</a>
+        <a href="javascript:void(0);" onclick="doPrint()" class="btn btn-info ">打印</a>
+        <div class="seach-box">
+		<form action="{:url('index')}" method="get">
+          <div class="form-group">		              		
+            <div class="seach-list">
+            	<label class="">仓库名称:</label>
+                <input type="text" name="title" value="{$keywords.title}" placeholder="仓库名称" class="form-control">
+            </div>
+            <div class="seach-list">
+            	<label class="">仓库管理员:</label>
+                <input type="text" name="contact" value="{$keywords.contact}" placeholder="仓库管理员" class="form-control">
+            </div>
+            <div class="seach-list">
+            	<label class="">手机号:</label>
+                <input type="text" name="phone" value="{$keywords.phone}" placeholder="手机号" class="form-control">
+            </div>
+            <div class="seach-list">		   	                    	
+                <select class="form-control" name="status">
+                    <option value="">--仓库状态--</option>                                    
+                    <option value="1" {eq name="$keywords.status" value="1"}selected="selected"{/eq}>正常</option>
+                    <option value="0" {eq name="$keywords.status" value="0"}selected="selected"{/eq}>废弃</option>
+                </select>
+            </div>
+            <div class="seach-list">			                    	
+            	<button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button> </span>
+            </div>	
+    	</div>
+		</form>
+        </div>
+        <!--startprint-->
+        <table class="table table-bordered table-striped dataTables-example">
+            <thead>
+                <tr>
+                	<!--startRemove-->
+                    <th><input type="checkbox" class="i-checks check-all"></th>
+                    <!--endRemove-->
+                    <th>仓库编号</th>
+                    <th>仓库名称</th>
+                    <th>仓库管理员</th>
+                    <th>手机号</th>
+                    <th>状态</th>
+                    <th onclick="sorts({name: 'create_time', sort: '{$keywords['create_time']}'})" class="sorting_{$keywords['create_time']}">创建时间</th>
+                    <!--startRemove-->
+                    <th>操作</th>
+                    <!--endRemove-->
+                </tr>
+            </thead>
+            <tbody>
+        		{empty name='$data'}
+				<tr class="table-empty" >
+					<td class="text-center empty-info" colspan="100%">
+                            <i class="fa fa-database"></i> 暂无数据<br>
+                                    </td>
+                                </tr>
+				{/empty}
+            	{volist name="$data" id="vo"}
+                <tr>
+                	<!--startRemove-->
+                	<td>
+                        <input type="checkbox" class="i-checks ids" value="{$vo.id}"/>
+                    </td>
+                    <!--endRemove-->
+                    <td><a href="{:url('detail',['id'=>$vo.id])}">{$vo.code}</a></td>
+                    <td>{$vo.title}</td>
+                    <td>{$vo.contact}</td>
+                    <td>{$vo.phone}</td>
+                    <td>{eq name="$vo.status" value="1"}<span class="btn btn-success btn-xs">正常</span>{else/}<span class="btn btn-danger btn-xs">废弃</span>{/eq}</td>
+                    <td>{$vo.create_time}</td>
+                    <!--startRemove-->
+                    <td>                                   	
+                    	<a href="{:url('add')}?id={$vo.id}" class="btn btns btn-success">编辑</a>								
+						<span onclick="deletes({$vo.id})" class="btn btns btn-danger">删除</span>
+                    </td>
+                    <!--endRemove-->
+                </tr>   
+                {/volist}
+            </tbody>
+        </table>
+        <!--endprint-->
+        {$data->render()}
+        </div>
+    </div>
+   </div>
+<script>
+var keywords = {:json_encode($keywords)};
+	function sorts(option){
+		keywords[option.name] = option.sort == 'asc' ? 'desc' : 'asc';
+		keywords.important = option.name;
+		var seach = '';
+		for (var k in keywords) {
+			seach += k + '=' + keywords[k] + '&';
+		}
+		seach = seach.slice(0, -1);
+		location.href = '{:url('index')}?' + seach;
+	}
+	function deletes(id){
+		layer.confirm('确定要删除',{
+			time:0,
+			btn:['确定','取消'],
+			yes:function(index){
+				$.ajax({
+					type:"get",
+					url:"{:url('delete')}?ids="+id,
+					async:true,
+					success:function(msg){
+						alert(msg.msg)
+						setTimeout(function(){
+		             		location.reload();
+		                },1000);	
+					}
+				});
+			},	
+		})
+	}
+
+</script>

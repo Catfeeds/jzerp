@@ -1,0 +1,84 @@
+</script>
+
+<div class="wrapper wrapper-content animated fadeInRight" style="height: 100%;">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>日志详情 </h5>
+				</div>
+				<div class="ibox-content" style="height: 100%;">
+					<form class="form-builder row" id="form" method="post" autocomplete="off" action="{:url('add_type')}">
+						
+					<div class="form-group col-md-12 col-md-12 col-xs-12 ">
+							<label class="col-mx-12" >行为名称</label>
+							<div class="col-sm-12">
+
+								<label>{$data.title}</label>
+
+							</div>
+						</div>
+
+						<div class="form-group col-md-12 col-xs-12 ">
+							<label class="col-xs-12" >执行者</label>
+							<div class="col-sm-12">
+
+								<b><label>{$data.nickname}</label></b>
+
+							</div>
+						</div>
+						<div class="form-group  col-md-12 col-xs-12">
+                            <label class="col-xs-12" >目标ID</label>
+                            <div class="col-sm-12">
+                                <label>{$data.record_id}</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group  col-md-4 col-xs-12">
+                            <label class="col-xs-12" >执行IP</label>
+                            <div class="col-sm-12">
+                               <label>{$data.action_ip|long2ip}</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group  col-md-12 col-xs-12">
+                            <label class="col-xs-12" >备注</label>
+                            <div class="col-sm-12">
+                                <textarea style="width:500px;height:100px;font-size: 16px;">{$data.remark}</textarea>
+                            </div>
+                        </div>
+				
+					<div class="col-xs-12">
+                           <button class="btn btn-default" type="button" onclick="javascript:history.back(-1);return false;">
+                            	返回 
+                           </button>
+                         </div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- <script type="text/javascript">
+function add(){
+		var seeting = {
+			id: 'form',
+			url: '{:url("add_type")}',
+			validate: [
+			    ["name",  '标题长度小于10', false, /^\S{1,10}$/],
+			    ["title",  '1标题不能为空'],
+			    ["create_time",  '2标题不能为空'],			
+			],
+			append: []
+		}
+		//提交		
+		util.ajax(seeting).then(function(res){
+			alert(res.msg);
+			if (res.code == 1) {
+				setTimeout(function(){
+					location.href = '{:url("index")}'
+				}, 1500)
+			}
+		})
+	}
+</script> -->

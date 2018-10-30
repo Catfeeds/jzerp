@@ -1,0 +1,424 @@
+<style>
+	td {height: 40px;}
+	.img-link>img {width: 80px;height: 80px!important;}
+</style>
+<div class="ibox-content"> 
+	<div class="text-center">
+    	<h3>{$title}</h3>
+	</div>
+	<table class="table table-bordered">
+		<colgroup>
+			{switch name="max"}
+			{case value="2"}
+				<col width="20%" /><col width="30%" /><col width="20%" /><col width="30%" />
+			{/case}
+			{case value="3"}
+				<col width="10%" /><col width="23.3%" /><col width="10%" /><col width="23.3%" /><col width="10%" /><col width="23.3%" />
+			{/case}
+			{default /}
+				<col width="30%" /><col width="70%" />
+			{/switch}
+		</colgroup>
+		<tbody>
+			{empty name="list"}
+			<tr>
+				<td></td>
+				<td class="droppable sortable"></td>
+			</tr>
+			{else /}	                    			
+				{volist name="list" id="vo"}				
+					{eq name="$vo['type']" value="lists"}
+					{php}
+						$option = json_decode($vo['option'], true);
+					{/php}
+					<tr>
+					<td colspan="6"><div>{$vo.title}</div>
+    				<table class="table table-bordered lists" data-num="{$i}" data-id="{$vo.id}">
+        				<colgroup>
+                			{volist name="$option" id="v"}
+                			<col width="{:intval(10/(count($option)/10))}%">						                    			
+                			{/volist}
+                		</colgroup>
+        				<tbody>
+        				<tr>
+        					{volist name="$option" id="v"}
+        					<td><b>{$v.title}</b></td>
+        					{/volist}
+        				</tr>       		
+        				{volist name="$data['details']" id="vvv"}      
+        				<tr class="tr">       					
+        					{volist name="$option" id="v"}
+        					{php}       					
+								$options = $v['option'];
+							{/php}
+        					<td>       						                                
+            					{switch name="$v.type"}            						
+    							{case value="radio|checkbox"}			                    						
+        							{volist name="$options" id="vv"}
+        								{eq name="$vv.checked" value="$vvv[str_replace('[]','',$v.name)]"} {$vv.text} {/eq}
+        							{/volist}			                    							
+        						{/case}							
+        						{case value="select"}
+									{php}$new_names = str_replace('[]','',$v['name']);{/php}
+        							{if condition="isset($$new_names)"} 	        							
+    								{volist name="$$new_names" id="v"}		    								
+                                    	{notempty name="$data['id']"}{eq name="$key" value="$vvv[$new_names]"}{$v}{/eq}{/notempty}					                                        						                                    
+        							{/volist}
+        							{else /}
+        							{volist name="$options" id="vv"}		                    							
+                                        {notempty name="$data['id']"}{eq name="$vv.value" value="$vvv[$new_names]"}{$vv.text}{/eq}{/notempty}						                                        						                                    
+        							{/volist}
+        							{/if}       							
+        						{/case}	
+        						{case value="login_user"}	
+        							{:get_personnel($vvv[str_replace('[]','',$v.name)])['nickname']}
+        						{/case}	
+								{case value="code"}			                    							
+									{$vvv[str_replace('[]','',$v.name)]}
+        						{/case}	
+        						{case value="datetime"}		
+        							{$vvv[str_replace('[]','',$v.name)]}
+        						{/case}	
+        						{case value="file"}			                    							
+							    
+        						{/case}
+        						{case value=""}
+        						
+        						{/case}	
+        						{case value="money"}
+        							{$vvv[str_replace('[]','',$v.name)]}
+        						{/case}	
+        						{case value="bigmoney"}
+        							{$vvv[str_replace('[]','',$v.name)]}
+        						{/case}	
+        						{case value="textarea"}			                    							
+        							{$vvv[str_replace('[]','',$v.name)]}
+        						{/case}	
+        						{default /}  
+        							{php}
+	        							$name = str_replace('[]','',$v['name']);
+		        						switch ($v['type'])
+		        						{
+		        							case 'materials':
+		        								$info = materialList('',true);
+		        							break;
+		    								case 'person':
+		        								$info = get_personnel_list(true);
+		        							break;
+		        							case 'supplier':
+		        								$info = supplierList('', true);
+		        							break;
+		        							case 'department':
+		        								$info = get_organization_list(true);
+		        							break;
+		        							default:
+		        						}
+	        						{/php}   
+	        						{in name="$v.type" value="person,persons,department,departments,materials,supplier"} 
+        							{$info[$vvv[$name]]}
+        							{else/} {$vvv[$name]}{/in}			
+            					{/switch}            					                					
+        					</td>
+        					{/volist}        					
+        				</tr>
+        				{/volist}
+        				</tbody>
+    				</table>
+					</td>
+				</tr>
+			{else /}
+					{eq name="$vo['col']" value="1"}
+					<tr>
+					{/eq}
+						<td><span><b>{$vo.title}</b></span></td>	
+						{php}
+							$option = json_decode($vo['option'], true);
+						{/php}
+						<td colspan="{$vo.colspan}" data-id="{$vo.id}">	
+							{switch name="$vo.type"}
+        						{case value="radio|checkbox"}			                    						
+        							{volist name="$option" id="v"}
+        								{eq name="$v.checked" value="$data[$vo.name]"} {$v.text} {/eq}
+        							{/volist}			                    							
+        						{/case}							
+        						{case value="select"}        						
+									{php}$new_name = $vo['name'];{/php}
+        							{if condition="isset($$new_name)"}       							
+    								{volist name="$$new_name" id="v"}			                    							
+                                    	{notempty name="$data['id']"}{eq name="$key" value="$data[$vo.name]"}{$v}{/eq}{/notempty}		                                        						                                    
+        							{/volist}
+        							{else /}
+        							{volist name="$option" id="v"}			                    							
+                                       {notempty name="$data['id']"}{eq name="$v.value" value="$data[$vo.name]"}{$v.text}{/eq}{/notempty}						                                        						                                    
+        							{/volist}
+        							{/if}       								        						
+        						{/case}	
+        						{case value="login_user"}	
+        							{:get_personnel($data[$vo.name])['nickname']}
+        						{/case}	
+								{case value="code"}			                    							
+									{$data[$vo.name]}
+        						{/case}	
+        						{case value="datetime"}		
+        							{volist name="$option" id="v"}
+        								{$data[$vo.name]}
+									{/volist}
+        						{/case}	
+        						{case value="file"}								    	
+							    	{volist name="$option" id="v"}	
+							    		{empty name="$v['value']"}
+								    		<ul class="list-group uploader-list" id="file_list_{$vo.name}">
+		                    				{notempty name="$data[$vo.name]"}		                   				
+		                    				{volist name="$data[$vo.name]|explode=',',###" id="f"}
+		                    				{notempty name="$f"}
+		                    				<li class="list-group-item file-item">
+		                    					<span class="pull-right file-state">
+		                    						<span class="text-success">已上传</span>
+		                    					</span>
+		                    					<i class="fa fa-file"></i> 
+		                    					{$f|get_file_name}
+		                    					 [<a href="{[$f]|get_files_path}" class="download-file" download="{[$f]|get_file_name}">下载</a>]
+		                    				</li>	 
+		                    				{/notempty}
+		                    				{/volist}
+		                    				{/notempty}
+								    	</ul>
+							    		{else /}						    	 	
+							    		{eq name="$v['value']" value="multiple"}
+							    		<div class="uploader-list" id="file_list_{$vo.name}">
+    									{notempty name="$data[$vo.name]"}	
+	    									<div class="file-item thumbnail">
+								                <a class="img-link" href="{$data[$vo.name]|get_files_path}">
+								                    <img src="{$data[$vo.name]|get_thumb}" width="100">
+								                </a>								                
+								            </div>
+							            {/notempty}
+							           </div>
+    									{else /} 
+    									<div class="uploader-list" id="file_list_{$vo.name}">
+    									{notempty name="$data[$vo.name]"}
+    									{volist name="$data[$vo.name]|explode=',',###" id="f"}
+    										{notempty name="$f"}
+							                <div class="file-item thumbnail" style="display:inline-block;">
+							                    <a class="img-link" href="###">
+							                        <img src="{$f|get_thumb}" width="100">
+							                    </a>
+							                </div>
+							                {/notempty}
+						                {/volist}
+						                {/notempty}
+						                </div>
+						                {/eq}
+						               {/empty}	
+							    	{/volist}											    								    			    						    								    	
+        						{/case}
+        						{case value=""}
+        						
+        						{/case}	
+        						{case value="money"}
+        							¥ {$data[$vo.name]}
+        						{/case}	
+        						{case value="bigmoney"}
+									{$data[$vo.name]}                              
+        						{/case}	
+        						{case value="textarea"}			                    							
+        							{$data[$vo.name]}
+        						{/case}	
+        						{default /}
+	        						{php}	        						
+		        						$id = $data[$vo['name']];			        						
+		        						switch ($vo['type'])
+		        						{
+		        							case 'materials':
+		        								$info = materialId($id);
+		        							break;
+		        							case 'person':
+		        								$info = get_personnel($id, true);		        								
+		        							break;
+		        							case 'persons':
+		        								$info = get_personname_list($id);		        								
+		        							break;
+		        							case 'supplier':
+		        								$info = supplierId($id);
+		        							break;
+		        							case 'department':
+		        								$info = get_organization_id($id, true);
+		        							break;
+											default:
+		        						}		        								        						
+	        						{/php}
+	        						{in name="$vo.type" value="person,persons,department,departments,materials,supplier"} 
+	        						{$info}
+        							{else/} {$data[$vo.name]} 
+        							{/in}        							
+        					{/switch}
+						</td>			                    			
+					{eq name="$vo['col']" value=""}
+					</tr>
+					{/eq}
+					{/eq}
+				{/volist}
+			{/empty}
+		</tbody>
+	</table>  	
+	{php}
+		$flow_id = input('flow_id');
+		$record_id = input('record_id');
+		$step_id = input('step_id');
+		$detail = input('detail');
+		$table = input('table');		
+	{/php}
+	{notempty name="$flow_id"}
+	<form class="form-builder row" id="form" action="{:url('sponsor/addflow')}" method="post" autocomplete="off">
+		<table class="table table-bordered flow_table">
+			<colgroup>
+				<col width="30%" /><col width="70%" />
+			</colgroup>
+			<tbody>				
+			</tbody>
+		</table>
+		<table class="table table-bordered next">
+			<colgroup>
+				<col width="30%" /><col width="70%" />
+			</colgroup>
+			<tbody>
+				<tr>
+					<td>下一步骤</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>任务执行人</td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+		{empty name="$detail"}<button class="btn btn-minw btn-primary" target-form="form-builder" onclick="add()" type="button">提交</button>{/empty}
+		{include file="public/person" /}
+		<script>
+			var next_id;
+			$.ajax({
+				type:"get",
+				url:"{:url('sponsor/getStep',['flow_id'=>$flow_id,'record_id'=>$record_id])}",
+				async:true,
+				success:function(res){
+					var text = '',str = '',next_html = '',addhtml = '',next_step,title,banid;					
+					$.each(res, function(i, val) { 
+						console.log(val)
+					    //去除第一步骤
+					    if(val.ban_type == 0){							
+							return true;
+						}
+					    //取步骤名称
+				    	title = val.step_title;
+				    	//取办理人id
+				    	banid = val.ban_id;					    	
+				    	banid = banid.slice(1);
+				    	if(val.before_id){
+				    		banid = val.before_id + ',';	
+				    	}
+
+				    	//console.log(banid)
+				    	if(val.id == {$step_id}){						    		
+				    		next_id = val.next_step_id;	
+				    	}
+				    	//取步骤名称
+				    	if(val.id == next_id){
+				    		next_step = val.step_title;				    		
+				    		//任务执行人
+					    	switch(val.ban_type)
+					    	{
+					    		case 2:
+					    			$('.next tbody tr:last-child').find('td:last-child').html('<input type="text" onclick="beforeid(this)" class="form-control" name="before_id" value="" /><input type="hidden" name="before_id" value="" />');
+					    		break;
+					    		default:
+					    	}
+				    	}
+				    	if(next_id == 1){
+					    	next_step = '结束';
+					    }								    
+				    	//当前账号审批时显示操作	
+				    	{empty name="$detail"}
+				    		if(val.id == {$step_id}){	
+				    			if(banid.indexOf({:UID}+',') != -1){					    		
+				    				if(val.added){
+					    				addhtml = `<label class="control-label">审批金额：</label>
+					    							<input type="number" class="form-control" name="${val.added}" />`;
+				    				}
+				    				//当前账号未审批的数据
+					    			str = `<label class="radio-inline">
+		    								<input type="radio" name="status" checked value="1" />同意
+		    							</label>
+		    							<label class="radio-inline">
+		    								<input type="radio" name="status" value="-1" />不同意
+		    							</label>
+		    							${addhtml}
+		    							<textarea type="textarea" class="form-control" name="remark" placeholder="请输入意见"></textarea>`
+					    		}				    								    							    			
+				    		}else{
+				    			//审批过的数据
+				    			str = `<p style="text-align: left;">${val.status?(val.status==0?'':(val.status == 1?'同意':'不同意')):''}</p>	        							
+    							<p style="text-align: right;">${val.remark?val.remark:''}</p>
+    							<p style="text-align: right;">${val.create_time?val.create_time:''}</p>`
+				    		}
+				    	{else/}
+				    		//查看审批里的数据
+			    			str = `<p style="text-align: left;">${val.status?(val.status==0?'':(val.status == 1?'同意':'不同意')):''}</p>	 	        							
+    							<p style="text-align: right;">${val.remark?val.remark:''}</p>
+    							<p style="text-align: right;">${val.create_time?val.create_time:''}</p>`
+				    	{/empty}						    							    		
+				    	text += `<tr>
+				    				<td>${title}</td>
+				    				<td>
+				    					${str}					    					
+				    				</td>
+				    			</tr>`								    						    							    							    							    					    						  						    					    
+					}); 					
+					$('.flow_table tbody').append(text);
+					$('.next tbody tr:first').find('td:last-child').text(next_step);
+				}
+			});
+			//提交审批
+		   function add(){
+			var seeting = {
+				id: "form",
+				url: "{:url('sponsor/addflow')}",
+				validate:[],
+				append:[
+					['record_id',{$record_id}],
+					['step_id',next_id],
+					['table','{$table}'],
+				],
+			}			
+				util.ajax(seeting).then(function(res){
+					alert(res.msg);
+					if(res.code == 0){
+						$('input[name="'+res.data+'"]').focus();
+					}
+					if (res.code == 1) {
+						setTimeout(function(){
+							history.back();
+						}, 1500)
+					}
+				}).catch(e => {
+					console.log(e);
+					alert('系统错误, 请联系管理员');
+				})
+		}
+
+		</script>
+	{/notempty}
+	<button style="margin-bottom: 40px;" onclick="history.back()" class="btn btn-white" type="submit">返回</button>
+</div>  
+<script type="text/javascript">
+	   //点击选人
+function beforeid(o){	
+	var name = $(o).attr('name');		
+	window.person = new openPerson({
+		radio: true,
+		other: true,
+		name:o,
+		hiddenname:name,
+	});
+}
+</script>

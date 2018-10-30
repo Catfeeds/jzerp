@@ -1,0 +1,93 @@
+<div class="wrapper wrapper-content animated fadeInRight" style="height: 100%;">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>添加行为 </h5>
+				</div>
+				<div class="ibox-content" style="height: 100%;">
+					<form class="form-builder row" id="form" name ="form" method="post" autocomplete="off">
+						<div class="form-group col-md-4 col-xs-12 ">
+							<label class="col-xs-12" for="name">行为标识</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="name"  value="{$data.name|default=''}" placeholder="请输入英文字母和下划线">
+							</div>
+						</div>
+					<div class="form-group col-md-12 col-xs-12 ">
+							<label class="col-xs-12" >行为名称</label>
+							<div class="col-sm-12">
+
+								<input class="form-control" type="text" name="title" value="{$data.title|default=''}" placeholder="请输入行为名称">
+
+							</div>
+						</div>
+						
+
+						<div class="form-group col-md-12 col-xs-12 ">
+							<label class="col-xs-12" >行为描述</label>
+							<div class="col-sm-12">
+
+								<input class="form-control" type="text" name="remark" value="{$data.remark|default=''}" placeholder="请输入行为描述">
+
+							</div>
+						</div>
+						<div class="form-group col-md-12 col-xs-12 ">
+							<label class="col-xs-12" >行为规则</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="rule" value="{$data.rule|default=''}" placeholder="请输入行为规则">
+							</div>
+						</div>
+						<div class="form-group col-md-12 col-xs-12 ">
+							<label class="col-xs-12" >日志规则</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="log" value="{$data.log|default=''}" placeholder="请输入日志规则">
+							</div>
+						</br>
+					<div class="col-xs-12">
+                          <button class="btn btn-minw btn-primary ajax-post" target-form="form-builder" onclick="add()" type="button">
+                        		提交                                       
+                          </button>
+                           <button class="btn btn-default" type="button" onclick="javascript:history.back(-1);return false;">
+                            	返回 
+                           </button>
+                         </div>
+					</form>
+					<form id="file">
+						<input class="none" type="file" id="addFiles" name="file[]" multiple="multiple" onchange="addFile()"  value="" />
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script type="text/javascript">
+	function add(){
+		var seeting = {
+			id: 'form',
+			url: '{:url("add_action")}',
+			validate: [
+				["name",'行为标识格式不正确','',/^[0-9a-zA-Z_]{1,}$/],
+			    ["title",  '行为名称不能为空'],
+			    ["remark",'行为描述不能为空'],
+			    ["log",'日志规则不能为空']
+			    
+			],
+			append: []
+		
+		}
+			
+		//提交
+		util.ajax(seeting).then(function(res){
+			alert(res.msg);
+			if (res.code == 1) {
+				setTimeout(function(){
+					location.href = '{:url("index_action")}'
+				}, 1500)
+			}
+		})
+
+	}	
+</script>

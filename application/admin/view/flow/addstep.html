@@ -1,0 +1,156 @@
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-content i-checks">
+            <form class="form-builder row" id="form" action="{:url('addstep')}" method="post" autocomplete="off">                
+                <div class="form-group col-md-4 col-xs-6">
+				    <label class="col-xs-12">步骤名称：</label>
+				    <div class="col-sm-12">				        
+				        <input class="form-control" type="text" name="step_title" value="{$data['step_title']}" placeholder="请输入步骤名称">
+					</div>
+				</div>                                
+				<div class="form-group col-md-4 col-xs-6">
+				    <label class="col-xs-12">办理人类型：</label>
+				    <div class="col-sm-12">
+				        <select class="form-control select" name="ban_type" onchange="bantype(this)" placeholder="请选择一项">
+				           <option value="0" {eq name="$data['ban_type']" value="0"}selected="selected"{/eq}>初始步骤部不设定办理人</option>
+				           <option value="1" {eq name="$data['ban_type']" value="1"}selected="selected"{/eq}>指定人</option>
+				           <option value="2" {eq name="$data['ban_type']" value="2"}selected="selected"{/eq}>由前一步骤指定</option>
+	                   </select>
+		            </div>
+				</div>
+				<div class="form-group col-md-4 col-xs-6" {eq name="$data['ban_type']" value="1"}{else/}style="display: none;"{/eq}>
+				    <label class="col-xs-12">选人：</label>
+				    <div class="col-sm-12">
+				        <input type="text" class="form-control" name="ban_id" value="{empty name='$data["ban_id"]'}{else/}{:get_personname_list(trim($data['ban_id'],','))}{/empty}" />
+				        <input type="hidden" name="ban_id" value="{$data['ban_id']}" />
+		            </div>
+				</div>
+				<div class="form-group col-md-4 col-xs-6">
+				    <label class="col-xs-12">办理时限：</label>
+				    <div class="col-sm-12">
+				    	<div class="input-group m-b">
+				        <input type="number" class="form-control" style="width: 38%;display: inline-block;" value="{$data['time']}" name="time" />
+				        <select class="form-control" name="time_type" style="width: 26%;display: inline-block;" placeholder="请选择一项">
+				           <option value="0" {eq name="$data['time_type']" value="0"}selected="selected"{/eq}>天</option>
+				           <option value="1" {eq name="$data['time_type']" value="1"}selected="selected"{/eq}>小时</option>
+	                 	 </select>	
+	                  	</div>
+		            </div>
+				</div>
+				<div class="form-group col-md-4 col-xs-6">
+                	<label class="col-sm-12 control-label">超时预警：</label>		
+                    <div class="col-sm-12">
+                        <div class="input-group m-b"><span class="input-group-addon">提前时间：</span>
+                            <input type="number" name="warning" value="{$data['warning']}" class="form-control">
+                            <span class="input-group-addon">小时</span>                         
+                        </div>                        
+                    </div> 
+                </div>
+                <div class="form-group col-md-4 col-xs-6">
+                	<label class="col-sm-12 control-label">超时自动流转：</label>		
+                    <div class="col-sm-12">
+                       <div class="radio">
+                            <label>
+                                <input type="radio" value="-1" {empty name="$data['id']"}checked{else/}{eq name="$data['warning_type']" value="-1"} checked {/eq}{/empty} name="warning_type"> 不通过
+                            </label>
+                            <label>
+                                <input type="radio" value="1" {eq name="$data['warning_type']" value="1"} checked {/eq} name="warning_type"> 通过
+                            </label>
+                        </div>                     
+                    </div> 
+                </div>
+                <div class="form-group col-md-4 col-xs-6">
+				    <label class="col-xs-12">增值办理：</label>
+				    <div class="col-sm-12">	
+				    	<div>
+				    		<input class="form-control" type="text" name="added" value="{$data['added']}" placeholder="请输入字段名">
+				    	</div>				        
+					</div>
+				</div>   
+                <div class="col-xs-6 col-sm-12 form-group">
+                    <label class="col-sm-2 control-label">下一步骤</label>
+                    <div class="col-sm-10">
+                    	{volist name="setplist" id="vo"}
+                        <div class="radio">
+                            <label>
+                                <input type="radio" value="{$key}" {eq name="$data['next_step_id']" value="$key"} checked {/eq} name="next_step_id"> {$vo}
+                            </label>
+                        </div> 
+                        {/volist}
+                    </div>
+                </div>
+                <div class="form-group col-md-12 col-xs-12">
+                    <div class="col-xs-12">
+                        <button class="btn btn-minw btn-primary" target-form="form-builder" onclick="add()" type="button">提交</button>
+                        <button class="btn btn-default" type="button" onclick="javascript:history.back(-1);return false;">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{include file="public/person" /}
+<script>
+var json = {};
+function bantype(o){
+	var val = $(o).find('option:selected').val();
+	var banname = $(o).parents('.form-group').next();
+	switch(val)
+	{
+		case '1':
+		banname.show();
+		json = {				
+				other: true,
+		};
+		break;		
+		default:
+		banname.find('input').val('');
+		banname.hide();	
+	}
+}
+ 
+//点击选人
+$('input[name="ban_id"]').on('click', function(){
+	var o = $(this);
+	var name = o.attr('name');		
+	json.name = this;
+	json.hiddenname = name;
+	window.person = new openPerson(	
+		json
+	);
+})
+   function add(){
+	var seeting = {
+		id: "form",
+		url: "{:url('addstep')}",
+		validate:[
+			['step_title', '步骤名称不能为空'],
+		],
+		append:[],
+	}
+	{notempty name="$data['id']"}
+		seeting.append.push(['id', {$data['id']}]);
+	{/notempty}
+	{php}
+		if(!empty(input('flow_id'))){
+			echo "seeting.append.push(['flow_id', ".input('flow_id')."]);";		
+		}
+	{/php}
+		util.ajax(seeting).then(function(res){
+			alert(res.msg);
+			if(res.code == 0){
+				$('input[name="'+res.data+'"]').focus();
+			}
+			if (res.code == 1) {
+				setTimeout(function(){
+					location.href = '{:url("steplist",['id'=>input('flow_id')])}'
+				}, 1500)
+			}
+		}).catch(e => {
+			console.log(e);
+			alert('系统错误, 请联系管理员');
+		})
+}
+
+</script>
+

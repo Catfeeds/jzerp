@@ -1,0 +1,83 @@
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">                   
+                    <a href="javascript:void(0);" onclick="doPrint()" class="btn btn-info ">打印</a>
+                    <form action="{:url('index')}" method="get">                     
+                        <div class="seach-list">
+                            <select class="form-control" name="type_id">
+                                <option value="">--材料类型--</option>
+                                {volist name="materialtype" id="vo"}
+                                    <option value="{$vo.id}" {eq name="$keywords.type_id" value="$vo.id"}selected="selected"{/eq}>{$vo._name_type}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <div class="seach-list">
+                            <select class="form-control" name="house_id">
+                                <option value="">--仓库--</option>
+                                {volist name="house" id="vo"}
+                                    <option value="{$key}" {eq name="$keywords.house_id" value="$key"}selected="selected"{/eq}>{$vo}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <div class="seach-list">
+                        	<label class="">物品名称:</label>
+                        <input type="text" placeholder="请输入物品名称" id="name" value="{$keywords.name}" name="name" class="input-sm form-control">
+                        </div>
+                        <div class="seach-list">
+                        	<label class="">物品编码:</label>
+                        <input type="text" placeholder="请输入物品编号" id="number" value="{$keywords.number}" name="number" class="input-sm form-control">
+                        </div>
+                        <div class="seach-list">
+                            <button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button> 
+                        </div>
+                    </form>
+                    <div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+		<!--startprint-->
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>物品名称</th>
+                                <th onclick="sorts({name: 'update_time', sort: '{$keywords['update_time']}'})" class="sorting_{$keywords['update_time']}">更新时间</th>
+                                <th>物品编码</th>
+                                <th>物品型号</th>
+                                <th>所属仓库</th>
+                                <th>单价</th>
+                                <th>数量</th>
+                                <th>总价</th>
+                            </tr>                           
+                        </thead>
+                        <tbody>
+                            {volist name="data" id="vo"}
+                            <tr>                            	
+                                <td>{$vo.name}</td>
+                                <td>{$vo.update_time}</td>
+                                <td>{$vo.number}</td>
+                                <td>{$vo.specifications}</td>
+                                <td>{$vo.house_name}</td>
+                                <td>{$vo.price}</td>
+                                <td>{$vo.stock}</td>
+                                <td>{$vo.total}</td>
+                            </tr>
+                            {/volist}
+                        </tbody>
+                    </table>
+			<!--endprint-->
+                    </div>
+                    <div class="clearfix">
+                        {$data -> render()}
+                    </div>
+                    </div>
+    </div>
+<script>
+	var keywords = {:json_encode($keywords)};	
+	function sorts(option){
+		keywords[option.name] = option.sort == 'asc' ? 'desc' : 'asc';
+		var seach = '';
+		for (var k in keywords) {
+			seach += k + '=' + keywords[k] + '&';
+		}
+		seach = seach.slice(0, -1);
+		location.href = '{:url('stock')}?' + seach;
+	}
+</script>
+
+<script src="__ADMIN_STATIC__/js/plugins/jsTree/jstree.min.js"></script>

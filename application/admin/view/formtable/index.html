@@ -1,0 +1,266 @@
+<div class="ibox float-e-margins">
+	<div class="ibox-content">
+		<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+        	<a href="javascript:void(0);" onclick="add()" class="btn btn-success"><i class="iconfont icon-jia"></i>添加</a>
+        	<a href="javascript:void(0);" onclick="deleteAll('{:url('delete')}')" class="btn btn-danger "><i class="fa fa-trash-o fa-fw"></i>批量删除</a>
+            <div class="seach-box">
+			<form action="{:url('index')}" method="get">
+              <div class="form-group">
+          		<div class="seach-list">
+                    <select class="form-control" name="type">
+                        <option value="">--表单类型--</option>
+                        {volist name="type" id="vo"}
+                            <option value="{$key}" {eq name="$keywords.type" value="$key"}selected="selected"{/eq}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <div class="seach-list">
+                	<label class="">名称:</label>
+                    <input type="text" name="title" value="{$keywords.title}" placeholder="名称" class="form-control">
+                </div>
+                <div class="seach-list">			                    	
+                	<button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button> </span>
+                </div>			                    
+        	</div>
+			</form>
+            </div>
+            <table class="table table-bordered table-striped dataTables-example">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" class="i-checks check-all"></th>
+                        <th>表单名称</th>
+                        <th>表单类型</th>
+                        <th onclick="sorts({name: 'sort', sort: '{$keywords['sort']}'})" class="sorting_{$keywords['sort']}">排序</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	{empty name='list'}
+					<tr class="table-empty" >
+						<td class="text-center empty-info" colspan="100%">
+                			<i class="fa fa-database"></i> 暂无数据<br>
+                        </td>
+                    </tr>
+					{/empty}
+                	{volist name="list" id="vo"}
+                    <tr>
+                    	<td>
+                            <input type="checkbox" class="i-checks ids" value="{$vo.id}"/>
+                        </td>
+                        <td>{$vo.title}</td>
+                        <td>{$vo.type}</td>
+                        <td>{$vo.sort}</td>
+                        <td>                                   	
+                        	<span onclick="edit(this,{$vo.id})" class="btn btns btn-success">编辑</span>								
+							<a href="{:url('custom')}?id={$vo.id}"><span class="btn btns btn-info">设计</span></a>
+							<a href="{:url('preview')}?id={$vo.id}"><span class="btn btns btn-success">预览</span></a>
+							<span onclick="deletes({$vo.id})" class="btn btns btn-danger">删除</span>
+                        </td>
+                    </tr>   
+                    {/volist}
+                </tbody>
+            </table>
+           <div class="clearfix">
+				{$list -> render()}
+			</div>
+        </div>
+    </div>
+</div>
+<div class="addinp" style="display: none;height: 100%;overflow: auto;">
+	<div class="ibox-content">
+		<div class="form-group">
+            <label>表单名称</label>
+            <input type="text" name="title" placeholder="请输入表单名称" class="form-control">
+    	</div>
+		<div class="form-group">
+            <label>表单类型</label>
+             <select class="form-control m-b" name="type">
+             	{volist name="type" id="vo"}
+                	<option value="{$key}">{$vo}</option>
+                {/volist}
+            </select>
+    	</div>            	
+    	<div class="form-group">
+            <label>提交地址</label>
+            <input type="text" name="form_url" placeholder="请输入提交地址" class="form-control">
+    	</div>
+    	<div class="form-group">
+            <label>查看地址</label>
+            <input type="text" name="form_details" placeholder="请输入查看地址" class="form-control">
+    	</div>
+    	<div class="form-group">
+            <label>表名</label>
+            <input type="text" name="table" placeholder="请输入表名" class="form-control">
+    	</div>
+    	<div class="form-group">
+            <label>排序</label>
+            <input type="number" name="sort" placeholder="请输入排序" value="100" class="form-control">
+    	</div>
+	</div>       	
+</div>
+<div class="editinp" style="display: none;height: 100%;overflow: auto;">
+	<div class="ibox-content">
+		<div class="form-group">
+            <label>表单名称</label>
+            <input type="text" name="title" placeholder="请输入表单名称" class="form-control">
+    	</div>
+		<div class="form-group">
+            <label>表单类型</label>
+            <select class="form-control m-b" name="type">
+                {volist name="type" id="vo"}
+                	<option value="{$key}">{$vo}</option>
+                {/volist}
+            </select>
+   		 </div>            	
+    	<div class="form-group">
+            <label>提交地址</label>
+            <input type="text" name="form_url" placeholder="请输入提交地址" class="form-control">
+    	</div>
+    	<div class="form-group">
+            <label>查看地址</label>
+            <input type="text" name="form_details" placeholder="请输入查看地址" class="form-control">
+    	</div>
+    	<div class="form-group">
+            <label>表名</label>
+            <input type="text" name="table" placeholder="请输入表名" class="form-control">
+    	</div>
+    	<div class="form-group">
+            <label>排序</label>
+            <input type="number" name="sort" placeholder="请输入排序" class="form-control">
+    	</div>
+	</div>       	
+</div>
+<script>
+//$('.dataTables-example').dataTable();
+var keywords = {:json_encode($keywords)};
+	function sorts(option){
+		keywords[option.name] = option.sort == 'asc' ? 'desc' : 'asc';
+		keywords.important = option.name;
+		var seach = '';
+		for (var k in keywords) {
+			seach += k + '=' + keywords[k] + '&';
+		}
+		seach = seach.slice(0, -1);
+		location.href = '{:url('index')}?' + seach;
+	}
+	function add(){
+		layer.open({
+			type:1,
+			title:'新增自定义表单',
+			maxmin: true,
+			scrollbar: false,
+			content:$('.addinp'),
+			area: ['420px'],
+			btn:['确定','取消'],
+			yes:function (index,layero) {	
+				var vals = $(".addinp input[name='title']").val();
+				var sort = $(".addinp input[name='sort']").val();
+				var form_url = $(".addinp input[name='form_url']").val();
+				var form_details = $(".addinp input[name='form_details']").val();
+				var table = $(".addinp input[name='table']").val();
+				var type = $(".addinp select[name='type']").find('option:selected').val();
+				if(vals == ''){					
+					alert('表单名称不能为空');
+					return false;
+				}
+				$.ajax({
+					type:"post",
+					async:false,
+					data:{title:vals,sort:sort,type:type,form_url:form_url,form_details:form_details,table:table},
+					url:"{:url('add')}",
+					success:function(msg){	
+						if(msg.code == 2){
+							alert(msg.data.title + msg.msg);
+							next = false;
+						}else{
+							alert(msg.data.title + msg.msg)
+							layer.close(index);	
+							$('#add').text('');
+							setTimeout(function(){
+			             		location.reload();
+			                },1000);
+						}						
+					}
+				})		
+			},		
+		})
+	}
+	function edit(t, id){
+		$.ajax({
+			type:"get",
+			async:false,
+			url:"{:url('edit')}?id="+id,
+			success:function(data){	
+				console.log(data)
+				$('.editinp input[name="title"]').val(data.title)
+				$('.editinp input[name="sort"]').val(data.sort)
+				$('.editinp input[name="form_url"]').val(data.form_url)
+				$(".editinp input[name='form_details']").val(data.form_details);
+				$(".editinp input[name='table']").val(data.table);
+				$('.editinp select option[value="'+data.type+'"]').attr("selected",true);
+				if(data.code == 0){
+					alert(data.msg)
+				}else{
+					layer.open({
+						type:1,
+						title:'编辑自定义表单',
+						maxmin: true,
+						scrollbar: false,
+						area: ['420px'],
+						content:$('.editinp'),
+						btn:['确定','取消'],
+						yes:function (index,layero) {	
+							var vals = $(".editinp input[name='title']").val();
+							var sort = $(".editinp input[name='sort']").val();
+							var form_url = $('.editinp input[name="form_url"]').val();
+							var form_details = $(".editinp input[name='form_details']").val();
+							var table = $(".editinp input[name='table']").val();
+							var type = $(".editinp select[name='type']").find('option:selected').val();
+							if(vals == data.title && form_url == data.form_url && type == data.type && form_details == data.form_details && table == data.table){
+								alert('无变化');
+								return false;
+							}
+							if(vals == ''){
+								alert('表单名称不能为空');
+								return false;
+							}
+							$.ajax({
+								type:"post",
+								data:{title:vals,sort:sort,type:type,form_url:form_url,form_details:form_details,table:table},
+								url:"{:url('edit')}?id="+id,
+								async:true,
+								success:function(res){
+									alert(res.data.title + res.msg)
+									layer.close(index);
+									setTimeout(function(){
+					             		location.reload();
+					                },1000);
+								}
+							});							
+						},	
+					})
+				}				
+			}
+		})			
+	}
+	function deletes(id){
+		layer.confirm('确定要删除',{
+			time:0,
+			btn:['确定','取消'],
+			yes:function(index){
+				$.ajax({
+					type:"get",
+					url:"{:url('delete')}?ids="+id,
+					async:true,
+					success:function(msg){
+						alert(msg.msg)
+						setTimeout(function(){
+		             		location.reload();
+		                },1000);	
+					}
+				});
+			},	
+		})
+	}
+
+</script>

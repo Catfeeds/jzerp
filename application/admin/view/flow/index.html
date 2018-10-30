@@ -1,0 +1,311 @@
+<link href="__ADMIN_STATIC__/css/input.css" rel="stylesheet">
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+    	<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+        	<a href="javascript:void(0);" onclick="add()" class="btn btn-warning "><i class="iconfont icon-jia"></i>添加</a>
+        	<a href="javascript:void(0);" onclick="deleteAll('{:url('delete')}')" class="btn btn-danger "><i class="fa fa-trash-o fa-fw"></i>批量删除</a>
+        	<div class="seach-box">
+			<form action="{:url('index')}" method="get">
+              <div class="form-group">
+          		<div class="seach-list">
+                    <select class="form-control" name="type">
+                        <option value="">--流程类型--</option>
+                        {volist name="type" id="vo"}
+                            <option value="{$key}" {eq name="$keywords.type" value="$key"}selected="selected"{/eq}>{$vo}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <div class="seach-list">
+                	<label class="">流程名称:</label>
+                    <input type="text" name="title" value="{$keywords.title}" placeholder="流程名称" class="form-control">
+                </div>			                     
+                <div class="seach-list">			                    	
+                	<button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button> </span>
+                </div>			                    
+        	</div>
+			</form>
+            </div>
+            <table class="table table-bordered table-striped dataTables-example">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" class="i-checks check-all"></th>
+                        <th>流程名称</th>
+                        <th>流程类型</th>
+                        <th>表单类型</th>
+                        <th onclick="sorts({name: 'sort', sort: '{$keywords['sort']}'})" class="sorting_{$keywords['sort']}">排序</th>
+                        <th>流程说明</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	{empty name='list'}
+					<tr class="table-empty" >
+						<td class="text-center empty-info" colspan="100%">
+                			<i class="fa fa-database"></i> 暂无数据<br>
+                        </td>
+                    </tr>
+					{/empty}
+                	{volist name="list" id="vo"}
+                    <tr>
+                    	<td>
+                            <input type="checkbox" class="i-checks ids" value="{$vo.id}"/>
+                        </td>
+                        <td>{$vo.title}</td>
+                        <td>{$vo.form_title}</td>
+                        <td>{$vo.type_title}</td>
+                        <td>{$vo.sort}</td>
+                        <td>{$vo.explain}</td>
+                        <td><div class="status" data-id="{$vo.id}">
+				    			<div class="circle {if condition="$vo.status == 1"} actives active_t{else /}cancal_t{/if}"></div>
+				    			<input type="hidden" name="web_site_status" value="{$vo.status}">
+			                </div>
+                        </td>
+                        <td>
+							<span class="btn btns btn-success" onclick="edit(this,{$vo.id})">编辑</span>
+							<span class="btn btns btn-danger" onclick="deletes({$vo.id})">删除</span>
+							<a href="{:url('steplist',['id'=>$vo['id']])}"><span class="btn btns btn-success">设置步骤</span></a>
+                        </td>
+                    </tr> 
+                	{/volist}
+                </tbody>
+            </table>
+        	{$list->render()}
+       </div>
+    </div>
+</div>
+<div class="addinp" style="display: none;height: 100%;overflow: auto;">
+	<div class="ibox-content">
+   		<div class="form-group">
+            <label>流程类型</label>
+             <select class="form-control m-b flowtype" name="flow_type" id="add_flow_type">
+             	<option value="">--选择--</option>
+             	{volist name="type" id="vo"}
+                	<option value="{$key}">{$vo}</option>
+                {/volist}
+            </select>
+    	</div>
+   		<div class="form-group">
+            <label>表单类型</label>
+             <select class="form-control m-b formid" name="form_id" id="add_form_id">
+            </select>
+    	</div>
+   		<div class="form-group">
+            <label>流程名称</label>
+            <input type="text" id="add_title" placeholder="请输入流程名称" class="form-control">
+    	</div>
+    	<div class="form-group">
+            <label>排序</label>
+            <input type="number" id="add_sort" placeholder="请输入排序" value="100" class="form-control">
+		</div>  
+   		<div class="form-group">
+            <label>流程说明</label>
+            <input type="text" id="add_explain" placeholder="请输入流程说明" class="form-control">
+    	</div>     	
+	</div>
+</div>
+<div class="editinp" style="display: none;height: 100%;overflow: auto;">
+	<div class="ibox-content">
+		<div class="form-group">
+            <label>流程类型</label>
+             <select class="form-control m-b flowtype" name="flow_type" id="edit_flow_type">
+             	<option value="">--选择--</option>
+             	{volist name="type" id="vo"}
+                	<option value="{$key}">{$vo}</option>
+                {/volist}
+            </select>
+    	</div>
+   		<div class="form-group">
+            <label>表单类型</label>
+             <select class="form-control m-b formid" name="form_id" id="edit_form_id">
+            </select>
+    	</div>
+   		<div class="form-group">
+            <label>流程名称</label>
+            <input type="text" id="edit_title" name="title" placeholder="请输入流程名称" class="form-control">
+    	</div>
+    	<div class="form-group">
+            <label>排序</label>
+            <input type="number" id="edit_sort" name="sort" placeholder="请输入排序" value="100" class="form-control">
+		</div>  
+   		<div class="form-group">
+            <label>流程说明</label>
+            <input type="text" id="edit_explain" name="explain" placeholder="请输入流程说明" class="form-control">
+    	</div>     	
+	</div>
+</div>
+<script>
+$(".status").click(function(){
+	var o = $(this);
+	var id = o.attr('data-id');
+	var d = o.children('div');
+	var inp = o.children('input');
+	if(d.hasClass('actives')){
+		d.removeClass('actives active_t').addClass('cancelActive');		
+		inp.val(0)
+	} else {
+		d.removeClass('cancelActive cancal_t').addClass('actives');
+		inp.val(1)		
+	}
+	var status = inp.val();
+	$.ajax({
+		type:"post",
+		data:{status:status},
+		url:"{:url('setstatus')}?id="+id,
+		async:true,
+		success:function(res){
+			alert(res.msg)
+		}
+	});
+})
+var keywords = {:json_encode($keywords)};
+	function sorts(option){
+		keywords[option.name] = option.sort == 'asc' ? 'desc' : 'asc';
+		keywords.important = option.name;
+		var seach = '';
+		for (var k in keywords) {
+			seach += k + '=' + keywords[k] + '&';
+		}
+		seach = seach.slice(0, -1);
+		location.href = '{:url('index')}?' + seach;
+	}
+	$(".flowtype").change(function(){
+		var formtype = "#"+($(this).attr('id')=='add_flow_type' ? 'add_form_id' : 'edit_form_id');
+		if($(this).val()==''){
+			$(formtype).html();   
+			return false;
+		}
+		$.ajax({
+			type:"post",
+			async:false,
+			data:{type:$(this).val()},
+			url:"{:url('formtable/getlist')}",
+			success:function(msg){	
+				if(msg.code == 0){
+					layer.msg(msg.msg,{time:500});
+					$(formtype).html('');
+				}else{
+					var option = '';
+					for(var i in msg.data){
+						option += '<option value="'+i+'">'+msg.data[i]+'</option>';
+					}
+					$(formtype).html(option);
+				}
+			}
+    	})	
+	});
+	function add(){
+		layer.open({
+			type:1,
+			title:'新增类型',
+			maxmin: true,
+			scrollbar: false,
+			content:$('.addinp'),
+			btn:['确定','取消'],
+			area: ['420px'],
+			yes:function (index,layero) {	
+				var flow_type = $('#add_flow_type').val();
+				var form_id = $('#add_form_id').val();
+				var title = $('#add_title').val();
+				var sort = $('#add_sort').val();
+				var explain = $('#add_explain').val();
+				if(title == '' || flow_type=='' || form_id==''){
+					alert('类型或名称不能为空');
+					return false;
+				}
+				$.ajax({
+					type:"post",
+					async:false,
+					data:{flow_type:flow_type,form_id:form_id,title:title,sort:sort,explain:explain},
+					url:"{:url('add')}",
+					success:function(msg){	
+						if(msg.code == 1){
+							alert(msg.data.title + msg.msg)
+							layer.close(index);	
+							$('#add').text('');
+							setTimeout(function(){
+			             		location.reload();
+			                },1000);	
+							
+						}else{
+							alert(msg.msg);
+						}
+					}
+						               
+            	})		
+			}
+		})
+	}	
+	function edit(t, id){
+		$.ajax({
+			type:"get",
+			async:false,
+			url:"{:url('edit')}?id="+id,
+			success:function(data){						
+				$('.editinp input[name="title"]').val(data.title)
+				$('.editinp input[name="explain"]').val(data.explain)
+				$('.editinp input[name="sort"]').val(data.sort)
+				$('.editinp .flowtype option[value="'+data.flow_type+'"]').attr("selected",true);
+				$('.editinp .formid').html(data.formlist);
+				if(data.code == 0){
+					alert(data.msg)
+				}else{							
+					layer.open({
+						type:1,
+						title:'编辑类型',
+						maxmin: true,
+						scrollbar: false,
+						content:$('.editinp'),
+						btn:['确定','取消'],
+						area: ['420px'],
+						yes:function (index,layero) {	
+							var flow_type = $('#edit_flow_type').val();
+							var form_id = $('#edit_form_id').val();
+							var title = $('#edit_title').val();
+							var sort = $('#edit_sort').val();
+							var explain = $('#edit_explain').val();
+							if(title == '' || flow_type=='' || form_id==''){
+								alert('类型或名称不能为空');
+								return false;
+							}
+							$.ajax({
+								'type':"post",
+								'data':{flow_type:flow_type,form_id:form_id,title:title,sort:sort,explain:explain},
+								'url':"{:url('edit')}?id="+id,
+								'async':true,
+								'success':function(res){
+									alert(res.msg)
+									if(res.code==1){
+										layer.close(index);
+										setTimeout(function(){
+						             		location.reload();
+						                },1000);	
+									}
+			            		}	
+							});							
+						},	
+					})
+				}				
+			}
+		})			
+	}
+	function deletes(id){
+		layer.confirm('确定要删除',{
+			time:0,
+			btn:['必须啊','考虑下'],
+			yes:function(index){
+				$.ajax({
+					type:"get",
+					url:"{:url('delete')}?ids="+id,
+					async:true,
+					success:function(msg){
+						alert(msg.msg)
+						setTimeout(function(){
+		             		location.reload();
+		                },1000);	
+					}
+				});
+			},	
+		})
+	}
+</script>

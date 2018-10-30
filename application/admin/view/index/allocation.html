@@ -1,0 +1,306 @@
+<script src="__ADMIN_STATIC__/js/vue.js"></script>
+<style type="text/css">
+	#app ul{
+		
+		padding: 0;
+		margin: 0;
+		
+	}
+	#app{
+		margin-bottom: 40px;
+	}
+	#app li{
+		height: 280px;
+
+		float: left;
+		list-style-type: none;
+
+		position: relative;
+		box-sizing: border-box;
+		padding: 6px;
+		resize: horizontal;overflow:auto;
+	}
+	.abs{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		/*cursor: move;*/
+		line-height: 36px;
+		border-bottom: 1px solid #D3D4D3;
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		user-select: none;
+		background-color: #ECF1F8;
+	}
+	.abs span{
+		padding: 0 6px;
+		display: inline-block;
+		height: 39px;
+	}
+	#app .content > .iconfont{
+		font-size: 40px !important;
+		align-self: center;
+		margin: 0 auto !important;
+
+	}
+	#app .abs > .iconfont{
+		font-size: 20px !important;
+		float: right;
+		line-height: 38px;
+		
+	}
+	#app .content{
+		position: relative;
+		width: 100%;
+		display: flex;
+		border: 1px solid #DDDDDD;
+		/*box-sizing: border-box;*/
+		/*margin: 12px;*/
+		height: 100%;
+
+		
+	}
+	#layer span{
+		display: inline-block;
+		width: 20%;
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		user-select: none;
+		text-align: center;
+		line-height: 36px;
+	}
+	#layer span:hover{
+		color: #BC2D09;
+	}
+	.abs span:hover{
+		color: #BC2D09;
+	}
+	.activeSpan{
+	    background-color: #fff;
+	    border-left: 1px #ddd solid;
+	    border-right: 1px #ddd solid;
+	    transform: translateY(1px);
+	    
+	}
+	.box{
+		overflow-x: auto;
+	}
+</style>
+<div id="app">
+	<div class="box">
+		<div style="margin: 6px;">
+			两列式:<input v-model="row" type="radio"  value="2" />
+			三列式:<input v-model="row" type="radio" value="3" />
+			<i title="+1" style="color: red;" @click="addone" class="iconfont icon-jia"></i>
+		</div>
+		<ul >
+			<template v-for="(item, index) in list">
+				<li ref="resize" draggable="true" @dragleave="leave(index)" @dragenter='enter(index)' @dragstart="start(index)" @dragend="end(index)"  :style="{width: item.width || '33.33%'}">
+					<div class="content">
+						<div class="abs"><span v-for="(v, k) in item.top" @click="topClick(index, k)" :class="{activeSpan: topActive.outer == index && topActive.within == k}">{{v.title}}</span>
+							<i v-show="item.top.length > 0" @click="del(index)" class="iconfont icon-cha"></i>
+						</div>
+						<i @click="add(index)" class="iconfont icon-jia"></i>
+					
+					</div>
+				</li>
+
+			</template>
+			<div class="clearfix">
+				
+			</div>
+		</ul>
+		<button style="margin-left: 10px; margin-top: 12px;" class="btn btn-minw btn-primary" @click="submit">提交</button>
+	</div>
+	<div style="display: none;" id="layer">
+		<span v-for="(t, index) in type" @click="typeAdd(index)">{{t.title}}</span>
+	</div>
+</div>
+<script type="text/javascript">
+	new Vue({
+		el: '#app',
+		data: {
+			row: {$row} || 3,
+			
+
+			list: JSON.parse({:json_encode($data)}) || [],
+			type: [
+				{icon: '', title: '通知公告', type: 'notice'},
+				{icon: '', title: '我的会议', type: 'meeting'},
+				{icon: '', title: '待办流程', type: 'flow'},
+			],
+			layer: '',
+			
+			active: null,
+			drag: {
+				start: null,
+				enter: null,
+				level: null
+			},
+			topActive: {
+				outer: null,
+				within: null
+			}
+		},
+		beforeCreate: function(){
+			this.$nextTick(function(){
+				if (this.list.length == 0) {
+					var w = Number((100 / this.row).toFixed(2))  + '%';
+					
+					this.list =   [
+						{
+							top: [],
+							width: w
+							
+						},	{
+							top: [],
+							width: w
+							
+						},	{
+							top: [],
+							width: w
+							
+						},	{
+							top: [],
+							width: w
+							
+						},
+					];
+			
+				}
+			})
+		},
+		methods: {
+			addone(){
+				this.list.push({
+					top: [],
+					width: Number((100 / this.row).toFixed(2))  + '%'
+				})
+			},
+			topClick(i, k){
+				this.topActive.outer = i;
+				this.topActive.within = k;
+			},
+			del(i){
+				if(this.topActive.outer !== null   &&  this.topActive.within !== null && this.topActive.outer === i){
+					layer.confirm('确认删除'+ this.list[i].top[this.topActive.within].title +'么?', {
+						btn: ['确定', '取消'], //按钮
+						title: '删除消息'
+					}, index => {
+					    this.list[i].top.splice(this.topActive.within, 1);
+						layer.close(index)
+					})
+				} else {
+					layer.confirm('确认删除此框么?', {
+						btn: ['确定', '取消'], //按钮
+						title: '删除消息'
+					}, index => {
+					    this.list.splice(i, 1);
+						layer.close(index)
+					})
+				}
+			},
+			add(index){
+				this.active = index;
+				layer.open({
+				    type: 1, 
+				    title: '请选择类型',
+				    area: ['750px', '550px'],
+				    offset:[ Number((window.innerHeight - 550)/2) + 'px', Number((window.innerWidth - 750)/2) + 'px'],
+                    maxmin: true, 
+                    closeBtn: 1,
+				    btn: ['确定', '取消'],
+				    content: this.layer || (this.layer = $("#layer")),
+				    yes(index){
+				  		layer.close(index)
+				   },
+				   btn2(index){
+				  		layer.close(index)
+				   }
+				});
+			},
+		
+			start(i){
+				this.drag.start = i;
+			},
+			end(i){
+				var start = this.list[this.drag.start];
+				var enter = this.list[this.drag.enter];
+				this.$set(this.list, this.drag.start, enter)
+				this.$set(this.list, this.drag.enter, start);
+			},
+			enter(i){
+				this.drag.enter = i;
+		
+			},
+			leave(i){
+				this.drag.level = i;
+			},
+			typeAdd(index){
+				var t = this.type[index].title;
+				var top = this.list[this.active]['top'];
+				if(top.filter(v => t === v.title).length > 0){
+					alert('已包含此项!');
+				} else {
+					top.push(this.type[index]);
+				}
+			},
+			submit(){
+			 var r = this.$refs.resize;
+			 var l = this.list;
+			 var width =  document.body.clientWidth;
+			 var active = [];
+			 for(var i in l){
+			 	if (l[i]['top'].length == 0) {
+			 		l.splice(i, 1);
+			 		continue;
+			 	} else {
+			 		l[i].active = l[i]['top'][0].type;
+			 		if(!active.includes(l[i].active)){
+			 			active.push(l[i].active);
+			 		}
+			 	}
+			 	var w = r[i].style.width;
+			 	if(w.indexOf('%') !== -1){
+			 		continue
+			 	}
+			 	
+			 	l[i].width = Number((Number(w.replace('px', '')) / width) * 100) + '%'; 
+			 }
+			$.ajax({
+				type:"post",
+				url:"",
+				data: {
+					content: JSON.stringify(l),
+					user_id: '{:UID}',
+					active: JSON.stringify(active),
+					row: this.row
+				},
+				async:true,
+				success({msg}){
+					alert(msg)
+				}
+			});
+		}
+		},
+		watch: {
+			'row': {
+				    handler: function(val){
+					var w = Number((100 / val).toFixed(2))  + '%';
+					for (var i in this.list) {
+						this.list[i].width = w;
+					}
+				},
+       		 	immediate: false
+			} 
+		},
+//		computed: {
+//			'list': function(val){
+//				var w = Math.floor(this.width / this.row);
+//				
+//				return 
+//			}
+//		}
+	})
+</script>

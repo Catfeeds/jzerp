@@ -1,0 +1,110 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>新增</h5>
+            </div>
+            <div class="ibox-content">
+                <div  class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">配置分组</label>
+
+                        <div class="col-sm-10">
+                            <div class="radio">
+                                {volist name="list_group" id="vo"}
+                                    <label>
+                                        <input type="radio" value="{$key}" name="group" {equal name="$key" value="$group"}checked="checked"{/equal}>{$vo}
+                                    </label>
+                                {/volist}
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">配置类型</label>
+
+                        <div class="col-sm-10">
+                            <select class="form-control m-b" id="type" name="type">
+                                {volist name="type" id="vo"}
+                                   <option value="{$key}">{$vo}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">配置标题</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="title" name="title" placeholder="请输入配置标题" class="form-control"> <span class="help-block m-b-none">一般由中文组成，仅用于显示</span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">配置名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="name" name="name" placeholder="请输入配置名称" class="form-control"> <span class="help-block m-b-none">由英文字母和下划线组成，如 web_site_title，调用方法：config('web_site_title')</span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">配置值</label>
+                        <div class="col-sm-10">
+                            <textarea type="text" id="value" name="value" rows="10" placeholder="请输入配置值" class="form-control"></textarea><span class="help-block m-b-none">该配置的具体内容</span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">配置项</label>
+                        <div class="col-sm-10">
+                            <textarea type="text" id="options" name="options" rows="10" placeholder="提示信息" class="form-control"></textarea><span class="help-block m-b-none">用于单选、多选、下拉、联动等类型</span>                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">配置说明</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="tips" name="tips" placeholder="请输入配置说明" class="form-control"> <span class="help-block m-b-none">该配置的具体说明</span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">配置排序</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="sort" name="sort" placeholder="排序" class="form-control"> 
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-primary" onclick="save()" type="submit">保存内容</button>
+                            <button class="btn btn-white" onclick="javascript:history.go(-1);" type="submit">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function save()
+    {
+        var group = $("input[type='radio']:checked").val();
+        var type = $("#type").val();
+        var title = $("#title").val();
+        var name = $("#name").val();
+        var value = $("#value").val();
+        var options = $("#options").val();
+        var tips = $("#tips").val();
+        var sort = $("#sort").val();
+        $.post("{:url('config/save')}",{group:group,type:type,title:title,name:name,value:value,options:options,tips:tips,sort:sort},function(res){
+            console.log(res);
+            if(res.code == 9){
+                alert(res.msg);
+                window.location = res.url;
+            }else{
+                alert(res.msg);
+            }
+        })
+    }
+</script>

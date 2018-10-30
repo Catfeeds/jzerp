@@ -1,0 +1,772 @@
+<style>es
+	.table td {height: 50px;}
+	.img-link {cursor: zoom-in;}
+	.img-link>img {width: 80px;height: 80px!important;}
+	.thumbnail:hover i {display: block!important;}
+</style>
+<div class="ibox-content"> 
+	<div class="text-center">
+    	<h3>{$title}</h3>
+	</div>
+	<form class="form-builder" id="form" method="post" autocomplete="off">
+	<table class="table table-bordered">
+		<colgroup>
+			{switch name="max"}
+			{case value="2"}
+				<col width="20%" /><col width="30%" /><col width="20%" /><col width="30%" />
+			{/case}
+			{case value="3"}
+				<col width="10%" /><col width="23.3%" /><col width="10%" /><col width="23.3%" /><col width="10%" /><col width="23.3%" />
+			{/case}
+			{default /}
+				<col width="30%" /><col width="70%" />
+			{/switch}
+		</colgroup>
+		<tbody>
+			{empty name="list"}
+			<tr>
+				<td></td>
+				<td></td>
+			</tr>
+			{else /}			
+				{volist name="list" id="vo"}
+				{eq name="$vo['type']" value="lists"}
+				{php}
+					$option = json_decode($vo['option'], true);
+				{/php}
+				<tr>
+					<td colspan="6"><div>{$vo.title}<button type="button" style="float: right;" class="btn btn-minw btn-primary" onclick="addtr(this)">新增</button></div>
+    				<table class="table table-bordered lists" data-num="{$i}" data-id="{$vo.id}">
+        				<colgroup>
+                			{volist name="$option" id="v"}
+                			<col width="{:intval(10/(count($option)/10))}%">						                    			
+                			{/volist}
+                		</colgroup>
+        				<tbody>
+        				<tr>
+        					{volist name="$option" id="v"}
+        					<td>{$v.title}</td>
+        					{/volist}
+        					<td>操作</td>
+        				</tr>
+        				{if condition="!isset($data['details'])"}
+        					{php}
+        						$data['details'] = [1=>1];
+        					{/php}
+        				{/if}
+        				{volist name="$data['details']" id="vvv"} 
+        				<input type="hidden" name="details_id[]" value="{$vvv['id']}" />
+        				<tr class="tr">
+        					{volist name="$option" id="v"}
+        					{php}
+								$options = $v['option'];
+							{/php}
+        					<td>       						
+                                <div class="col-sm-12 i-checks">
+            					{switch name="$v.type"}            						
+    							{case value="radio|checkbox"}			                    						
+        							{volist name="$options" id="vv"}
+        							<label class="{$vo.type}-inline">
+        								<input type="{$v.type}" name="{$v.name}" {eq name="$vv.checked" value="1"} checked {/eq}  {notempty name="$data['id']"}value="{$vvv[str_replace('[]','',$v.name)]}"{else /}value="{$vv.value}"{/notempty} />{$vv.text}
+        							</label>
+        							{/volist}			                    							
+        						{/case}							
+        						{case value="select"}
+        						<select class="form-control" name="{$v.name}" onchange="linkage(this)">       						
+									{php}$new_names = str_replace('[]','',$v['name']);{/php}
+									<option value="">请选择</option>
+        							{if condition="isset($$new_names)"}        							
+    								{volist name="$$new_names" id="v"}			                    							
+                                    	<option value="{$key}" {notempty name="$data['id']"}{eq name="$key" value="$vvv[$new_names]"}selected="selected"{/eq}{/notempty}>{$v}</option>						                                        						                                    
+        							{/volist}
+        							{else /}
+        							{volist name="$options" id="vv"}		                    							
+                                        <option value="{$vv.value}" {notempty name="$data['id']"}{eq name="$vv.value" value="$vvv[$new_names]"}selected="selected"{/eq}{/notempty}>{$vv.text}</option>						                                        						                                    
+        							{/volist}
+        							{/if}       							
+        						</select>
+        						{/case}	
+        						{case value="login_user"}	
+        							<input type="hidden" name="{$v.name}" {empty name="data['id']"}value = "{:session('user_auth')['nickname']}"{else /}value="{$vvv[str_replace('[]','',$v.name)]}"{/empty} />
+        							<p class="form-control-static">{empty name="data['id']"}{:session('user_auth')['nickname']}{else /}{:get_personnel($vvv[str_replace('[]','',$v.name)])['nickname']}{/empty}</p>
+        						{/case}	
+								{case value="code"}			                    							
+								<input type="{$v.type}" {notempty name="$data['id']"}value="{$vvv[str_replace('[]','',$v.name)]}"{/notempty} name="{$v.name}" value="{$vo.placeholder}{:date('Ym').'-'.substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 5)}" class="form-control" readonly="readonly" placeholder="{$v.placeholder}">        							
+        						{/case}	
+        						{case value="datetime"}		
+        							{php}
+            							$options = json_decode($options, true);
+            						{/php}
+        							{volist name="$options" id="vv"}
+        							<input type="{$v.type}" data-date="{$vv.value}" {notempty name="$data['id']"}value="{$vvv[str_replace('[]','',$v.name)]}"{/notempty} name="{$v.name}" id="{$v.name}" class="form-control" placeholder="{$v.placeholder}">
+								{/volist}
+        						{/case}	
+        						{case value="file"}			                    							
+							    
+        						{/case}
+        						{case value=""}
+        						
+        						{/case}	
+        						{case value="money"}
+        						<div class="input-group m-b"><span class="input-group-addon">¥</span>
+                                    <input type="money" oninput="Edit1Change(this)" {eq name="$v.readonly" value="0"} readonly {/eq} {notempty name="$data['id']"}value="{$vvv[str_replace('[]','',$v.name)]}"{/notempty} name="{$v.name}" id="moneys" class="form-control" placeholder="{$v.placeholder}">
+                                </div>
+        						{/case}	
+        						{case value="bigmoney"}
+        						<input type="bigmoney" {eq name="$v.readonly" value="0"} readonly {/eq} {notempty name="$data['id']"}value="{$vvv[str_replace('[]','',$v.name)]}"{/notempty} name="{$v.name}" id="{$v.name}" class="form-control" placeholder="{$v.placeholder}">
+                                <script src="__ADMIN_STATIC__/js/bigmoney.js"></script>
+                                <script type="text/javascript">					                
+									function Edit1Change(o){			
+										var val = chineseNumber($(o).val());
+										$("#{$v.name}").val(val);
+									}														
+					            </script>
+        						{/case}	
+        						{case value="textarea"}			                    							
+        							<textarea type="{$v.type}" {eq name="$v.readonly" value="0"} readonly {/eq} class="form-control" name="{$v.name}" placeholder="{$v.placeholder}">{notempty name="$data['id']"}{$vvv[str_replace('[]','',$v.name)]}{/notempty}</textarea>
+        						{/case}	
+        						{default /}   
+        						{php}
+        						$name = str_replace('[]','',$v['name']);
+        						switch ($v['type'])
+        						{
+        							case 'materials':
+        								$info = materialList('',true);
+        							break;
+    								case 'person':
+        								$info = get_personnel_list(true);
+        							break;
+        							case 'supplier':
+        								$info = supplierList('', true);
+        							break;
+        							case 'department':
+        								$info = get_organization_list(true);						
+        							break;
+        							default:
+        						}
+        						{/php}  				
+        						<input type="{$v.type}"        						 
+        							{eq name="$v.readonly" value="0"} readonly {/eq} class="form-control" placeholder="{$v.placeholder}" 
+        							{notempty name="$v.tbname"}data-tbname="{$v.tbname}"{/notempty} 
+        							{notempty name="$v.jofield"}data-jofield="{$v.jofield}"{/notempty} 
+        							{notempty name="$v.action"}data-action="{$v.action}"{/notempty}
+        							{notempty name="$v.total"} oninput="addtotal(this)" data-total="{$v.total}"{/notempty}
+        							{in name="$v.type" value="person,persons,department,departments,materials,supplier"} name="{$name}d" 
+        							{notempty name="$data['id']"}{notempty name="$info"}value="{$info[$vvv[$name]]}"{/notempty}{/notempty} onclick="materials(this)" 
+        							{else/} {notempty name="$data['id']"}value="{$vvv[$name]}"{/notempty} name="{$v.name}" {/in} >        						
+        						{switch name="$v.type"}
+								    {case value="person|persons|department|departments|materials|supplier"}
+								    <input type="hidden" name="{$v.name}" {notempty name="$data['id']"}value="{$vvv[$name]}"{/notempty}/>
+								    <script>
+								    		//选材料
+									function materials(t){										
+										switch ($(t).attr('type'))
+										{
+											case 'materials':
+											material.init().setCallback(function({ids, text}){
+												t.value = text['0'].name;
+												$(t).next().val(ids['0']);
+												$(t).parents('.tr').find('input').not($(t).next()).not($(t)).each(function(){
+													var jofield = $(this).attr('data-jofield');	
+													$(this).val(text['0'][jofield]);
+												})
+											}).open();
+											break;
+											case 'supplier':
+											supplier.init().setCallback(function({ids, text}){
+												t.value = text['0'].supplier_name;
+												$(t).next().val(ids['0']);
+											}).open();
+											break;											
+										}
+									}
+								    </script>
+								    {/case}
+								    {default /}
+								    <script>
+								    	function addtotal(o){
+								    		var name = $(o).attr('data-total');
+								    		var tr = $(o).parents('.tr');
+								    		var num = 1;	
+								    		var sumnum = 0;								    		
+								    		var ztotal = $(o).parents('.lists');
+								    		tr.find('input[data-total="'+name+'"]').each(function(){
+								    			num = num * this.value;								    			
+								    		})
+								    		var lastTd = tr.find('input[name="'+name+'"]');
+								    		lastTd.val(num.toFixed(2));
+								    		ztotal.find('input[name="'+name+'"]').each(function(){
+							    				sumnum += this.value ? Number(this.value) : 0;							    				
+								    		})
+								    		var money = $("input[name='"+ lastTd.attr('data-total') +"']");
+								    		var bigmoney = $("input[name='"+ money.attr('data-total') +"']");
+								    		money.val(sumnum.toFixed(2));
+								    		bigmoney.val(chineseNumber(sumnum));
+								    	}
+								    </script>
+								{/switch}  
+								{notempty name="$v.action"}<input type="hidden" name="{$v.jofield}" />{/notempty}								
+            					{/switch}
+                              </div>              					                					
+        					</td>
+        					{notempty name="$v.pname"}
+								<script>
+									var opval = '';
+									function linkage(o){
+										opval = $(o).find('option:selected').val();
+										$(o).parents('.tr').find('input').each(function(){
+											if($(this).attr('data-tbname')){
+												var jofield = $(this).attr('data-jofield');	
+												var tbname = $(this).attr('data-tbname');
+												var action = $(this).attr('data-action');
+												var that = $(this);
+												$.ajax({
+													type:"post",
+													data:{id:opval,table:tbname,action:action,jofield:jofield},
+													url:"{:url('sponsor/linkage')}",
+													async:true,
+													success:function(res){
+														console.log(res)
+														if(that.attr('data-action')){
+															if(res.field_nickname){
+																that.val(res.field_nickname);
+																that.next().val(res[jofield]);
+															}else{
+																alert(res);
+															}							
+														}else{
+															that.val(res[jofield]);	
+														}
+													}
+												});	
+											}										
+										})	
+									}										
+								</script>
+							{/notempty}
+        					{/volist}
+        					<td><button type="button" class="btn btn-minw btn-danger" onclick="deletetr(this)">删除</button></td>
+        				</tr>
+        				{/volist}
+        				</tbody>
+    				</table>
+					</td>
+				</tr>
+			{else /}
+					{eq name="$vo['col']" value="1"}
+					<tr>
+					{/eq}
+						<td><span>{$vo.title}</span></td>	
+						{php}
+							$option = json_decode($vo['option'], true);
+						{/php}
+						<td colspan="{$vo.colspan}" data-id="{$vo.id}">	
+							<div class="col-sm-12 i-checks">
+        					{switch name="$vo.type"}
+        						{case value="radio|checkbox"}			                    						
+        							{volist name="$option" id="v"}
+        							<label class="{$vo.type}-inline">
+        								<input type="{$vo.type}" name="{$vo.name}" {notempty name="$data['id']"}{eq name="$v.checked" value="$data['status']"} checked {/eq}{else/}{eq name="$v.checked" value="1"} checked {/eq}{/notempty} value="{$v.value}" />{$v.text}
+        							</label>
+        							{/volist}			                    							
+        						{/case}							
+        						{case value="select"}
+        						<select class="form-control" name="{$vo.name}" {notempty name="$vo.morelinkage"}data-morelinkage="{$vo.morelinkage}"{/notempty} {notempty name="$vo.tbname"}data-tbname="{$vo.tbname}"{/notempty} >
+									{php}$new_name = $vo['name'];{/php}
+									<option value="-1">请选择</option>
+        							{if condition="isset($$new_name)"}
+    								{volist name="$$new_name" id="v"}			                    							
+                                    	<option value="{$key}" {notempty name="$data['id']"}{eq name="$key" value="$data[$vo.name]"}selected="selected"{/eq}{/notempty}>{$v}</option>						                                        						                                    
+        							{/volist}
+        							{else /}
+        							{volist name="$option" id="v"}			                    							
+                                        <option value="{$v.value}" {notempty name="$data['id']"}{eq name="$v.value" value="$data[$vo.name]"}selected="selected"{/eq}{/notempty}>{$v.text}</option>						                                        						                                    
+        							{/volist}
+        							{/if}       							
+        						</select>
+        						{/case}	
+        						{case value="login_user"}	
+        							<input type="hidden" name="{$vo.name}" {empty name="data['id']"}value = "{:session('user_auth')['uid']}"{else /}value="{$data[$vo.name]}"{/empty} />
+        							<p class="form-control-static">{empty name="data['id']"}{:session('user_auth')['nickname']}{else /}{:get_personnel($data[$vo.name])['nickname']}{/empty}</p>
+        						{/case}	
+								{case value="code"}			                    							
+								<input type="{$vo.type}" {notempty name="$data['id']"}value="{$data[$vo.name]}"{/notempty} name="{$vo.name}" value="{$vo.placeholder}{:date('Ym').'-'.substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 5)}" class="form-control" readonly="readonly" placeholder="{$vo.placeholder}">        							
+        						{/case}	
+        						{case value="datetime"}	
+        							{volist name="$option" id="v"}
+        								<input type="{$vo.type}" data-date="{$v.value}" {notempty name="$data['id']"}value="{$data[$vo.name]}"{/notempty} name="{$vo.name}" id="{$vo.name}" class="form-control" placeholder="{$vo.placeholder}">
+									{/volist}
+        						{/case}	
+        						{case value="file"}	
+							    <div class="js-upload-files">								    	
+							    	{volist name="$option" id="v"}	
+							    		{empty name="$v['value']"}
+							    		<ul class="list-group uploader-list" id="file_list_{$vo['name']}">
+		                    				{notempty name="$data[$vo['name']]"}		                    				
+		                    				{volist name="$data[$vo['name']]|explode=',',###"" id="f"}	
+		                    				{notempty name="$f"}
+		                    				<li class="list-group-item file-item">
+		                    					<span class="pull-right file-state">
+		                    						<span class="text-success">已上传</span>
+		                    					</span>
+		                    					<i class="fa fa-file"></i> 
+		                    					{$f|get_file_name}
+		                    					 [<a href="{[$f]|get_files_path}" class="download-file" download="{[$f]|get_file_name}">下载</a>]
+		                    					 [<a class="remove-file" onclick="deleteFile({$key}, this)">删除</a>]
+		                    				</li>
+		                    				{php}
+		                    					$files_ids = [];
+		                    					array_push($files_ids, $key);
+		                    				{/php}
+		                    				{/notempty}
+		                    				{/volist}
+		                    				{/notempty}
+								    	</ul>
+								    	<div onclick="uuu(this, '{$vo.name}')" class="webuploader-pick">上传多个文件</div>
+							    		{else /}
+							    		{eq name="$v['value']" value="multiple"}
+							    		<div class="uploader-list" id="file_list_{$vo['name']}">
+    									{notempty name="$data[$vo.name]"}	
+	    									<div class="file-item thumbnail" style="display:inline-block;">
+								                <a class="img-link" href="###">
+								                    <img src="{$data[$vo.name]|get_thumb}" width="100">
+								                </a>
+								                <i class="fa fa-times-circle remove-picture" onclick="deleteImage($data[$vo.name], this)"></i>
+								            </div>
+							            {/notempty}
+							            </div>
+							            <div onclick="uuu(this, '{$vo.name}')" class="webuploader-pick">上传单个图片</div>
+    									{else /} 
+    									<div class="uploader-list" id="file_list_{$vo['name']}">
+    									{notempty name="$data[$vo.name]"}
+    									{volist name="$data[$vo.name]|explode=',',###" id="f"}
+											{notempty name="$f"}
+							                <div class="file-item thumbnail" style="display:inline-block;">
+							                    <a class="img-link" href="###">
+							                        <img src="{$f|get_thumb}" width="100">
+							                    </a>
+							                    <i class="fa fa-times-circle remove-picture none" onclick="deleteImage({$f}, this)"></i>
+							                </div>
+											{/notempty}
+						                {/volist}
+						                {/notempty}
+						                </div>
+						                <div onclick="uuu(this, '{$vo.name}')" class="webuploader-pick">上传多个图片</div>
+						                {/eq}		
+							    		{/empty}						    	 								    		
+							    	{/volist}											    			    						    							    	
+							    	<input type="hidden" {notempty name="$data['id']"}value="{$data[$vo.name]}"{/notempty} name="{$vo.name}"  />
+				            	</div>
+				            	<input class="none" type="file" id="{$vo.name}" name="{$vo.name}ed[]" multiple="multiple" onchange="addFile(this)"  value="" />
+        						{/case}
+        						{case value=""}
+        						
+        						{/case}	
+        						{case value="money"}
+        						<div class="input-group m-b"><span class="input-group-addon">¥</span>
+                                    <input type="money" oninput="Edit1Change(this)" 
+                                    	{eq name="$vo.readonly" value="0"} readonly {/eq} 
+                                    	{notempty name="$data['id']"}value="{$data[$vo.name]}"{/notempty} 
+                                    	{notempty name="$vo.total"}data-total="{$vo.total}"{/notempty}
+                                    	name="{$vo.name}" class="form-control" placeholder="{$vo.placeholder}">
+                                </div>
+        						{/case}	
+        						{case value="bigmoney"}
+        						<input type="bigmoney" {eq name="$vo.readonly" value="0"} readonly {/eq} {notempty name="$data['id']"}value="{$data[$vo.name]}"{/notempty} name="{$vo.name}" id="{$vo.name}" class="form-control" placeholder="{$vo.placeholder}">
+                                <script src="__ADMIN_STATIC__/js/bigmoney.js"></script>
+                                <script type="text/javascript">											
+									function Edit1Change(o){			
+										var val = chineseNumber($(o).val());
+										$("#{$vo.name}").val(val);
+									}														
+					            </script>
+        						{/case}	
+        						{case value="textarea"}			                    							
+        							<textarea type="{$vo.type}" {eq name="$vo.readonly" value="0"} readonly {/eq} class="form-control" name="{$vo.name}" placeholder="{$vo.placeholder}">{notempty name="$data['id']"}{$data[$vo.name]}{/notempty}</textarea>
+        						{/case}	
+        						{default /}
+        						{notempty name="$data['id']"}
+        						{php}
+        						$id = $data[$vo['name']];
+        						switch ($vo['type'])
+        						{
+        							case 'materials':
+        								$info = materialId($id);
+        							break;
+        							case 'person':
+        								$info = get_personnel($id, true);
+        							break;
+        							case 'persons':
+        								$info = get_personname_list($id);
+        							break;
+        							case 'supplier':
+        								$info = supplierId($id);
+        							break;
+        							case 'department':
+        								$info = get_organization_id($id, true);
+        							break;
+									default:
+        						}
+        						{/php}
+        						{/notempty}          						
+        						<input type="{$vo.type}" name="{$vo.name}"       							 
+        							{eq name="$vo.readonly" value="0"} readonly {/eq} 
+        							class="form-control" placeholder="{$vo.placeholder}" 
+        							{notempty name="$vo.tbname"}data-tbname="{$vo.tbname}"{/notempty} 
+        							{notempty name="$vo.jofield"}data-jofield="{$vo.jofield}"{/notempty}         							
+        							{notempty name="$vo.action"}data-action="{$vo.action}"{/notempty}
+        							{notempty name="$vo.total"}data-total="{$vo.total}"{/notempty}
+        							{in name="$vo.type" value="person,persons,department,departments,materials,supplier"} {notempty name="$data['id']"}value="{$info}"{/notempty} 
+        							{else/} {notempty name="$data['id']"}value="{$data[$vo.name]}"{/notempty} {/in}>         						
+        						{switch name="$vo.type"}
+								    {case value="person|persons|department|departments|materials"}<input type="hidden" name="{$vo.name}" {notempty name="$data['id']"}value="{$data[$vo.name]}" {/notempty}/>
+								    <script>
+								    	//选材料
+									$('input[type="materials"]').on('click',function(){
+										var t = this;										
+										material.init().setCallback(function({ids, text}){
+											t.value = text['0'].name;
+											$(t).next().val(ids.join(','));
+										}).open();											
+									})
+								  </script>									   	
+								    {/case}	
+								    {case value="supplier"}
+								    <input type="hidden" name="{$vo.name}" {notempty name="$data['id']"}value="{$data[$vo.name]}" {/notempty} />
+								    <script>
+								    	//选材料
+									$('input[type="supplier"]').on('click',function(){									
+										var t = this;										
+										supplier.init().setCallback(function({ids, text}){
+											t.value = text['0'].supplier_name;
+											$(t).next().val(ids.join(','));
+										}).open();										
+									})
+								   </script>
+								    {/case}								    
+								    {default /}
+								{/switch}  
+								{notempty name="$vo.action"}<input type="hidden" name="{$vo.jofield}" />{/notempty}
+        					{/switch}
+        					</div>
+						</td>			                    			
+					{eq name="$vo['col']" value=""}
+					</tr>
+					{/eq}
+					{/eq}
+					{notempty name="$vo.pname"}
+						<script>
+							var tables = $('.table');
+							var opval = '';
+							var tbselect = tables.find('select[name="{$vo.pname}"]'); 
+							opval = tbselect.find('option:selected').val();
+							tbselect.on('change',function(){
+								opval = $(this).find('option:selected').val();
+								//一级联动
+								tables.find('input').each(function(){
+									if($(this).attr('data-tbname')){
+										var jofield = $(this).attr('data-jofield');	
+										var tbname = $(this).attr('data-tbname');
+										var action = $(this).attr('data-action');
+										var that = $(this);
+										$.ajax({
+											type:"post",
+											data:{id:opval,table:tbname,action:action,jofield:jofield},
+											url:"{:url('sponsor/linkage')}",
+											async:true,
+											success:function(res){
+												if(that.attr('data-action')){
+													if(res.field_nickname){
+														that.val(res.field_nickname);
+														that.next().val(res[jofield]);
+													}else{
+														alert(res);
+													}							
+												}else{
+													that.val(res[jofield]);	
+												}
+											}
+										});	
+									}										
+								})	
+								//多级联动
+								tables.find('select').each(function(){
+									if($(this).attr('data-tbname')){
+										var tbname = $(this).attr('data-tbname');
+										var morelinkage = $(this).attr('data-morelinkage');
+										var that = $(this);
+										$.ajax({
+											type:"post",
+											data:{id:opval,table:tbname,morelinkage:morelinkage},
+											url:"{:url('sponsor/linkage')}",
+											async:true,
+											success:function(res){
+												var html = '<option value="-1">请选择</option>';
+												$.each(res ,function(i,val){													
+													html += `<option value="${i}">${val}</option>`;
+												})
+												that.html(html);
+											}
+										});	
+									}										
+								})
+							})							
+						</script>
+					{/notempty}
+				{/volist}				
+			{/empty}
+		</tbody>		
+	</table> 
+	</form>
+	<button style="margin-bottom: 40px;" class="btn btn-minw btn-primary" onclick="add()" type="button">提交</button>
+	<button style="margin-bottom: 40px;" onclick="history.back()" class="btn btn-white" type="button">返回</button>
+</div> 
+{include file="public/person" /}
+{include file="public/material" /}
+{include file="public/supplier" /}
+<!--联动-->
+<script>
+var html = '',
+ele = null,
+name = null;
+//点击当前上传文件按钮
+function uuu(o, n){
+	ele = $(o);
+	name = n + 'ed';
+	document.querySelector('#' + n).click();
+}
+//列表输入增加行
+function addtr(o){	
+	html = 	$(o).parent().next().find('.tr').first().clone();
+	html.find('input[type="datetime"]').removeAttr('lay-key');
+	html.find('input').val('');
+	$(o).parent().next().find('tbody').append(html);
+	$('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+  });   
+   lay('input[type="datetime"]').each(function(){
+	 	var type = $(this).attr('data-date');
+	 	if(type == 'date2'){
+	 		laydate.render({
+		       	elem: this
+		        ,type: 'date'
+		        ,range: true
+		    });
+	 	}else{
+	 		laydate.render({
+		       	elem: this
+		        ,type: type
+		    });
+	 	}
+	})
+   $('input[type="person"],input[type="persons"],input[type="department"],input[type="departments"]').on('click', function(){
+	var o = $(this);
+	var name = o.attr('name');
+	var nextname = o.next().attr('name');
+	var json = {
+		name: this,
+		hiddenname: nextname,
+	};	
+	switch(o.attr('type'))
+	{
+		case 'person':
+		json.radio = true;		
+		break;
+		case 'persons':
+		json.radio = false;
+		break;
+		case 'department':
+		json.radio = true;
+		json.onlyOrganization = true;
+		break;
+		case 'departments':
+		json.radio = false;
+		json.onlyOrganization = true;
+		break;
+	}	
+		new openPerson(json);			
+})
+}
+ lay('input[type="datetime"]').each(function(){
+ 	var type = $(this).attr('data-date');
+ 	if(type == 'date2'){
+ 		laydate.render({
+	       	elem: this
+	        ,type: 'date'
+	        ,range: true
+	    });
+ 	}else{
+ 		laydate.render({
+	       	elem: this
+	        ,type: type
+	    });
+ 	}
+})
+	 
+//删除列表输入行
+function deletetr(o){
+	$(o).parent().parent().remove();
+}
+//点击选人
+$('input[type="person"],input[type="persons"],input[type="department"],input[type="departments"]').on('click', function(){
+	var o = $(this);
+	var name = o.attr('name');
+	var nextname = o.next().attr('name');
+	var json = {
+		name: this,
+		hiddenname: nextname,
+	};	
+	switch(o.attr('type'))
+	{
+		case 'person':
+		json.radio = true;		
+		break;
+		case 'persons':
+		json.radio = false;
+		break;
+		case 'department':
+		json.radio = true;
+		json.onlyOrganization = true;
+		break;
+		case 'departments':
+		json.radio = false;
+		json.onlyOrganization = true;
+		break;
+	}	
+		new openPerson(json);			
+})
+
+{empty name="files_ids"}
+	var fileids = [];
+	{else /}
+	var fileids = {:json_encode($files_ids)};
+{/empty}
+	//提交新增
+	function add(){
+		
+		var seeting = {
+		id: 'form',
+		url: '{:url("$url", ["flow_id" => input('flow_id')?input('flow_id'):$flow_id, "form_id" => input('form_id')?input('form_id'):$form_id])}',		
+		validate: [					
+			{volist name="$list" id="vo"}
+				{eq name="$vo.must" value="1"}
+					['{$vo.name}','{$vo.title}不能为空'],
+				{/eq}
+			{/volist}
+		],
+		append: [],
+	}
+	{php}
+		if(!empty(input('state'))){
+			echo "seeting.append.push(['state', ".input('state')."]);";		
+		}		
+	{/php}
+	if (fileids.length > 0) {
+		seeting.append.push(['file', fileids.join(',')]);
+	}
+		{notempty name="$data['id']"}
+			seeting.append.push(['id', {$data['id']}]);
+		{/notempty}
+		util.ajax(seeting).then(function(res){
+			alert(res.msg);
+			if(res.code == 0){
+				$('input[name="'+res.data+'"]').focus();
+			}
+			if (res.code == 1) {
+					if(res.url){
+						setTimeout(function(){
+							location.href = res.url;
+						}, 1500)
+					}else{
+						setTimeout(function(){
+							history.back();
+						}, 1500)
+					}
+			}
+		}).catch(e => {
+			console.error(e);
+			alert('系统错误, 请联系管理员');
+		})
+	}
+		//上传文件
+		function addFile(o){			
+			var seeting = {
+				id: 'form',
+				append: [['to_dir', 'balance'], ['name', name]],
+				url: "{:url('AdminFiles/UpLoadFiles')}",
+			}
+		//提交文件显示文件
+		util.ajax(seeting).then(function(res){			
+			if (res.code == 1) {
+				var success = res.data.success;
+				var str = '';
+				var istype = ele.parent().next('input').attr('id');
+				for (var i = 0;  i < success.length; i ++) {
+					var is = ele.next('input');					
+					is.val(is.val() + Number(success[i]['id']) + ',');
+					if(istype == 'file'){
+						str += `<li class="list-group-item file-item">
+            					<span class="pull-right file-state">
+            						<span class="text-success">上传成功</span>
+            					</span>
+            					<i class="fa fa-file"></i> 
+            					${success[i]['name']}
+            					 [<a href="${success[i]['path']}" class="download-file" download="${success[i]['name']}">下载</a>]
+            					 [<a class="remove-file" onclick="deleteFile(${success[i]['id']}, this)">删除</a>]
+            				</li>`;
+					}else if(istype == 'image'){
+						is.val(Number(success[i]['id']));
+						str += `<div class="file-item thumbnail" style="display:inline-block;">
+					                <a class="img-link" href="###">
+					                    <img src="${success[i]['path']}" width="100">
+					                </a>
+					                <i class="fa fa-times-circle remove-picture none" onclick="deleteImage(${success[i]['id']}, this)"></i>
+					            </div>`;
+					}else{
+						str += `<div class="file-item thumbnail" style="display:inline-block;">
+				                    <a class="img-link" href="###">
+				                        <img src="${success[i]['path']}" width="100">
+				                    </a>
+				                    <i class="fa fa-times-circle remove-picture none" onclick="deleteImage(${success[i]['id']}, this)"></i>
+				                </div>`;
+					}					
+				}
+				var fail = res.data.fail;				
+				for (var i = 0;  i < fail.length; i ++) {
+					str += `<li class="list-group-item file-item">
+            					<span class="pull-right file-state">
+        							<span class="text-success">上传失败(${fail[i]['err']})</span>
+            					</span>
+            					<i class="fa fa-file"></i> 
+            					${fail[i]['name']}
+            				</li>`;
+				}
+				if(istype == 'image'){
+					ele.prev().html(str);
+				}else{
+					ele.prev().append(str);
+				}				
+			}
+		}).catch(e => {
+			console.log(e);
+			alert('上传失败, 请联系管理员');
+		})
+	}
+	//删除上传文件
+	function deleteFile(id, o){
+		var eles = $(o).parents('ul').next().next();
+		var index = eles.val();
+		eles.val(index.replace(id + ',', ''));
+		$(o).parents('.js-upload-files').next().val('');
+		$(o).parents('li').remove();
+	}
+	//删除图片
+	function deleteImage(id, o){
+		var eles = $(o).parents('.uploader-list').next().next();
+		var index = eles.val();
+		eles.val(index.replace(id + ',', ''));
+		$(o).parents('.js-upload-files').next().val('');
+		$(o).parent().remove();
+	}		
+</script>

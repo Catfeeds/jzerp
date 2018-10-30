@@ -1,0 +1,33 @@
+<style type="text/css">
+	.fa-gla{
+		float: left;
+		list-style-type: none;
+		width: 60px;
+		height: 60px;
+		font-size: 28px;
+		border: 1px solid #ddd;
+		margin: 0 -1px -1px 0;
+		display: flex;
+	}
+	.pad-bot{
+		padding-bottom: 40px;
+		max-height: 800px;
+		overflow: auto;
+	}
+	.fa-gla i{
+		font-size: 24px !important;
+		align-self: center;
+		margin: 0 auto;
+	}
+</style>
+<div class="clearfix pad-bot">
+	<div class="tab-pane fade active in">
+		<ul class="js-icon-list items-push-2x text-center">
+			{volist name="icon_list" id="ic"}
+			<li onclick="iconClick&&iconClick('{$ic}')" class="fa-gla">
+				<i class="{$ic}"></i>
+			</li>
+			{/volist}
+		</ul>
+	</div>
+</div>

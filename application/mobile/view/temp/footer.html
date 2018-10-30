@@ -1,0 +1,66 @@
+<style>
+    .footer-table{
+        background: #F8F8F8;
+    }
+    .footer-cloum{
+        float: left;
+        width: 20%;
+        padding-top: 10px;
+    }
+    .footer-box{
+        position: fixed;
+        max-width: 640px;
+        width: 100%;
+        text-align: center;
+        bottom: 0;
+        background-color: rgba(255, 255, 255, 1);
+        border-top:1px solid #DDDDDD;
+    }
+    .footer-cloum p{
+        padding-top: 5px;
+        padding-bottom: 8px;
+        color: #8B8B8B;
+    }
+
+
+    .footer-icon{
+        font-size: 24px !important;
+        color: #BABABA !important;
+    }
+
+    .active .footer-icon, .active p{
+        color: #03A9F4 !important;
+    }
+
+</style>
+<footer>
+    <div class="footer-box">
+        <div class="footer-table">
+            <div class="footer-cloum active">
+				<a href="{:url('message/index')}" target="_self">                    <i class="footer-icon iconfont icon-xiaoxi"></i>
+                    <p>消息</p>
+                </a>
+            </div>
+            <div class="footer-cloum ">
+				<a href="{:url('apply/index')}" target="_self">                    <i class="footer-icon iconfont icon-yingyong"></i>
+                    <p>应用</p>
+                </a>
+            </div>
+            <div class="footer-cloum ">
+				<a href="{:url('builder/index')}" target="_self">                    <i class="footer-icon iconfont icon-webicon308"></i>
+                    <p>添加</p>
+                </a>
+            </div>
+            <div class="footer-cloum ">
+				<a href="{:url('contacts/index')}" target="_self">                    <i class="footer-icon iconfont icon-tongxunlu"></i>
+                    <p>通讯录</p>
+                </a>
+            </div>
+            <div class="footer-cloum ">
+				<a href="{:url('my/index')}" target="_self">                    <i class="footer-icon iconfont icon-renshi"></i>
+                    <p>我</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,32 @@
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+    	{volist name="flowtype" id="vo"}
+        <div class="col-sm-4">
+            <div class="ibox">
+                <div class="ibox-title">                    
+                    <h5>{$vo.title}</h5>
+                </div>
+                <div class="ibox-content">                  
+                	{volist name="flow" id="v"}
+	                	{eq name="$vo.id" value="$v.flow_type"}
+		                	{volist name="form_url" id="vv"}
+			                    {eq name="$key" value="$v.form_id"}
+			                    	<p><a class="list-group-item" href="{:url($vv, ['flow_id'=>$v.id,'form_id'=>$v.form_id])}">{$v.title}</a></p>
+			                    {/eq}
+		                    {/volist}
+		                    {else/}
+	                    {/eq}
+                    {/volist}               
+                </div>
+            </div>
+        </div>
+        {/volist}
+    </div>
+</div>
+<script>
+	$('.row').find('.col-sm-4').each(function(){		
+		if($(this).find('.ibox-content p').length == 0){
+			$(this).remove();
+		}		
+	})
+</script>

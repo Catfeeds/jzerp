@@ -1,0 +1,124 @@
+<style type="text/css">
+	input[type=number]::-webkit-inner-spin-button,  
+	input[type=number]::-webkit-outer-spin-button {  
+	    -webkit-appearance: none;
+	}
+	input[type=number]::inner-spin-button,  
+	input[type=number]::outer-spin-button {  
+	    -webkit-appearance: none;
+	}
+</style>
+<div class="col-sm-12 animated fadeInRight">
+                <div class="mail-box-header">
+
+                    <form method="get" action="{:url('lists')}" class="pull-right mail-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-sm" name="search" value="{$search}" placeholder="搜索发送者/消息类型/消息正文">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    搜索
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <h2>
+                    我的消息
+                </h2>
+                    <div class="mail-tools tooltip-demo m-t-md">
+                   
+                        <button onclick="location.reload()" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="刷新消息列表"><i class="fa fa-refresh"></i> 刷新</button>
+<span style="vertical-align: bottom;">
+			&nbsp;&nbsp;&nbsp;&nbsp;删除<input onkeyup="delDay(this, event.code)" type="number" style="padding:0 12px;width: 80px;border: none; border-bottom: 1px solid #ddd;outline: none;" />天前的消息(回车键删除)
+		</span>
+                    </div>
+                </div>
+                <div class="mail-box">
+					{php}
+						$read = ['unread', 'read'];
+						global $yesterday;
+						global $today;
+						$yesterday = strtotime(date('Y-m-d', time())) - (24 * 60 * 60 * 1000);
+						$today = strtotime(date('Y-m-d', time()));
+						
+						function formatTime($t = ''){
+							if($t){
+								global $yesterday;
+								global $today;
+								if($t > $yesterday && $today > $t){
+									
+									return '昨天   '.date('H:i', $t);
+								} else if($t > $today) {
+									$H = date('H', $t);
+									if($H < 12) {
+										$d = '上午   ';
+									} else {
+										$d = '下午   ';
+									}
+									return $d.date('H:i', $t);
+									
+								} else {
+									return date('Y-m-d H:i', $t);
+								}
+							} else {
+								return '';
+							}
+						}
+					{/php}
+                    <table class="table table-hover table-mail">
+                        <tbody>
+                                <!--<td class="check-mail">
+                                    <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                                </td>-->
+                        	{volist name="list" id="l"}
+                            <tr class="{$read[$l.is_read]}">
+                                <td class="mail-ontact">{$l.nickname}<span class="label label-warning pull-right">{$l.ctitle}</span>
+                                </td>
+                                <td class="mail-subject">{$l.content}
+                                </td>
+                                <!--<td class=""><i class="fa fa-paperclip"></i>
+                                </td>-->
+                                <td class="text-right mail-date">{:formatTime($l.create_time)}</td>
+                            </tr>
+                          {/volist}
+                        </tbody>
+                    </table>
+					{$list -> render()}
+
+                </div>
+            </div>
+            <script type="text/javascript">
+            	var delDays = null;
+	function delDay(o, code){
+		if(code.toLowerCase() !== 'enter') return;
+		
+		var v = (delDays || (delDays = $(o))).val();
+		if(v && /^[1-9][0-9]*$/.test(v)){
+			
+			layer.confirm('确定要删除吗?',{
+				time:0,
+			   offset:[  Number((window.innerWidth - 260)/2) + 'px', Number((window.innerHeight - 146)/2) + 'px'],
+				
+				btn:['确定','取消'],
+				yes:function(index){
+					$.ajax({
+					type:"post",
+					url:"{:url('delDays')}",
+					async:true,
+					data: {day: v},
+					success: function(res){
+						
+						alert(res.msg)
+						setTimeout(()=> {
+							location.reload();
+						}, 1500)
+					}
+				});
+				},
+			})	  
+	
+			
+		} else {
+			alert('参数错误');
+		}
+	}
+            </script>

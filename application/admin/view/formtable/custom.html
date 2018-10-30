@@ -1,0 +1,1149 @@
+    <style>
+        .droppable-active {
+            background-color: #68b828 !important;
+        }
+        .tools a {
+            cursor: pointer;
+            font-size: 80%;
+        }
+        .form-body .col-md-6,
+        .form-body .col-md-12 {
+            min-height: 400px;
+        }
+        .draggable {
+            cursor: move;
+        }
+        .table td {height: 50px;}
+    </style>
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-sm-3 fixed" style="position: fixed;">
+            	<div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">基础表单</a>
+                        </li>
+                        <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">时间选择</a>
+                        </li>
+                        <li class=""><a data-toggle="tab" href="#tab-3" aria-expanded="false">上传</a>
+                        </li>
+                        <li class=""><a data-toggle="tab" href="#tab-4" aria-expanded="false">高级表单</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+		                        <form role="form" class="form-horizontal m-t" autocomplete="off">
+		                        	<div class="form-group draggable">
+		                                <label class="col-sm-3 control-label">编号随机数：</label>
+		                                <div class="col-sm-9">
+		                                    <input type="code" class="form-control" name="code" readonly="readonly" placeholder="" value="{:date('Ym').'-'.substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 5)}">
+		                                </div>
+		                            </div>
+		                            <div class="form-group draggable">
+		                                <label class="col-sm-3 control-label">文本框：</label>
+		                                <div class="col-sm-9">
+		                                    <input type="text" name="title" class="form-control" placeholder="请输入文本">
+		                                </div>
+		                            </div>
+		                            <div class="form-group draggable">
+		                                <label class="col-sm-3 control-label">密码框：</label>
+		                                <div class="col-sm-9">
+		                                    <input type="password" class="form-control" name="password" placeholder="请输入密码">
+		                                </div>
+		                            </div>                            
+		                            <div class="form-group draggable">
+		                                <label class="col-sm-3 control-label">下拉列表：</label>
+		                                <div class="col-sm-9">
+		                                    <select class="form-control" name="select">
+		                                        <option value="1">选项 1</option>
+		                                        <option value="2">选项 2</option>
+		                                        <option value="3">选项 3</option>
+		                                        <option value="4">选项 4</option>
+		                                    </select>
+		                                </div>
+		                            </div>		                            	                                             
+		                            <div class="form-group draggable">
+		                                <label class="col-sm-3 control-label">单选框：
+		                                </label>		
+		                                <div class="col-sm-9">
+		                                    <label class="radio-inline">
+		                                        <input type="radio" checked="" value="0" name="radio">选项1</label>
+		                                    <label class="radio-inline">
+		                                        <input type="radio" value="1" name="radio">选项2</label>		
+		                                </div>
+		                            </div>
+		                            <div class="form-group draggable">
+		                                <label class="col-sm-3 control-label">复选框：</label>		
+		                                <div class="col-sm-9">
+		                                    <label class="checkbox-inline">
+		                                        <input type="checkbox" value="0" name="checkbox[]">选项1</label>
+		                                    <label class="checkbox-inline">
+		                                        <input type="checkbox" value="1" name="checkbox[]">选项2</label>
+		                                    <label class="checkbox-inline">
+		                                        <input type="checkbox" value="2" name="checkbox[]">选项3</label>
+		                                </div>
+		                            </div>
+		                            <div class="form-group draggable">
+		                            	<label class="col-sm-3 control-label">数字：</label>		
+			                            <div class="col-sm-9">			                                
+		                                    <input type="number" name="number" class="form-control" placeholder="数字">			                                
+			                            </div> 
+		                            </div>
+		                            <div class="form-group draggable">
+		                            	<label class="col-sm-3 control-label">金额：</label>		
+			                            <div class="col-sm-9">
+			                                <div class="input-group m-b"><span class="input-group-addon">¥</span>
+			                                    <input type="money" name="money" id="money" class="form-control" placeholder="请输入金额">
+			                                </div>
+			                            </div> 
+		                            </div>
+		                            <div class="form-group draggable">
+		                            	<label class="col-sm-3 control-label">金额大写：</label>		
+			                            <div class="col-sm-9">			                                
+		                                    <input type="bigmoney" name="bigmoney" id="bigmoney" class="form-control" placeholder="请输入金额">
+		                                    <script src="__ADMIN_STATIC__/js/bigmoney.js"></script>
+		                                    <script type="text/javascript">
+								                $(function(){
+								                   $('#money').attr('oninput','return Edit1Change();');				   					
+								                });
+												var j=chineseNumber(document.getElementById("money").value);
+												document.getElementById("bigmoney").value=j;		
+												function Edit1Change(){			
+													document.getElementById("bigmoney").value=chineseNumber(document.getElementById("money").value);
+												}														
+								            </script>
+			                            </div> 
+		                            </div>
+		                            <div class="form-group draggable">
+		                                <label class="col-sm-3 control-label">大文本框：</label>		
+		                                <div class="col-sm-9">
+		                                    <textarea type="textarea" class="form-control" name="note" placeholder="请输入备注"></textarea>
+		                                </div>
+		                            </div>
+		                        </form>
+		                    </div>
+                        </div>
+                         <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                    	 	<form role="form" class="form-horizontal m-t" autocomplete="off">
+                    	 		<div class="form-group draggable">
+	                                <label class="col-sm-3 control-label">日期(年月日)：</label>
+	                                <div class="col-sm-9">
+	                                    <input type="datetime" id="date" name="date" data-date="date" class="form-control" placeholder="YYYY-MM-DD">
+	                                </div>
+		                            </div>
+		                            <script>
+		                            	  //日期(年-月-日)
+											laydate.render({
+										        elem: '#date'
+										        ,type: 'date'
+										        ,theme: 'grid'
+										        ,calendar: true
+										        ,format: 'yyyy年MM月dd日' //可任意组合
+										    });	
+		                            </script>
+		                            <div class="form-group draggable">
+		                                <label class="col-sm-3 control-label">日期(年)：</label>
+		                                <div class="col-sm-9">
+		                                    <input type="datetime" id="year" name="year" data-date="year" class="form-control" placeholder="YYYY">
+		                                </div>
+		                            </div>
+		                            <script>
+		                            	  //日期(年)
+											laydate.render({
+										        elem: '#year'
+										        ,type: 'year'
+										        ,theme: 'grid'
+										        ,calendar: true
+										        ,format: 'yyyy年' //可任意组合
+										    });	
+		                            </script>
+		                            <div class="form-group draggable">
+		                                <label class="col-sm-3 control-label">日期(年月)：</label>
+		                                <div class="col-sm-9">
+		                                    <input type="datetime" id="month" name="month" data-date="month" class="form-control" placeholder="YYYY-MM">
+		                                </div>
+		                            </div>
+		                            <script>
+		                            	  //日期(年)
+											laydate.render({
+										        elem: '#month'
+										        ,type: 'month'
+										        ,theme: 'grid'
+										        ,calendar: true
+										        ,format: 'yyyy年MM月' //可任意组合
+										    });	
+		                            </script>
+		                             <div class="form-group draggable">
+		                                <label class="col-sm-3 control-label">日期(时分秒)：</label>
+		                                <div class="col-sm-9">
+		                                    <input type="datetime" id="datetime" name="datetime" data-date="datetime" class="form-control" placeholder="Y-m-d H-i-s">
+		                                </div>
+		                            </div>
+		                            <script>
+		                            	  //日期(年)
+											laydate.render({
+										        elem: '#datetime'
+										        ,type: 'datetime'
+										        ,theme: 'grid'
+										        ,calendar: true
+										        ,format: 'yyyy年MM月dd日 HH时mm分ss秒' //可任意组合
+										    });	
+		                            </script>		
+		                            <div class="form-group draggable">
+	                                <label class="col-sm-3 control-label">日期(范围)：</label>
+	                                <div class="col-sm-9">
+	                                    <input type="datetime" id="date2" name="date2" data-date="date2" class="form-control" placeholder="YYYY-MM-DD">
+	                                </div>
+		                            </div>
+		                            <script>
+		                            	  //日期(年-月-日)
+											laydate.render({
+										        elem: '#date2'
+										        ,type: 'date'
+										        ,range: true
+										        ,theme: 'grid'
+										        ,calendar: true
+										        ,format: 'yyyy年MM月dd日' //可任意组合
+										    });	
+		                            </script>
+                            </form>
+                            </div>
+                        </div>
+                        <div id="tab-3" class="tab-pane">
+                            <div class="panel-body">
+                    	 	<form role="form" class="form-horizontal m-t" autocomplete="off">
+                    	 		<div class="form-group draggable">
+	                                <label class="col-sm-3 control-label">上传多文件：</label>
+	                                <div class="col-sm-9">
+	                                    <input type="file" name="file" class="form-control">
+	                                </div>
+	                            </div>	
+	                            <div class="form-group draggable">
+	                                <label class="col-sm-3 control-label">上传单图片：</label>
+	                                <div class="col-sm-9">
+	                                    <input type="file" name="image" data-type="multiple" class="form-control">
+	                                </div>
+	                            </div>	
+	                            <div class="form-group draggable">
+	                                <label class="col-sm-3 control-label">上传多图片：</label>
+	                                <div class="col-sm-9">
+	                                    <input type="file" name="images" data-type="multiples" class="form-control">
+	                                </div>
+	                            </div>	
+                            </form>
+                            </div>
+                        </div>                      
+                        <div id="tab-4" class="tab-pane">
+                            <div class="panel-body">
+                    	 	<form role="form" class="form-horizontal m-t" autocomplete="off">
+                    	 		<div class="form-group draggable">
+	                                <label class="col-sm-3 control-label">制单人：</label>
+	                                <div class="col-sm-9">
+	                                    <input type="login_user" class="form-control" name="login_user" placeholder="默认当前登录人">
+	                                </div>
+	                            </div>
+                              	<div class="form-group draggable">
+	                                <label class="col-sm-3 control-label">单选人：</label>
+	                                <div class="col-sm-9">
+	                                    <input type="person" name="person" class="form-control" placeholder="点击选择">
+	                                </div>
+	                            </div>
+	                            <div class="form-group draggable">
+	                                <label class="col-sm-3 control-label">多单选人：</label>
+	                                <div class="col-sm-9">
+	                                    <input type="persons" name="persons" class="form-control" placeholder="点击选择">
+	                                </div>
+	                            </div>
+	                            <div class="form-group draggable">
+	                                <label class="col-sm-3 control-label">单选部门：</label>
+	                                <div class="col-sm-9">
+	                                    <input type="department" name="department" class="form-control" placeholder="点击选择">
+	                                </div>
+	                            </div>
+	                            <div class="form-group draggable">
+	                                <label class="col-sm-3 control-label">多选部门：</label>
+	                                <div class="col-sm-9">
+	                                    <input type="departments" name="departments" class="form-control" placeholder="点击选择">
+	                                </div>
+	                            </div>
+	                            <div class="form-group draggable">
+	                                <label class="col-sm-3 control-label">材料名称：</label>
+	                                <div class="col-sm-9">
+	                                    <input type="materials" name="materials" class="form-control" placeholder="点击选择">
+	                                </div>
+	                            </div>
+	                            <div class="form-group draggable">
+	                                <label class="col-sm-3 control-label">供应商：</label>
+	                                <div class="col-sm-9">
+	                                    <input type="supplier" name="supplier" class="form-control" placeholder="点击选择">
+	                                </div>
+	                            </div>
+                            </form>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-9 marginleft">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>拖拽左侧表单元素到此区域</h5>                         
+                        <div class="ibox-tools">
+                        	<button class="ibox_but btn btns btn-info" style="float:right;margin-left: 10px;">加一行</button>
+                        	<button class="ibox_list btn btns btn-info" style="float:right;margin-left: 10px;">列表输入</button>
+                            <select class="form-control" id="n-columns">
+                                <option {eq name='max' value='1'} selected {/eq} value="1">显示2列</option>
+                                <option {eq name='max' value='2'} selected {/eq} value="2">显示4列</option>
+                                <option {eq name='max' value='3'} selected {/eq} value="3">显示6列</option>
+                            </select>
+                        </div>   
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="ibox-content">                   	
+                        <div class="row form-body form-horizontal m-t"> 
+                        	<div class="text-center">
+                            	<h3>{$title}</h3>
+                        	</div>
+                        	<form role="form" class="form-horizontal m-t" autocomplete="off">
+                    	<table class="table table-bordered tables">
+                    		<colgroup class="colgroup">
+                    			{switch name="max"}
+                    			{case value="2"}
+                    				<col width="20%" /><col width="30%" /><col width="20%" /><col width="30%" />
+                    			{/case}
+                    			{case value="3"}
+                    				<col width="10%" /><col width="23.3%" /><col width="10%" /><col width="23.3%" /><col width="10%" /><col width="23.3%" />
+                    			{/case}
+                    			{default /}
+                    				<col width="30%" /><col width="70%" />
+                    			{/switch}
+                    		</colgroup>
+                    		<tbody class="tbody">
+                    			{empty name="list"}
+                    			<tr class="tr">
+                    				<td></td>
+                    				<td class="droppable sortable" colspan="1"></td>
+                    			</tr>
+                    			{else /}	                    			
+                    				{volist name="list" id="vo"}                       						
+                    					{eq name="$vo['type']" value="lists"}
+                    						{php}
+                								$option = json_decode($vo['option'], true);
+                							{/php}
+                    						<tr>
+                    							<td colspan="6"><div><span>{$vo.title}</span><button type="button" style="float: right;" class="btn btn-danger" onclick="deltd(this)">删除一列</button><button type="button" style="float: right;" class="btn btn-minw btn-primary" onclick="addtd(this)">新增一列</button></div>
+					            				<table class="table table-bordered lists" data-num="{$i}" data-id="{$vo.id}">
+						            				<colgroup>
+						            					{volist name="$option" id="v"}
+						                    			<col width="{:intval(10/(count($option)/10))}">						                    			
+						                    			{/volist}
+						                    		</colgroup>
+						            				<tbody>
+						            				<tr>
+						            					{volist name="$option" id="v"}
+						            					<td><span>{$v.title}</span></td>
+						            					{/volist}
+						            				</tr>
+						            				<tr class="tr">
+						            					{volist name="$option" id="v"}
+						            					{php}
+															$options = $v['option'];
+														{/php}
+						            					<td class="droppable ui-droppable ui-sortable">
+						            						<div class="form-group draggable ui-draggable dropped" style="position: static;">
+								                                <label class="col-sm-3 control-label" style="display: none;">{$v.title}</label> 
+								                                <div class="col-sm-12">
+						                    					{switch name="$v.type"}
+						                    						{case value="radio|checkbox"}			              
+						                    							{volist name="$options" id="vv"}
+						                    							<label class="{$v.type}-inline">
+						                    								<input type="{$v.type}" name="{$v.name}" {eq name="$vv.checked" value="1"} checked {/eq}  value="{$vv.value}" />{$vv.text}
+						                    							</label>
+						                    							{/volist}			                    							
+						                    						{/case}	
+						                    						{case value="select"}
+						                    						<select class="form-control" name="{$v.name}">
+						                    							{volist name="$options" id="vv"}			                    							
+									                                        <option value="{$vv.value}">{$vv.text}</option>						                                        						                                    
+						                    							{/volist}
+						                    						</select>
+						                    						{/case}	
+						                    						{case value="login_user"}			                    							
+						                    							<input type="{$v.type}" class="form-control" name="{$v.name}" placeholder="{$v.placeholder}">
+						                    						{/case}	
+						                    						{case value="datetime"}	
+						                    						{php}
+						                    							$options = json_decode($options, true);
+						                    						{/php}
+									        							{volist name="$options" id="vv"}									        							
+									        								<input type="{$v.type}" name="{$v.name}" id="{$v.name}" data-date="{$vv.value}" class="form-control" {eq name="$vo.must" value="1"}data-must="1"{/eq} placeholder="{$v.placeholder}">					        							
+																		{/volist}
+																	{/case}
+						                    						{case value=""}
+						                    						
+						                    						{/case}							                    						
+						                    						{case value="textarea"}			                    							
+						                    							<textarea type="{$v.type}" {eq name="$v.readonly" value="0"} readonly {/eq} class="form-control" name="{$v.name}" placeholder="{$v.placeholder}"></textarea>
+						                    						{/case}	
+						                    						{default /}
+						                    						<input type="{$v.type}" {eq name="$v.readonly" value="0"} readonly {/eq} name="{$v.name}" class="form-control" placeholder="{$v.placeholder}" {notempty name="$v.pname"}data-pname="{$v.pname}"{/notempty} {notempty name="$v.tbname"}data-tbname="{$v.tbname}"{/notempty} {notempty name="$v.jofield"}data-jofield="{$v.jofield}"{/notempty} {notempty name="$v.morelinkage"}data-morelinkage="{$v.morelinkage}"{/notempty} {notempty name="$v.action"}data-action="{$v.action}"{/notempty} {notempty name="$v.total"}data-total="{$v.total}"{/notempty}>
+						                    					{/switch}
+								                                </div>
+						                    					{notempty name="$v.title"}
+						                    					<p class="tools col-sm-9"></a><a class="remove-link">移除</a></p>
+						                    					{/notempty}
+						                    					</div>
+						            					</td>
+						            					{/volist}
+						            				</tr>
+						            				</tbody>
+					            				</table>
+                    							</td>
+                    						</tr>
+                						{else /}
+                						{eq name="$vo['col']" value="1"}
+                    					<tr class="tr">
+                    					{/eq}
+		                    				<td><span>{$vo.title}</span></td>
+		                    				{php}
+                								$option = json_decode($vo['option'], true);
+                							{/php}
+		                    				<td class="droppable sortable" colspan="{$vo.colspan}" data-id="{$vo.id}">	
+		                    					<div class="form-group draggable ui-draggable dropped" style="position: static;">
+				                                <label class="col-sm-3 control-label" style="display: none;">{$vo.title}</label> 
+				                                <div class="col-sm-12">
+		                    					{switch name="$vo.type"}
+		                    						{case value="radio|checkbox"}			              
+		                    							{volist name="$option" id="v"}
+		                    							<label class="{$vo.type}-inline">
+		                    								<input type="{$vo.type}" name="{$vo.name}" {eq name="$v.checked" value="1"} checked {/eq} {eq name="$vo.must" value="1"}data-must="1"{/eq} value="{$v.value}" />{$v.text}
+		                    							</label>
+		                    							{/volist}			                    							
+		                    						{/case}	
+		                    						{case value="select"}
+		                    						<select class="form-control" name="{$vo.name}" {notempty name="$vo.pname"}data-pname="{$vo.pname}"{/notempty} {notempty name="$vo.tbname"}data-tbname="{$vo.tbname}"{/notempty} {notempty name="$vo.morelinkage"}data-morelinkage="{$vo.morelinkage}"{/notempty} {eq name="$vo.must" value="1"}data-must="1"{/eq}>
+		                    							{volist name="$option" id="v"}			                    							
+					                                        <option value="{$v.value}">{$v.text}</option>						                                        						                                    
+		                    							{/volist}
+		                    						</select>
+		                    						{/case}	
+		                    						{case value="login_user"}			                    							
+		                    							<input type="{$vo.type}" class="form-control" name="{$vo.name}" placeholder="{$vo.placeholder}">
+		                    						{/case}	
+		                    						{case value="datetime"}			                    							
+		                    							{volist name="$option" id="v"}
+					        							<input type="{$vo.type}" name="{$vo.name}" id="{$vo.name}" data-date="{$v.value}" class="form-control" {eq name="$vo.must" value="1"}data-must="1"{/eq} placeholder="{$vo.placeholder}">					        							
+														{/volist}
+													{/case}
+		                    						{case value=""}
+		                    						
+		                    						{/case}		
+		                    						{case value="file"}		                    					
+		                    							{volist name="$option" id="v"}		                    									                   								
+					        								<input type="{$vo.type}" name="{$vo.name}" {notempty name="$v"}data-type="{$v.value}"{/notempty} class="form-control" {eq name="$vo.must" value="1"}data-must="1"{/eq}>					        																						
+														{/volist}
+		                    						{/case}
+		                    						{case value="textarea"}			                    							
+		                    							<textarea type="{$vo.type}" {eq name="$vo.readonly" value="0"} readonly {/eq} class="form-control" {eq name="$vo.status" value="0"} data-status="1" {/eq} {eq name="$vo.must" value="1"}data-must="1"{/eq} name="{$vo.name}" placeholder="{$vo.placeholder}"></textarea>
+		                    						{/case}	
+		                    						{default /}
+		                    						<input type="{$vo.type}" {eq name="$vo.readonly" value="0"} readonly {/eq} name="{$vo.name}" {eq name="$vo.status" value="0"} data-status="1" {/eq} {eq name="$vo.must" value="1"}data-must="1"{/eq} class="form-control" placeholder="{$vo.placeholder}" {notempty name="$vo.pname"}data-pname="{$vo.pname}"{/notempty} {notempty name="$vo.tbname"}data-tbname="{$vo.tbname}"{/notempty} {notempty name="$vo.jofield"}data-jofield="{$vo.jofield}"{/notempty} {notempty name="$vo.morelinkage"}data-morelinkage="{$vo.morelinkage}"{/notempty} {notempty name="$vo.action"}data-action="{$vo.action}"{/notempty}{notempty name="$vo.total"}data-total="{$vo.total}"{/notempty}>
+		                    					{/switch}
+		                    					</div>
+		                    					{notempty name="$vo.title"}
+		                    					<p class="tools col-sm-9"></a><a class="remove-link">移除</a></p>
+		                    					{/notempty}
+		                    					</div>
+		                    				</td>			                    			
+		                    			{eq name="$vo['col']" value=""}
+		                    			</tr>
+		                    			{/eq}
+                    					{/eq}                    					
+                    				{/volist}
+                    			{/empty}
+                    		</tbody>
+                    	</table>    
+                    	</form>
+                        </div>                       
+                        <button class="btn btn-success save">保存</button>
+                        <button onclick="history.back()" class="btn btn-white" type="button">返回</button>
+                    </div>
+                </div>
+                <div class="ibox float-e-margins iboxgj" style="display: none;">
+                    <div class="ibox-title">
+                        <h5>高级设置</h5>                    
+                	</div>
+                	<div class="ibox-content"> 
+                		<div class="row advanced">                              
+                            <div class="col-sm-2">
+                                <div class="input-group m-b"><span class="input-group-addon">行</span>
+                                    <input type="number" name="row" readonly class="form-control text-center">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="input-group m-b"><span class="input-group-addon">列</span>
+                                    <input type="number" name="col" readonly class="form-control text-center">
+                                </div>
+                            </div>
+                            <div class="col-sm-3 colwith">
+                                <div class="input-group m-b"><span class="input-group-addon">列宽</span>
+                                    <select class="form-control">
+                                    	<option>1</option>
+                                    	<option>3</option>
+                                    	<option>5</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 bigtitle">
+                                <div class="input-group m-b"><span class="input-group-addon">大标题</span>
+                                    <input type="text" name="gj_dtitle" oninput="gj_dtitle(this)" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="input-group m-b"><span class="input-group-addon">标题</span>
+                                    <input type="text" name="gj_title" oninput="gj_title(this)" class="form-control">
+                                </div>
+                            </div>
+                              <div class="col-sm-2">
+                                <div class="checkbox i-checks">
+                                    <label>
+                                        <input type="checkbox" name="gj_checkread"> <i></i> 只读</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="checkbox i-checks">
+                                    <label>
+                                        <input type="checkbox" name="gj_checkstatus"> <i></i> 隐藏</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="input-group m-b"><span class="input-group-addon">name值</span>
+                                    <input type="text" name="name" oninput="gj_name(this)" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-5 infos">
+                                <div class="input-group m-b"><span class="input-group-addon">提示信息</span>
+                                    <input type="text" name="placeholder" oninput="gj_plac(this)" class="form-control">
+                                </div>
+                            </div>  
+                            <div class="col-sm-5 options">
+                                <div class="input-group m-b"><span class="input-group-addon">选项值:</span>
+                                    <input type="text" name="select" oninput="gj_select(this)" class="form-control">
+                                    <span class="input-group-addon">用，分开</span>
+                                </div>
+                            </div> 
+                            <div class="col-sm-2">
+                                <div class="checkbox i-checks">
+                                    <label>
+                                        <input type="checkbox" name="gj_checkmust"> <i></i> 必填</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="checkbox i-checks">
+                                    <label>
+                                        <input type="checkbox" name="gj_checklinkage"> <i></i> 联动</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="checkbox i-checks">
+                                    <label>
+                                        <input type="checkbox" name="gj_checktotal"> <i></i> 合计</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 total">
+                                <div class="input-group m-b"><span class="input-group-addon">合计</span>
+                                    <input type="text" name="total" oninput="total(this)" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-3 selectid">
+                                <div class="input-group m-b"><span class="input-group-addon">select名称</span>
+                                    <input type="text" name="selectid" oninput="selectid(this)" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-3 tablename">
+                                <div class="input-group m-b"><span class="input-group-addon">表名</span>
+                                    <input type="text" name="tablename" oninput="tablename(this)" class="form-control">
+                                </div>
+                            </div>                           
+                            <div class="col-sm-3 jofield">
+                                <div class="input-group m-b"><span class="input-group-addon">关联字段</span>
+                                    <input type="text" name="jofield" oninput="jofield(this)" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-3 morelinkage">
+                                <div class="input-group m-b"><span class="input-group-addon">多级联动</span>
+                                    <input type="text" name="morelinkage" oninput="morelinkage(this)" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-3 action">
+                                <div class="input-group m-b"><span class="input-group-addon">方法名</span>
+                                    <input type="text" name="action" oninput="action(this)" class="form-control">
+                                </div>
+                            </div> 
+                            <div class="col-sm-2">
+                                <button type="button" onclick="del(this)" class="btn btn-danger">删除整行</button>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+        	</div>      
+        </div>      	
+	</div>
+    <!-- jQuery UI -->
+    <script src="__ADMIN_STATIC__/js/jquery-ui-1.10.4.min.js"></script>
+    <!-- From Builder -->
+    <script src="__ADMIN_STATIC__/js/plugins/beautifyhtml/beautifyhtml.js"></script>
+    
+    <script>
+    	$('.marginleft').css('margin-left',$('.fixed').outerWidth());
+    	//高级设置的dom
+    	var advanced = $('.advanced');
+    	//选中表单的上一个td
+    	var gjtd;
+    	//列表输入的标题
+    	var gjdtd;
+    	//选中的表单
+	    var gjinput;
+	    //有不同的html结构
+	    var gjinput1;	
+	    //新增一列
+	    function addtd(o){
+	    	var ele = $(o).parent().next();
+	    	ele.find('tr:nth-child(1)').append('<td></td>');
+	    	ele.find('tr:nth-child(2)').append('<td class="droppable"></td>');	 
+	    	var num = 10/(ele.find('tr:nth-child(1) td').length/10);
+	    	ele.find('colgroup col').attr('width',num.toFixed(2)+'%');
+	    	setup_draggable();
+	    }
+	     //删除一列
+	    function deltd(o){
+	    	var ele = $(o).parent().next();
+	    	ele.find('tr:nth-child(1)').find('td').last().remove();
+	    	ele.find('tr:nth-child(2)').find('td').last().remove();
+	    	var num = 10/(ele.find('tr:nth-child(1) td').length/10);
+	    	ele.find('colgroup col').attr('width',num.toFixed(2)+'%');
+	    }
+	    //改变父级select name值
+	    function selectid(o){
+	    	gjinput.attr('data-pname',o.value);
+	    }
+	    //改变表名
+	    function tablename(o){
+	    	gjinput.attr('data-tbname',o.value);
+	    }
+	    //关联字段
+	    function jofield(o){
+	    	gjinput.attr('data-jofield',o.value);
+	    }
+	    //多级联动
+	     function morelinkage(o){
+	    	gjinput.attr('data-morelinkage',o.value);
+	    }
+	    //方法名
+	    function action(o){
+	    	gjinput.attr('data-action',o.value);
+	    }
+	    //合计
+	    function total(o){
+	    	gjinput.attr('data-total',o.value);
+	    }
+	    //删除整行
+	    function del(){
+	    	gjinput.parents('.tr').remove();
+	    }
+	    //改变大标题
+	    function gj_dtitle(o){
+	    	gjdtd.text(o.value);
+	    }
+	    //改变标题
+	    function gj_title(o){
+	     	gjtd.text(o.value);
+	    }
+	    //改变提示信息
+	    function gj_plac(o){
+	     	gjinput.attr('placeholder',o.value);
+	    }
+	    //改变name值
+	    function gj_name(o){
+	     	gjinput.attr('name',o.value);
+	    }
+	    //改变select option的值
+	    function gj_select(o){
+	    	var arr = [];
+	    	var opt = '';
+	    	var opvalist = o.value.replace(/，/g, ',');
+	    	arr = opvalist.split(',');
+			if(gjinput.get(0).tagName.toLowerCase() == 'select'){
+	    		for(var i=0;i<arr.length;i++){
+		    		opt += '<option value="'+i+'">'+arr[i]+'</option>';
+		    	}
+	    		gjinput.html(opt);
+	    	}else{
+	    		for(var i=0;i<arr.length;i++){	
+		    		opt += '<label class="'+gjinput1.find('input').attr('type')+'-inline"><input type="'+gjinput1.find('input').attr('type')+'" value="'+i+'" name="'+gjinput1.find('input').attr('type')+'">'+arr[i]+'</label>';
+		    	}	
+		    	gjinput1.html(opt);
+	    	}
+	    }
+	    //联动
+	    advanced.find('input[name="gj_checklinkage"]').on('ifChanged',function(event){
+	    	if($(this).prop("checked")){
+	    		gjinput.attr('data-pname');
+	    		gjinput.attr('data-tbname');
+	    		gjinput.attr('data-jofield');
+	    		gjinput.attr('data-morelinkage');
+	    		gjinput.attr('data-action');
+	    		$('.selectid,.tablename,.jofield,.morelinkage,.action').show();
+	    	}else{
+	    		gjinput.removeAttr('data-pname');
+	    		gjinput.removeAttr('data-tbname');
+	    		gjinput.removeAttr('data-jofield');
+	    		gjinput.removeAttr('data-action');
+	    		$('.selectid,.tablename,.jofield,.morelinkage,.action').hide();
+	    	}
+	    })
+	    //合计
+	    advanced.find('input[name="gj_checktotal"]').on('ifChanged',function(event){
+	    	if($(this).prop("checked")){
+	    		gjinput.attr('data-total');
+	    		$('.total').show();
+	    	}else{
+	    		gjinput.removeAttr('data-total');
+	    		$('.total').hide();
+	    	}
+	    })
+	    //只读
+	    advanced.find('input[name="gj_checkread"]').on('ifChanged',function(event){
+	    	if($(this).prop("checked")){
+	    		gjinput.attr('readonly','readonly');
+	    	}else{
+	    		gjinput.removeAttr('readonly');
+	    	}
+	    })
+	    //隐藏
+	    advanced.find('input[name="gj_checkstatus"]').on('ifChanged',function(event){
+	    	if($(this).prop("checked")){
+	    		gjinput.attr('data-status','1');
+	    	}else{
+	    		gjinput.removeAttr('data-status');
+	    	}
+	    })
+	    //必填
+	    advanced.find('input[name="gj_checkmust"]').on('ifChanged',function(event){
+	    	if($(this).prop("checked")){
+	    		gjinput.attr('data-must','1');
+	    	}else{
+	    		gjinput.removeAttr('data-must');
+	    	}
+	    })
+	    //列宽
+	    advanced.find('select').on('change',function(){
+	    	var colspan = $(this).find('option:selected').text();
+	    	gjinput.parents('td').attr('colspan',colspan);
+	    	var tdnum = $("#n-columns option:selected").val();
+    		for(var i=0;i<=tdnum;i++){
+        		gjinput.parents('td').next().remove();
+	    	}   	
+    		var html = ''
+        	for(var j=0;j<((tdnum*2)-(Number(colspan)+1))/2;j++){        		
+        		html += '<td></td><td class="droppable sortable" colspan="1"></td>';
+        	}
+        	gjinput.parents('tr').append(html);
+	        setup_draggable();	
+	    })
+        $(document).ready(function () {        	
+        	//初始化拖拽
+            setup_draggable(); 
+            //加一行
+            $('.ibox_but').on('click',function(){ 
+            	var tdnum = $("#n-columns option:selected").val();
+            	var html = ''
+            	for(var i=0;i<tdnum;i++){
+            		html += '<td></td><td class="droppable sortable" colspan="1"></td>';
+            	}
+            	$('.table .tbody').append('<tr class="tr">'+html+'</tr>');
+		        setup_draggable();		
+            });
+            //列表输入
+            var num = 1;
+            $('.ibox_list').on('click',function(){ 
+            		var table = `<div><span>大标题</span><button type="button" style="float: right;" class="btn btn-danger" onclick="deltd(this)">删除一列</button><button type="button" style="float: right;" class="btn btn-primary" onclick="addtd(this)">新增一列</button></div>
+	            				<table class="table table-bordered lists" data-num="${num}">
+		            				<colgroup>
+		                    			<col width="50%" /><col width="50%" />
+		                    		</colgroup>
+		            				<tbody>
+		            				<tr><td></td><td></td></tr>
+		            				<tr class="tr"><td class="droppable"></td><td class="droppable"></td></tr>
+		            				</tbody>
+	            				</table>`;            	
+            	$('.tables .tbody').append('<tr><td colspan="6">'+table+'</td></tr>');
+            	num++;
+		        setup_draggable();		
+            });
+            //显示几列
+            $("#n-columns").on("change", function () {
+                var v = $(this).val(); 
+				$('.tables .tbody .tr').each(function(){
+					var colnum = '';
+					//一行中colspan的合
+					$(this).find('td.droppable').each(function(){
+						colnum = Number(colnum) + Number($(this).attr('colspan')) + 1;								
+					})
+					//所需的列数和当前一行中colspan合的差
+					var gap = v*2-colnum;
+					if(gap<0){
+						//只有两个td不移除
+						if($(this).find('td').length>2){
+							//小于0移除td
+							for(var i=0;i<Math.abs(gap);i++){   						
+								$(this).find('td').last().remove();								
+							}
+						}
+					}else{
+						//大于0增加td
+						for(var i=0;i<gap/2;i++){   						
+							$(this).append('<td></td><td class="droppable sortable" colspan="1"></td>');						
+						}		
+					}							
+				});
+				setup_draggable();
+                switch(v)
+                {
+                	case '1':
+                	$('.tables .colgroup').html('<col width="30%" /><col width="70%" />')
+        			break;
+        			case '2':
+        			$('.tables .colgroup').html('<col width="20%" /><col width="30%" /><col width="20%" /><col width="30%" />')
+        			break;
+        			case '3':
+        			$('.tables .colgroup').html('<col width="10%" /><col width="23.3%" /><col width="10%" /><col width="23.3%" /><col width="10%" /><col width="23.3%" />')
+        			break;
+        			default:
+                }
+           });
+        });
+        var setup_draggable = function () {
+        	//拖
+            $(".draggable").draggable({
+                appendTo: "body",
+                helper: "clone"
+            });
+            //放置
+            $(".droppable").droppable({
+                accept: ".draggable",
+                helper: "clone",
+                hoverClass: "droppable-active",
+                drop: function (event, ui) {
+                	var target = $(event.target);                	
+                    $(".empty-form").remove();
+                    var $orig = $(ui.draggable)
+                    if (!$(ui.draggable).hasClass("dropped")) {                  	
+                        var $el = $orig
+                            .clone()
+                            .addClass("dropped")
+                            .css({
+                                "position": "static",
+                                "left": null,
+                                "right": null
+                            })
+                            .appendTo(this);
+                            //放置去id
+                            $el.parent().attr('data-id','');
+                            //放置加标题
+                            var txt = $(this).find('.control-label').text();                                                      		                   											
+							$(".table .control-label").hide();	
+							if($(this).parents('table').hasClass('lists')){
+								var num = target['context']['cellIndex'];
+								$('<span>'+txt+'</span>').appendTo($el.parent().parent().prev().find('td:nth-child('+(num+1)+')'));
+							}else{
+								$el.parent().prev().html('');
+								$('<span>'+txt+'</span>').appendTo($el.parent().prev());
+							}
+                        // tools
+                        $('<p class="tools col-sm-9">\<a class="remove-link">移除</a></p>').appendTo($el);
+                    } else {
+                    	//table内拖放
+                        if ($(this)[0] != $orig.parent()[0]) {
+                            var $el = $orig
+                                .clone()
+                                .css({
+                                    "position": "static",
+                                    "left": null,
+                                    "right": null
+                                })
+                                .appendTo(this);
+                                //删除原来位置上的
+                                $orig.parent().prev().find('span').remove();
+                            	$orig.remove();  
+                            	//放置新位置
+								var txt = $(this).find('.control-label').text();
+                                if($(this).parents('table').hasClass('lists')){
+									var num = target['context']['cellIndex'];
+									$('<span>'+txt+'</span>').appendTo($el.parent().parent().prev().find('td:nth-child('+(num+1)+')'));
+								}else{
+									$('<span>'+txt+'</span>').appendTo($el.parent().prev());
+								}												
+                        }
+                    }
+                }
+            }).sortable();
+        }
+        //点击移除
+        $(document).on("click", ".remove-link", function (ev) {
+        	if($(this).parents('table').hasClass('lists')){
+        		var num = $(this).parents('td').index();
+        		$(this).parents('td.droppable').parent().prev().find('td:nth-child('+(num+1)+')').text('');
+        	}else{
+        		$(this).parent().parent().parent().prev().text('');            	
+        	} 
+        	$(this).parent().parent().remove();
+            if($('table').find('input').length == 0){
+            	$('.iboxgj').hide();
+            }
+        });  
+//      $(".table").on('click',function(event){
+//      	var target = $(event.target);
+//      	if(target.get(0).tagName.toLowerCase() == 'td'){
+//			var tdSeq = target.parent().find("td").index(target[0]);
+//			var trSeq = target.parent().parent().find("tr").index(target.parent()[0]);
+//			alert("第" + (trSeq + 1) + "行，第" + (tdSeq + 1) + "列");
+//			}
+//		});
+        //点击表单给高级设置赋值
+        $(".table").on('click',function(event){ 
+        	$('.iboxgj,.infos').show();
+        	$('.options,.bigtitle').hide();        	
+	        var target = $(event.target);
+	        var tar = target.get(0).tagName.toLowerCase();
+        	if(tar == 'input' || tar == 'select' || tar == 'textarea'){				
+				var trSeq = target.parents('tbody').find("tr").index(target.parents('tr')) + 1;
+				var tdSeq = (target.parents('tr').find("td").index(target.parents('td')) + 1)/2;
+				var optionval = '';		
+				var num = $(target.parents('td')).index();
+				if(target.parents('table').hasClass('lists')){
+					$('.colwith').hide();
+					$('.bigtitle').show();
+					gjtd = target.parents('td.droppable').parent().prev().find('td:nth-child('+(num+1)+') span');
+					gjdtd = target.parents('.lists').prev().find('span');
+					advanced.find('input[name="gj_dtitle"]').val(gjdtd.text());
+				}else{
+					$('.colwith').show();
+					gjtd = target.parents('td').prev().find('span');
+				}								
+				gjinput = target;
+				if(tar == 'select'){
+					$('.options').show();
+					$('.infos').hide();
+					target.find('option').each(function(){
+						optionval += $(this).text() + '，';
+					})
+				}				
+				if(target.get(0).type == 'radio' || target.get(0).type == 'checkbox'){
+					$('.options').show();
+					$('.infos').hide();
+					gjinput1 = target.parent().parent();
+					gjinput1.find('label').each(function(){
+						optionval += $(this).text().replace(/\s/g,"") + '，';
+					})
+				}				
+				optionval = optionval.slice(0,-1);
+				advanced.find('input[name="row"]').val(trSeq);
+				advanced.find('input[name="col"]').val(tdSeq);
+				advanced.find('input[name="gj_title"]').val(gjtd.text());	
+				advanced.find('input[name="name"]').val(target.attr('name'));
+				advanced.find('input[name="placeholder"]').val(target.attr('placeholder'));
+				advanced.find('input[name="select"]').val(optionval);
+				advanced.find('input[name="selectid"]').val(target.attr('data-pname'));
+				advanced.find('input[name="tablename"]').val(target.attr('data-tbname'));
+				advanced.find('input[name="jofield"]').val(target.attr('data-jofield'));
+				advanced.find('input[name="morelinkage"]').val(target.attr('data-morelinkage'));
+				advanced.find('input[name="action"]').val(target.attr('data-action'));
+				advanced.find('input[name="total"]').val(target.attr('data-total'));
+				advanced.find('select option').each(function(){
+					if($(this).val() == target.parents('td').attr('colspan')){
+						$(this).attr("selected","selected");
+					}
+				})
+				if(target.attr("readonly")){					
+					advanced.find('input[name="gj_checkread"]').iCheck('check');					
+				}else{
+					advanced.find('input[name="gj_checkread"]').iCheck('uncheck');
+				}
+				if(target.attr("data-status")){
+					advanced.find('input[name="gj_checkstatus"]').iCheck('check');					
+				}else{
+					advanced.find('input[name="gj_checkstatus"]').iCheck('uncheck');
+				}
+				if(target.attr("data-must")){					
+					advanced.find('input[name="gj_checkmust"]').iCheck('check');					
+				}else{
+					advanced.find('input[name="gj_checkmust"]').iCheck('uncheck');
+				}
+				if(target.attr("data-total")){					
+					advanced.find('input[name="gj_checktotal"]').iCheck('check');	
+					$('.total').show();
+				}else{
+					advanced.find('input[name="gj_checktotal"]').iCheck('uncheck');
+					$('.total').hide();
+				}
+				if(target.attr("data-pname")){					
+					advanced.find('input[name="gj_checklinkage"]').iCheck('check');					
+				}else{
+					advanced.find('input[name="gj_checklinkage"]').iCheck('uncheck');
+					$('.tablename,.selectid,.jofield,.morelinkage,.action').hide();
+				}				
+			}
+		});  
+		//获取最原始id
+		var first_id = '';
+		var lists_id = '';		
+		$('.table td.droppable').each(function(){
+			if($(this).attr('data-id') == null){
+				return true;
+			}
+			first_id += $(this).attr('data-id')+',';
+		})
+		$('.lists').each(function(){
+			lists_id += $(this).attr('data-id')+',';
+		})
+		first_id = first_id + lists_id;
+		//保存
+        $('.save').on('click',function(){
+        	var jsons = [];
+        	var ids = [];        	
+        	var count = 1;
+        	var tabletr = $('.tables .tr');
+        	tabletr.each(function(indexs){ 
+        		$(this).find('td.droppable').each(function(index){
+        			var json = {};
+        			var thisinput = $(this).find('input');
+        			var thistype = thisinput.attr('type');
+        			var thistextarea = $(this).find('textarea');
+        			var thisselect = $(this).find('select');
+    				json['option'] = [];   
+    				var value;
+					var text;
+					var checked;
+        			ids.push($(this).attr('data-id')); 	        			        				
+	        		if(thisinput.length>0){	
+	        			if(thistype == 'radio'){
+	        				thisinput.each(function(){
+	        					 value = $(this).attr('value');
+	        					 text = $(this).parent('.radio-inline').text().replace(/\s/g,"");
+	        					 checked = $(this).prop('checked');
+	        					 json['option'].push({value,text,checked});
+	        				})	        				
+	        			}else if(thistype == 'checkbox'){
+	        				thisinput.each(function(){
+	        					 value = $(this).attr('value');
+	        					 text = $(this).parent('.checkbox-inline').text().replace(/\s/g,"");
+	        					 checked = $(this).prop('checked');
+	        					 json['option'].push({value,text,checked});
+	        				})
+	        			}else if(thistype == 'datetime'){
+	        				thisinput.each(function(){
+		        				value = $(this).attr('data-date');
+		        				json['option'].push({value});		        				
+	        				})
+	        			}else if(thistype == 'file'){
+	        				thisinput.each(function(){
+		        				value = $(this).attr('data-type');
+		        				json['option'].push({value});		        				
+	        				})
+	        			}else{		        			
+		        			json['pname'] = thisinput.attr('data-pname');
+		        			json['tbname'] = thisinput.attr('data-tbname');
+		        			json['jofield'] = thisinput.attr('data-jofield');		        			
+		        			json['action'] = thisinput.attr('data-action');
+		        			json['total'] = thisinput.attr('data-total');
+	        			}
+	        			json['placeholder']=thisinput.attr('placeholder')?thisinput.attr('placeholder'):'';
+	        			json['type']=thistype?thistype:'';
+		        		json['name']=thisinput.attr('name')?thisinput.attr('name'):'';
+		        		json['readonly']=thisinput.attr('readonly')?0:1;
+		        		json['status']=thisinput.attr('data-status')?0:1;
+		        		json['must']=thisinput.attr('data-must')?1:0;
+	        		}else if(thistextarea.length>0){
+	        			json['type']=thistextarea.attr('type')?thistextarea.attr('type'):'';
+		        		json['name']=thistextarea.attr('name')?thistextarea.attr('name'):'';
+		        		json['placeholder']=thistextarea.attr('placeholder')?thistextarea.attr('placeholder'):'';
+		        		json['readonly']=thistextarea.attr('readonly')?0:1;
+		        		json['status']=thistextarea.attr('data-status')?0:1;
+		        		json['must']=thistextarea.attr('data-must')?1:0;
+	        		}else{
+	        			$(this).find('select option').each(function(){
+        					 value = $(this).attr('value');
+        					 text = $(this).text().replace(/\s/g,"");
+        					 json['option'].push({value,text});        					 
+        				})
+	        			json['type']=thisselect.length > 0?'select':'';
+	        			json['name']=thisselect.attr('name')?$(this).find('select').attr('name'):'';
+	        			json['status']=thisselect.attr('data-status')?0:1;
+	        			json['must']=thisselect.attr('data-must')?1:0;	
+	        			json['morelinkage'] = thisselect.attr('data-morelinkage');
+	        			json['pname'] = thisselect.attr('data-pname');
+	        			json['tbname'] = thisselect.attr('data-tbname');
+	        			json['jofield'] = thisselect.attr('data-jofield');
+	        		}
+	        		if($(this).attr('data-id')!=''){
+	        			json['id']=$(this).attr('data-id');
+	        		}	      		
+	        		json['pid']={:input('id')};  
+	        		json['title']=$(this).prev().find('span').text().replace(/\s/g,""); 
+	        		json['row']=indexs+1;
+	        		json['col']=index+1;
+	        		json['colspan']=$(this).attr('colspan');
+	        		json['option'] = JSON.stringify(json['option']);
+					if($(this).parents('table').hasClass('lists')){
+        				json['lists'] = $(this).parents('.lists').attr('data-num');
+        				json['title'] = $(this).parent().prev().find('td:nth-child('+($(this).index()+1)+') span').text();
+        				json['dtitle'] = $(this).parents('.lists').prev().find('span').text();
+        				json['id']=$(this).parents('.lists').attr('data-id')
+        				ids.push($(this).parents('.lists').attr('data-id'));
+        			}
+	        		jsons.push(json)	        		
+        		})	        		
+        	})
+        	console.log(jsons)
+        	//和改变的id做对比去重
+        	for(var i in ids){
+        		if(!ids[i]){
+        			continue;
+        		}
+        		first_id = first_id.replace(ids[i] + ',', '');
+        	}
+        	//有逗号去掉
+        	if(/,$/.test(first_id)){
+          		first_id = first_id.slice(0,-1);
+        	}
+        	//存在差异删除
+        	if(first_id){
+        		$.ajax({
+        			type:"post",
+        			data:{ids:first_id},
+        			url:"{:url('tabledel')}",
+        			async:true,
+        			success:function(msg){
+        				//alert(msg.msg)
+        			}
+        		});
+        	}
+        	$.ajax({
+        		type:"post",
+        		data:{data:jsons},
+        		url:"{:url('customadd')}",
+        		async:true,
+        		success:function(msg){
+        			alert(msg.msg)
+          			setTimeout(function(){
+          				window.location.reload();
+          			},1000)       			
+        		}
+        	});
+        })
+    </script>
+    
+    
+    

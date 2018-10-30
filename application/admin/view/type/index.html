@@ -1,0 +1,275 @@
+<div class="ibox float-e-margins">
+    <div class="ibox-title">
+        <h5>行为管理</h5>
+        
+    </div>
+    <div class="ibox-content">
+        <div class="">
+            <a href="javascript:void(0);" onclick="add()"  class="btn btn-warning "><i class="iconfont icon-jia"></i>添加</a>
+            <a href="javascript:void(0);" onclick="deleteAll('{:url("delete")}')" class="btn btn-danger "><i class="fa fa-trash-o fa-fw"></i>批量删除</a>
+        </div>
+        <div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+
+            <table class="table table-striped table-bordered table-hover  dataTable" id="editable" aria-describedby="editable_info">
+                <thead>
+                    
+                    <tr role="row">
+                        <th style="width: 20px;"><input type="checkbox"  class="i-checks check-all" style="opacity: 0;"></th>
+                      
+                        <th  rowspan="1" colspan="1" style="width: 188px;">类型名称</th>
+                    
+                        <th  rowspan="1" colspan="1"  style="width: 188px;">标识</th>
+
+                        <th  rowspan="1" colspan="1"  style="width: 200px;">创建时间</th>
+                        <th  rowspan="1" colspan="1"  style="width: 188px;">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {empty name='data'}
+                    <tr class="table-empty"  rowspan="10">
+                        <td class="text-center empty-info" colspan="13">
+                                <i class="fa fa-database"></i> 暂无数据<br>
+                                        </td>
+                                    </tr>
+                    {/empty}
+                    {volist name="data" id = 'vo'}
+                    <tr class="gradeA even">
+                        <td>
+                            <input type="checkbox" class="i-checks ids" style="opacity: 0;" value="{$vo.id}"/>
+                        </td>
+                        <th style="text-align: left;"> {if condition="$vo['level'] neq 0"} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|{/if} 
+                            <?php echo str_repeat('--',$vo['level'] * 1) ?>  
+                            {$vo.name}
+                        </th>
+
+                        <td>{if condition="$vo['level'] eq 0"}<b>{$vo.indentify}</b> {/if}</td>
+                        <td>{$vo.create_time|date='Y-m-d H:i:s',###}</td>
+                        <td>
+                            <span onclick="edit(this,{$vo.id})" class="btn btns btn-common">编辑</span></a>
+                            <span onclick="deletes({$vo.id})" class="btn btns btn-del">删除</span>
+                        </td>
+                    </tr>
+                    {/volist}
+                </tbody>
+            </table>
+            <div class="clearfix">
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="addinp" style="display: none;height: 100%;overflow: auto;">
+    <div class="ibox-content">
+        <div class="form-group">
+        <label>类型名称</label>
+        <input type="text" id="name" name="name" placeholder="请输入类型名称" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>请选择父类型</label>
+            <select name="pid" id="pid" class="form-control" onchange="cateChange(this.value)">
+                <option value="0" selected="selected">-----父类型-----</option>
+
+                {volist name ="name" id="vo"}
+                <option value="{$vo.id}">{$vo.name}</option>
+                {/volist}
+
+            </select>
+        </div>   
+        <div class="form-group">
+            <label>类型标识</label>
+            <input type="text" name="indentify" id="indentify" placeholder="请输入类型标识" class="form-control">
+        </div>       
+    </div>
+</div>
+
+
+
+
+<div class="editinp" style="display: none;height: 100%;overflow: auto;">
+    <div class="ibox-content">
+        <div class="form-group">
+        <label>类型名称</label>
+        <input type="text" id="ename" name="ename" placeholder="请输入类型名称" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>请选择父类型</label>
+            <select name="epid" id="epid" class="form-control" onchange="cateChange(this.value)">
+                <option value="0">-----父类型-----</option>
+
+                {volist name ="name" id="vo"}
+                <option value="{$vo.id}">{$vo.name}</option>
+                {/volist}
+
+            </select>
+        </div>   
+        <div class="form-group">
+            <label>类型标识</label>
+            <input type="text" name="eindentify" id="eindentify" placeholder="请输入类型标识" class="form-control">
+        </div>       
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+            function add(){
+        layer.open({
+            type:1,
+            title:'新增类型',
+            maxmin: true,
+            scrollbar: false,
+            content:$('.addinp'),
+            btn:['确定','取消'],
+            yes:function (index,layero) {   
+                var name = $('#name').val();
+                var pid = $('#pid').val();
+                var indentify = $('#indentify').val();
+                var regx = /^[a-z_]\S/; 
+                if(!regx.test(indentify)){
+                    alert('标识格式错误');
+                    return false;
+                }
+                if(name ==''){
+                    alert('类型名称不能为空');
+                    return false;
+                }
+                $.ajax({
+                    type:"post",
+                    async:false,
+                    data:{name:name,pid:pid,indentify:indentify},
+                    url:"{:url('add')}",
+                    success:function(msg){  
+                        if(msg.code == 0){
+                            alert(msg.data.name + msg.msg);
+                            next = false;
+                        }else{
+                            alert(msg.data.name + msg.msg)
+                            layer.close(index); 
+                            $('#name').text('');
+                            setTimeout(function(){
+                            location.reload();
+                             },1000);   
+                        }
+                    
+                    }
+                                       
+                })      
+            }
+        })
+    }
+
+
+    function edit(t, id){
+        $.ajax({
+            type:"get",
+            async:false,
+            url:"{:url('edit')}?id="+id,
+            success:function(data){                     
+                $('#ename').val(data.name)
+                $('#epid option[value="'+data.pid+'"]').prop('selected', 'selected')
+                $('#eindentify').val(data.indentify)
+                if(data.code == 0){
+                    alert(data.msg)
+                }else{                          
+                    layer.open({
+                        type:1,
+                        title:'编辑类型',
+                        maxmin: true,
+                        scrollbar: false,
+                        content:$('.editinp'),
+                        btn:['确定','取消'],
+                        yes:function (index,layero) {   
+                            var name = $('#ename').val();
+                            var pid = $('#epid').val();
+                            var indentify = $('#eindentify').val();
+
+                            if(name == data.name){
+                                alert('无变化');
+                                return false;
+                            }
+                            if(name == ''){
+                                alert('名称不能为空');
+                                return false;
+                            }                           
+                            $.ajax({
+                                'type':"post",
+                                'data':{name:name,pid:pid,indentify:indentify},
+                                'url':"{:url('edit')}?id="+id,
+                                'async':true,
+                                'success':function(res){
+                                    alert(res.data.name + res.msg)
+                            layer.close(index);
+                            setTimeout(function(){
+                                location.reload();
+                            },1000);                       
+                        }   
+                            });                         
+                        },  
+                    })
+                }               
+            }
+        })          
+    }
+
+    function cateChange(val){
+        $.ajax({
+            type:"post",
+            url:"{:url('GetOne')}",
+            async:true,
+            data: {id: val},
+            success: function(res){
+                var data = res.data;
+                $('input[name="indentify"]').val(data.indentify);
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+<script type="text/javascript">
+console.log({:json_encode($data)});
+function deletes(id){
+            layer.confirm('确定要删除吗？',{
+                time:0,
+                btn:['确定','取消'],
+                yes:function(index){
+                    $.ajax({
+                        type:"POST",
+                        data: {ids: id},
+                        url:'{:url("delete")}',
+                        async:true,
+                        success:function(res){
+                            alert(res.msg);
+                            if (res.code == 1) {
+                                setTimeout(function(){
+                                    location.reload()
+                                }, 1500)
+                            } 
+                        }
+                    });
+                },  
+            })    
+    }
+    
+    </script>
+
+
+
+
+
+    

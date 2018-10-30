@@ -1,0 +1,135 @@
+<div class="ibox float-e-margins">
+
+	<div class="ibox-content">
+		<div class="">
+			<!-- <a href="{:url('DowmLoadExcels')}"  class="btn btn-info"><i class="iconfont icon-daochu"></i>导出</a> -->
+			<a href="javascript:void(0);" onclick="doPrint()" class="btn btn-info"><i class="iconfont icon-daochu"></i>打印</a>
+			<div class="seach-box">
+			<form action="{:url('Certificates/moneylist')}" method="get">
+              <div class="form-group">
+                <div class="seach-list">
+                	<label class="">姓名:</label>
+                        <input type="text" name="username" value="{$keywords.username|default=''}" class="form-control">
+                    </div>
+                   	<div  class="seach-list">
+                   		<label class="">证件类型:</label>
+                   	</div>
+                    <div class="seach-list">
+                        <select class="form-control" name="certificate_type">
+                            <option value=""></option>
+                            {volist name="type" id="vo"}
+                            	<option value="{$vo}">{$vo}</option>
+							{/volist}
+                        </select>
+                    </div>
+                    <div class="seach-list">
+                    	<label class="">开始日期:</label>
+                        <input autocomplete="off" type="text" id="start_time" name="start_time" value="" placeholder="开始时间" class="form-control">
+                    </div>
+                    <div class="seach-list">
+                    	<label class="">结束日期:</label>
+                        <input autocomplete="off" type="text" id="end_time" name="end_time" value="" placeholder="开始时间" class="form-control">
+                    </div>
+                	<button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button> </span>
+                    
+                </div>
+			</form>
+            </div>
+		</div>
+		<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+			<!--startprint-->
+			<table class="table table-striped table-bordered table-hover  dataTable" id="editable" aria-describedby="editable_info">
+				<thead>
+					<tr role="row">
+						<th>费用编号</th>
+						<th>姓名</th>
+						<th>证件编号</th>
+						<th>证件类型</th>
+						<th onclick="sort({sort: '{$keywords['sort']}'})" class="sorting_{$keywords['sort']}">开始时间</th>
+						<th onclick="sort({sort: '{$keywords['sort']}'})" class="sorting_{$keywords['sort']}">结束时间</th>
+						<th>证件费用</th>
+						<!--startRemove-->
+						<th>操作</th>
+						<!--endRemove-->
+					</tr>
+				</thead>
+				<tbody>
+					{empty name='data'}
+						<tr class="table-empty"  rowspan="10">
+							<td class="text-center empty-info" colspan="13">
+                                <i class="fa fa-database"></i> 暂无数据<br>
+                            </td>
+                        </tr>
+					{/empty}
+					{volist name="data" id = 'd'}
+						<tr class="gradeA even">
+							<td><a href="{:url('moneyck',['id'=>$d.id])}">{$d['code']}</a></td>
+							<td>{$d['name']}</td>
+							<td>{$d['certificate_number']}</td>
+							<td>{$d['certificate_type']}</td>
+							<td>{$d['start_time']}</td>
+							<td>{$d['end_time']}</td>
+							<td>￥{$d['money']}</td>
+							<!--startRemove-->
+							<td>
+								<span onclick="edit({$d['id']})" class="btn btns btn-common">编辑</span>
+								<span onclick="deletes({$d['id']})" class="btn btns btn-del">删除</span>
+							</td>
+							<!--endRemove-->
+						</tr>
+					{/volist}
+				</tbody>
+			</table>
+			<!--endprint-->
+			<div class="clearfix">
+				{$data -> render()}
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	laydate.render({
+            elem: '#start_time', 
+            event: 'focus',
+        	value: '',
+	       });
+	laydate.render({
+            elem: '#end_time', 
+            event: 'focus',
+        	value: '',
+	       });         
+
+	function sort(option){
+		option.sort = option.sort == 'asc' ? 'desc' : 'asc';
+		location.href = `{:url('moneylist')}?date=date&sort=${option.sort}&page={$page}`;
+	}
+
+	function edit(id){
+		id?(location.href = '{:url('moneyadd')}?id=' + id):(alert('参数错误'));
+	}
+
+	function deletes(id){
+		layer.confirm('确定要删除',{
+			time:0,
+			btn:['确定','取消'],
+			yes:function(index){
+				$.ajax({
+					type:"POST",
+					data: {id: id},
+					url:'{:url("moneydeletes")}',
+					async:true,
+					success:function(res){
+						alert(res.msg);
+						if (res.code == 1) {
+							setTimeout(function(){
+								location.reload()
+							}, 1500)
+						} 
+					}
+				});
+			},	
+		})	  
+	}
+</script>

@@ -1,0 +1,253 @@
+<link href="__ADMIN_STATIC__/css/plugins/jsTree/style.min.css" rel="stylesheet">
+<style type="text/css">
+	/*#person_choose_show{
+		display: table;
+		width: 100%;
+	}
+	#person_choose_show > div:first-child{
+		margin: 20px;
+	}
+	#person_choose_show > div{
+		display: table-cell;
+		width: 50%;
+	}*/
+.block{
+    margin-bottom: 20px;
+}
+.block-header {
+    padding: 4px 20px;
+    -webkit-transition: opacity 0.2s ease-out;
+    transition: opacity 0.2s ease-out;
+    background-color: #f9f9f9;
+    /*margin: 20px 0;*/
+}
+h2{
+	font-size: 18px;
+}
+#person_choose_show{
+	padding: 20px 0;
+}
+.block-content {
+    margin: 0 auto;
+    padding: 20px 20px 1px;
+    max-width: 100%;
+    overflow-x: visible;
+    -webkit-transition: opacity 0.2s ease-out;
+    transition: opacity 0.2s ease-out;
+}
+.block-content p {
+    margin-bottom: 20px;
+}
+#person_choose_show .jstree-default .jstree-clicked{
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none;
+}
+#person_choose_show .jstree-default .jstree-icon:empty {
+    font-size: 19px !important;
+}
+[disabled="true"]{
+	display: none;
+}
+</style>
+<div id="person_choose_show">
+
+</div>
+<script src="__ADMIN_STATIC__/js/plugins/jsTree/jstree.min.js"></script>
+<script type="text/javascript">
+
+    function openPerson(seeting = {}){
+    	seeting = Object.assign({position: false,onlyOrganization:false,radio:false, other: false},seeting);
+    	this.click = true;
+    	this.personIds = [],	//选中的人的id
+    	this.organIds = [],	//选中的人的id
+    	this.option = seeting, // 配置列表
+    	this.initPerson = [],
+    	this.initOrgan = [],
+    	this.text = [],
+    	this.data = [], //数据
+    	this.init();	//初始化参数
+		this.person_choose_show = $('#person_choose_show').empty();
+		this.block_content = null;
+		this.getData();	//获取数据
+    }
+    openPerson.prototype = {
+    	init: function(){
+    		
+	      	var options = {
+//	      		onlyOrganization: this.option.onlyOrganization ? this.option.onlyOrganization : false,
+	//    		position: this.option.position ? this.option.position : false,
+	//    		title: this.option.onlyOrganization ? (this.option.position ? '请选择职位' : '请选择部门') : '请选择人员',
+	      		id: this.option.id ? this.option.id : 'person_choose_' + new Date().getTime(),
+	//    		radio: this.option.radio ? this.option.radio : false,
+	      		checked: this.option.checked ? (typeof this.option.checked==='string'?this.option.checked.split(','):this.option.checked) : [],
+	      	}
+	      	this.option = Object.assign(this.option, options);
+	      	this.onlyOrganization ? (this.organIds = this.option.checked):(this.personIds = this.option.checked);
+	      	
+      
+    	},
+    	getData: function(){
+    		
+       		var _t = this;
+
+	  		$.ajax({
+				type:"post",
+				data: {onlyOrganization: _t.option.onlyOrganization, checked: _t.option.checked, position: _t.option.position},
+				url:"{:url('admin/ChoosePerson/index')}",
+				async: true,
+				success: function({person, initPerson, initOrgan}){
+					_t.data = person;
+//	
+			
+					
+					_t.initPerson = initPerson;
+					_t.initOrgan = initOrgan;
+					_t.render();
+				}
+			});
+			if(_t.click){
+       			_t.open();
+       		}
+			
+       	
+    	},
+    	other: function(bool){
+    		
+       		if (bool === this.option.position) {
+       			return false;
+       		}
+       		this.option.position = bool;
+       		this.click = false;
+   			this.reset();
+       		this.getData();
+       	
+    	},
+    	reset: function(){
+    		
+			this.personIds = [],	//选中的人的id
+    		this.organIds = [],	//选中的人的id
+    		this.text = [],
+       		this.person_choose_show.empty();
+       		this.init();
+       	
+    	},
+    	render: function(){
+    		
+       		var _t = this;
+       		var otherstr = '';
+       		if(_t.option.other){
+       			otherstr = `<ul class="nav nav-tabs">
+                        <li onclick="person.other(false)" class="${_t.option.position ? '': 'active'}">
+                        <a data-toggle="tab" href="#tab-1" aria-expanded="false">部门</a>
+                        </li>
+                        <li onclick="person.other(true)" class="${_t.option.position ? 'active': ''}"><a data-toggle="tab" href="#tab-2" aria-expanded="true">职位</a>
+                        </li>
+                    </ul>`;
+       		}
+       		var str = `${otherstr}<div id="${this.option.id}" class="col-sm-6"></div>
+       		<div class="col-sm-6">
+					<div class="block">
+			        	  <div class="block-header">
+				        		<h2 class="block-title">${_t.option.onlyOrganization ? (_t.option.position?'已选职位':'已选部门'): '已选人员'}</h2>
+				        	</div>
+				          <div class="block-content person_content">
+				          </div>
+			          	</div>
+					</div>`;
+       		_t.person_choose_show.append(str);
+       		_t.block_content = $(".person_content");
+       		var treeId = $('#' + this.option.id);
+		 		treeId.jstree({
+		 			plugins: [ "checkbox"],
+			        'core': {
+			        	'multiple': !this.option.radio,
+			            'data': _t.data,
+		                "check_callback": true,
+			        },
+		         "checkbox": {
+		                    "three_state": !this.option.radio,//父子级别级联选择
+		                },
+		   			}).on('changed.jstree', function(event, {node}) {
+		                var ref = treeId.jstree(true);
+		                nodes = ref.get_checked();  //使用get_checked方法
+		                _t.personIds = [];
+		                _t.organIds = [];
+		                _t.text = [];
+		                _t.block_content.empty();
+		                $.each(nodes, function(i, nd) {
+		                	var args = nd.split('_');
+	                		if (args[0] == 'p' && !_t.option.onlyOrganization) {
+	                			_t.personIds.push(nd);
+		                	} else if(args[0] == 'o' && _t.option.onlyOrganization) {
+		                		_t.organIds.push(nd);
+		                	}
+		                });
+		                _t.setPersonshow();
+		            });
+       	
+    	},
+    	open: function(){
+    		
+       		var _t = this;
+   				layer.open({
+				  type: 1, 
+				  title: '选项',
+				   area: ['90%', '550px'],
+				   offset:[ Number((window.innerHeight - 550)/2) + 'px', '5%'],
+                    maxmin: true, 
+                    closeBtn: 1,
+				   btn: ['确定', '取消'],
+				  content: _t.person_choose_show,
+				  yes: function(index){
+				  	layer.close(index);
+				  	var ids = _t.option.onlyOrganization ? _t.organIds : _t.personIds;
+				  	var newids = [];
+				  	for (var i in ids) {
+				  		var args = ids[i].split('_');
+				  		newids.push(args[1]);
+				  	}
+			  		if(_t.option.name){
+			  			var t = _t.text.join(',');
+			  			_t.option.name.value = t;
+			  		}
+			  		if( _t.option.hiddenname){
+			  			var t = newids.join(',');
+			  			$('input[type="hidden"][name="'+_t.option.hiddenname+'"]').val(t);
+			  		}
+				  	_t.option.callback && _t.option.callback({ids: newids, text: _t.text});
+				  },
+				  btn2: function(){
+				  	_t.option.calcel && _t.option.calcel();
+				  }
+				});
+       	
+    	},
+    	setPersonshow: function(){
+    		
+//     		Object.defineProperty(this, 'personIds', {
+//     			set: function(value){
+//     				console.log(1)
+//     			},
+//     		})
+			var nowargs = [],
+			args = [],
+			contrast = [],
+//			nowcontrast = [],
+			str = '';
+			this.option.onlyOrganization ? (nowargs = this.initOrgan, contrast = this.organIds) : (nowargs = this.initPerson, contrast = this.personIds);
+//			contrast.forEach((v) => {
+//				nowcontrast.push(v.split('_')[1])
+//			})
+			for (var i in nowargs) {
+				if(contrast.includes(nowargs[i].id.toString())){
+					str += '<p class="p_name">' + nowargs[i].text + '</p>';
+					this.text.push(nowargs[i].text);
+			
+				}
+			}
+			this.block_content.append(str)
+       	
+    	}
+    }
+</script>

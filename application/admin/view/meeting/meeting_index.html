@@ -1,0 +1,73 @@
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+    	<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+        	<a href="{:url('meeting_create')}" class="btn btn-warning "><i class="iconfont icon-jia"></i>添加</a>
+        	<div class="seach-box">
+			<form action="{:url('meeting_index')}" method="get">
+	            <div class="form-group">
+	                <div class="seach-list">
+	                	<label class="">会议主题:</label>
+	                    <input type="text" name="meeting_title" value="{$keywords.meeting_title|default=''}" placeholder="会议主题" class="form-control">
+	                </div>		
+	                <div  class="seach-list">
+                   		<label class="">会议室:</label>
+                   	</div>	
+	                <div class="seach-list">
+                        <select class="form-control" name="meeting_room">
+                            <option value=""></option>
+                            {volist name="meeting_room" id="vo"}
+                            	<option value="{$key}"{if condition="$keywords['meeting_room']== $key"}selected="selected"{/if}>{$vo}</option>
+							{/volist}
+                        </select>
+                    </div>
+	                <div class="seach-list">			                    	
+	                	<button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button>
+	                </div>			                    
+	        	</div>
+			</form>
+            </div>
+            <table class="table table-bordered table-striped dataTables-example">
+                <thead>
+                    <tr>
+                        <th>会议主题</th>
+                        <th>会议日期</th>
+                        <th>开始时间</th>
+                        <th>结束时间</th>
+                        <th>会议室</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	{empty name='data'}
+					<tr class="table-empty" >
+						<td class="text-center empty-info" colspan="100%">
+                			<i class="fa fa-database"></i> 暂无数据<br>
+                        </td>
+                    </tr>
+					{/empty}
+                	{volist name="data" id="vo"}
+                    <tr>
+                        <td>{$vo.meeting_title}</td>
+                        <td>{$vo.meeting_time}</td>
+                        <td>{$vo.ctime}</td>
+                        <td>{$vo.etime}</td>
+                        <td>{$vo.meeting_room}</td>
+                        <td>
+							<span class="btn btns btn-success" onclick="edit({$vo.id})">编辑</span>
+							<span class="btn btn-warning" onclick="view({$vo.id})">查看</span>
+                        </td>
+                    </tr> 
+                	{/volist}
+                </tbody>
+            </table>
+       </div>
+    </div>
+</div>
+<script>
+	function edit(id){
+		id?(location.href = '{:url('meeting_create')}?id=' + id):(alert('参数错误'));
+	}
+	function view(id){
+		id?(location.href = '{:url('meeting_read')}?id=' + id):(alert('参数错误'));
+	}
+</script>

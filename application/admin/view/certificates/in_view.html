@@ -1,0 +1,112 @@
+<div class="ibox float-e-margins">
+
+	<div class="ibox-content">
+		<div class="">
+			<a href="javascript:void(0);" onclick="doPrint()" class="btn btn-info ">打印</a>
+			<div class="seach-box">
+			<form action="{:url('Certificates/inlist')}" method="get">
+              <div class="form-group">
+                <div class="seach-list">
+                	<label class="">归还人:</label>
+                        <input type="text" name="in_username" value="{$keywords.in_username|default=''}" class="form-control">
+                    </div>
+                    <div class="seach-list">
+                    	<label class="">部门:</label>
+                        <input type="text" name="organization" value="{$keywords.organization|default=''}" class="form-control">
+                    </div>
+                    
+                   	<div  class="seach-list">
+                   		<label class="">审批状态:</label>
+                   	</div>
+                    <div class="seach-list">
+                        <select class="form-control" name="status">
+                            <option value=""></option>
+                        	<option value="0">完成</option>
+                        	<option value="1">进行中</option>
+                        	<option value="2">作废</option>
+                        </select>
+                    </div>
+                    <div class="seach-list">
+                    	<label class="">日期:</label>
+                        <input autocomplete="off" type="text" id="in_time" name="in_time" value="" placeholder="结束日期" class="form-control">
+                    </div>
+                	<button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button> </span>
+                    
+                </div>
+			</form>
+            </div>
+		</div>
+		<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+			<!--startprint-->
+			<table class="table table-striped table-bordered table-hover  dataTable" id="editable" aria-describedby="editable_info">
+				<thead>
+					<tr role="row">
+						<th>归还编号</th>
+						<th>归还人</th>
+						<th>部门</th>
+						<th onclick="sort({sort: '{$keywords['sort']}'})" class="sorting_{$keywords['sort']}">日期</th>
+						<th>审批状态</th>
+					</tr>
+				</thead>
+				<tbody>
+					{empty name='data'}
+						<tr class="table-empty"  rowspan="10">
+							<td class="text-center empty-info" colspan="13">
+                                <i class="fa fa-database"></i> 暂无数据<br>
+                            </td>
+                        </tr>
+					{/empty}
+					{volist name="data" id = 'd'}
+						<tr class="gradeA even">
+							<td><a href="{:url('inck',['id'=>$d.id])}">{$d['in_code']}</a></td>
+							<td>{$d['in_username']}</td>
+							<td>{$d['organization']}</td>
+							<td>{$d['in_time']}</td>
+							<td><span class="btn btn-success btn-xs">{$d['status']}</span></td>
+						</tr>
+					{/volist}
+				</tbody>
+			</table>
+			<!--endprint-->
+			<div class="clearfix">
+				{$data -> render()}
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	laydate.render({
+            elem: '#in_time', 
+            event: 'focus',
+        	value: '',
+	       });     
+	function sort(option){
+		option.sort = option.sort == 'asc' ? 'desc' : 'asc';
+		location.href = `{:url('inlist')}?date=date&sort=${option.sort}&page={$page}`;
+	}
+	function deletes(id){
+		layer.confirm('确定要删除',{
+			time:0,
+			btn:['确定','取消'],
+			yes:function(index){
+				$.ajax({
+					type:"POST",
+					data: {id: id},
+					url:'{:url("indeletes")}',
+					async:true,
+					success:function(res){
+						alert(res.msg);
+						if (res.code == 1) {
+							setTimeout(function(){
+								location.reload()
+							}, 1500)
+						} 
+					}
+				});
+			},	
+		})	  
+	}
+
+</script>

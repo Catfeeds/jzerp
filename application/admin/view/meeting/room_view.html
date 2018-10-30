@@ -1,0 +1,182 @@
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+    	<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+        	<a href="javascript:void(0);" onclick="add()" class="btn btn-warning "><i class="iconfont icon-jia"></i>添加</a>
+        	<div class="seach-box">
+			<form action="{:url('room_list')}" method="get">
+	            <div class="form-group">
+	                <div class="seach-list">
+	                	<label class="">会议室:</label>
+	                    <input type="text" name="room_title" value="{$keywords.room_title}" placeholder="会议室" class="form-control">
+	                </div>			                     
+	                <div class="seach-list">			                    	
+	                	<button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button>
+	                </div>			                    
+	        	</div>
+			</form>
+            </div>
+            <table class="table table-bordered table-striped dataTables-example">
+                <thead>
+                    <tr>
+                        <th>会议室</th>
+                        <th>容纳人数</th>
+                        <th>资源配置</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	{empty name='data'}
+					<tr class="table-empty" >
+						<td class="text-center empty-info" colspan="100%">
+                			<i class="fa fa-database"></i> 暂无数据<br>
+                        </td>
+                    </tr>
+					{/empty}
+                	{volist name="data" id="vo"}
+                    <tr>
+                        <td>{$vo.room_title}</td>
+                        <td>{$vo.room_number}</td>
+                        <td>{$vo.room_configuration}</td>
+                        <td>
+							<span class="btn btns btn-success" onclick="edit(this,{$vo.id})">编辑</span>
+							<span class="btn btns btn-danger" onclick="deletes({$vo.id})">删除</span>
+                        </td>
+                    </tr> 
+                	{/volist}
+                </tbody>
+            </table>
+        	{$data->render()}
+       </div>
+    </div>
+</div>
+<div class="addinp" style="display: none;height: 100%;overflow: auto;">
+	<div class="ibox-content">
+   		
+   		<div class="form-group">
+            <label>会议室名称</label>
+            <input type="text" id="room_title" placeholder="请输入会议室名称" class="form-control">
+    	</div>
+   		<div class="form-group">
+            <label>容纳人数</label>
+            <input type="number" id="room_number" placeholder="请输入容纳人数" class="form-control">
+    	</div>
+    	<div class="form-group">
+            <label>资源配置</label>
+            <textarea id="room_configuration" value="" name="room_configuration" class="form-control"></textarea>
+		</div>    	
+	</div>
+</div>
+<div class="editinp" style="display: none;height: 100%;overflow: auto;">
+	<div class="ibox-content">
+		<div class="form-group">
+            <label>会议室名称</label>
+            <input type="text"  name="room_title" id="room_title" placeholder="请输入会议室名称" class="form-control">
+    	</div>
+   		<div class="form-group">
+            <label>容纳人数</label>
+            <input type="number" name="room_number"  id="room_number" placeholder="请输入容纳人数" class="form-control">
+    	</div>
+    	<div class="form-group">
+            <label>资源配置</label>
+            <textarea  id="room_configuration" value="" name="room_configuration" class="form-control"></textarea>
+		</div>     	
+	</div>
+</div>
+<script>
+	function add(){
+		layer.open({
+			type:1,
+			title:'新增会议室',
+			maxmin: true,
+			scrollbar: false,
+			content:$('.addinp'),
+			btn:['确定','取消'],
+			area: ['420px'],
+			yes:function (index,layero) {	
+				var room_title = $('#room_title').val();
+				var room_number = $('#room_number').val();
+				var room_configuration = $('#room_configuration').val();
+				$.ajax({
+					type:"post",
+					async:false,
+					data:{room_title:room_title,room_number:room_number,room_configuration:room_configuration},
+					url:"{:url('room_create')}",
+					success:function(msg){	
+						if(msg.code == 1){
+							alert(msg.msg)
+							setTimeout(function(){
+			             		location.reload();
+			                },1000);	
+							
+						}else{
+							alert(msg.msg);
+						}
+					}
+						               
+            	})		
+			}
+		})
+	}	
+	function edit(t, id){
+		$.ajax({
+			type:"get",
+			async:false,
+			url:"{:url('room_read')}?id="+id,
+			success:function(data){	
+				$('.editinp input[name="room_title"]').val(data.room_title)
+				$('.editinp input[name="room_number"]').val(data.room_number)
+				$('.editinp textarea[name="room_configuration"]').val(data.room_configuration)
+					layer.open({
+						type:1,
+						title:'编辑会议室',
+						maxmin: true,
+						scrollbar: false,
+						content:$('.editinp'),
+						btn:['确定','取消'],
+						area: ['420px'],
+						yes:function (index,layero) {	
+							var room_title = $('.editinp #room_title').val();
+							var room_number = $('.editinp #room_number').val();
+							var room_configuration = $('.editinp #room_configuration').val();
+							console.log(room_configuration)
+							$.ajax({
+								'type':"post",
+								'data':{room_title:room_title,room_number:room_number,room_configuration:room_configuration},
+								'url':"{:url('room_read')}?id="+id,
+								'async':true,
+								'success':function(res){
+									alert(res.msg)
+									if(res.code==1){
+										layer.close(index);
+										setTimeout(function(){
+						             		location.reload();
+						                },1000);	
+									}
+			            		}	
+							});							
+						},	
+					})
+								
+			}
+		})			
+	}
+	function deletes(id){
+		layer.confirm('确定要删除',{
+			time:0,
+			btn:['确定','取消'],
+			yes:function(index){
+				$.ajax({
+					type:"get",
+					url:"{:url('room_delete')}?id="+id,
+					async:true,
+					success:function(msg){
+						alert(msg.msg)
+						setTimeout(function(){
+		             		location.reload();
+		                },1000);	
+					}
+				});
+			},	
+		})
+	}
+</script>

@@ -1,0 +1,154 @@
+<head>
+    <meta charset="utf-8" />
+    <title>{$web_site_title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--<link rel="shortcut icon" href="__ADMIN_STATIC__/favicon.ico">--> 
+    <link href="__ADMIN_STATIC__/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__ADMIN_STATIC__/css/font-awesome.min.css" rel="stylesheet">
+    <link href="__ADMIN_STATIC__/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="__ADMIN_STATIC__/css/animate.css" rel="stylesheet">
+    <link href="__ADMIN_STATIC__/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{:config('icon_href')}"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
+    <script src="__ADMIN_STATIC__/js/jquery.min.js"></script>
+    <script src="__ADMIN_STATIC__/js/bootstrap.min.js"></script>
+    <script src="__ADMIN_STATIC__/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="__ADMIN_STATIC__/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="__ADMIN_STATIC__/js/plugins/layer/layer.min.js"></script>
+    
+	<script src="__ADMIN_STATIC__/js/plugins/iCheck/icheck.min.js"></script>
+
+
+    
+
+    
+    <!-- layerDate plugin javascript -->
+    <script src="__ADMIN_STATIC__/js/plugins/layerDate/laydate.js"></script>
+    <!-- 自定义js -->
+    <script src="__ADMIN_STATIC__/js/hAdmin.js"></script>    
+    <!--<script type="text/javascript" src="__ADMIN_STATIC__/js/index.js"></script>-->
+    <script src="__ADMIN_STATIC__/js/util.js" defer="defer"></script>
+    <style type="text/css">
+    	.webuploader-pick{
+		    position: relative;
+		    display: inline-block;
+		    cursor: pointer;
+		    background: #00b7ee;
+		    padding: 10px 15px;
+		    color: #fff;
+		    text-align: center;
+		    border-radius: 3px;
+		    overflow: hidden;
+		}
+		.none{
+			display: none !important;
+		}
+		.empty-info{
+			padding:100px 0 !important;
+			font-size: 20px;
+			background-color: #fff;
+		}
+		.btn-common{
+			background-color: #68b828;
+		}
+		.btns{
+			border-radius: 0;
+			line-height: 18px !important;
+			color: #fff;
+		}
+		.btn-del{
+			background-color: #f05050;
+		}
+		.btns:hover{
+			color: #fff;
+		}
+		.seach-box{
+			margin-bottom: 20px;
+			margin-top: 10px;
+		}
+		.seach-list,.seach-list label,.seach-list input{
+			white-space: nowrap;
+			width: auto !important;
+			display: inline-block;
+		}
+		.seach-btn{
+			line-height: 20px !important;
+			font-size: 14px;
+		}
+		.seach-btns{
+			border: none;background: none;outline: none;
+		}
+		.seach-btns i{
+			font-size: 22px !important;vertical-align: middle;
+		}
+		.seach-list{
+			margin-bottom: 6px;
+			margin-right: 12px;
+		}
+		.sorting_asc, .sorting_desc{
+			position: relative;
+			padding-right: 30px;
+		}
+		.sorting_asc:after{
+			content: '';
+		  	width:0;
+		    height:0;
+		    border-width:0 6px 6px;
+		    border-style:solid;
+		    border-color:transparent transparent #333;/*透明 透明  灰*/
+		    position:absolute;
+		    right: 5px;
+		    top: calc(50% - 6px);
+		}
+		.sorting_desc:after{
+			
+			content: '';
+		  	width:0;
+		    height:0;
+		    border-width:6px 6px 0 ;
+		    border-style:solid;
+		    border-color:#333 transparent transparent ;/*透明 透明  灰*/
+		    position:absolute;
+		    right: 5px;
+		    top: 50%;
+		
+		}
+		.dataTables_wrapper{
+			overflow: auto;
+		}
+	.dataTables_wrapper::-webkit-scrollbar-thumb{
+		display:block; 
+		width:6px;
+		margin:0 auto; 
+		border-radius: 10px;
+		background:#C1C1C1;
+	 }
+ 	.dataTables_wrapper::-webkit-scrollbar{
+		display:block; 
+		width:6px;
+		margin:0 auto; 
+		border-radius: 10px;
+		background-color: transparent;
+	 }
+	 .dataTables_wrapper::-webkit-scrollbar-track{
+		border-radius: 10px;
+		background-color: #F1F1F1;
+	 }
+	 .limit_size{
+	 	min-width: 50px !important;
+	 	max-width: 70px;
+	 }
+	 /*.dataTables_wrapper table{
+	 	position: relative;
+	 }
+	  .dataTables_wrapper th:last-child,td:last-child{
+	  	position: sticky;
+	  	right: 0;
+	  }*/
+	 .icon-delete{
+		font-size: 15px !important;
+	}
+    </style></head>
+

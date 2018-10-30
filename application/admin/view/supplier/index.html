@@ -1,0 +1,109 @@
+<div class="ibox float-e-margins">
+	<div class="ibox-title">
+		<h5>供应商管理 </h5>
+		
+	</div>
+	<div class="ibox-content">
+		<div class="">
+			<a href="{:url('supplier/add')}"  class="btn btn-warning "><i class="iconfont icon-jia"></i>添加</a>
+			<a href="javascript:void(0);" onclick="deleteAll('{:url("delete")}')" class="btn btn-danger "><i class="fa fa-trash-o fa-fw"></i>批量删除</a>
+			<div class="seach-box">
+			<form method="get" action="{:url('index')}">
+              <div class="form-group">
+                <div class="seach-list">                	
+                <label class="">供应商名称</label>
+                        <input type="text" name="supplier_name" value="{$keywords.supplier_name}" placeholder="请输入供应商名称" class="form-control">
+                    </div>                  
+                      <div class="seach-list">
+                    	<label class="">类型:</label>
+                        <input type="text" name="supplier_type" value="{$keywords.supplier_type}" placeholder="请输入类型" class="form-control">
+                    </div>
+                        	<button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button> </span>              		
+                    </div>
+                    
+                </div>
+			</form>
+            </div>
+        </div>
+		<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+
+			<table class="table table-striped table-bordered table-hover  dataTable" id="editable" aria-describedby="editable_info">
+				<thead>
+					
+					<tr role="row">
+                        <th style="width: 20px;"><input type="checkbox"  class="i-checks check-all" style="opacity: 0;"></th>
+						<th  rowspan="1" colspan="1" style="width: 200px;">供应商</th>
+						<th  rowspan="1" colspan="1"  style="width: 188px;">类型</th>
+						<th  rowspan="1" colspan="1"  style="width: 188px;">等级</th>
+						<th  rowspan="1" colspan="1"  style="width: 200px;">负责人</th>
+						<th  onclick="sort({name: 'create_time', sort: '{$keywords['sort']}'})" class="sorting_{$keywords['sort']}" rowspan="1" colspan="1"  style="width: 200px;">创建时间</th>
+						<th  rowspan="1" colspan="1"  style="width: 188px;">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{empty name='data'}
+					<tr class="table-empty"  rowspan="10">
+						<td class="text-center empty-info" colspan="13">
+                                <i class="fa fa-database"></i> 暂无数据<br>
+                                        </td>
+                                    </tr>
+					{/empty}
+					{volist name="data" id = 'vo'}
+					<tr class="gradeA even">
+						<td>
+                            <input type="checkbox" class="i-checks ids" style="opacity: 0;" value="{$vo.id}"/>
+						</td>
+						<td>{$vo.supplier_name}</td>
+						<td>{$vo.supplier_type}</td>
+						<td>{$vo.supplier_level}</td>
+						<td>{$vo.supplier_leader}</td>
+						<td>{$vo.create_time|date='Y-m-d H:i:s',###}</td>
+						<td>
+							<span onclick="deletes({$vo['id']})" class="btn btns btn-del">删除</span>
+						</td>
+					</tr>
+					{/volist}
+				</tbody>
+			</table>
+			{$data->render()}
+		</div>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+
+function sort(option){
+		option.sort = option.sort == 'asc' ? 'desc' : 'asc';
+		location.href = `{:url('index')}?supplier_name={$keywords.supplier_name}&supplier_type={$keywords.supplier_type}&sort=${option.sort}&page={$page}`;
+	}
+function deletes(id){
+			layer.confirm('确定要删除吗？',{
+				time:0,
+				btn:['确定','取消'],
+				yes:function(index){
+					$.ajax({
+						type:"POST",
+						data: {ids: id},
+						url:'{:url("delete")}',
+						async:true,
+						success:function(res){
+							alert(res.msg);
+							if (res.code == 1) {
+								setTimeout(function(){
+									location.reload()
+								}, 1500)
+							} 
+						}
+					});
+				},	
+			})	  
+	}
+	console.log()
+	</script>
+
+
+
+
+
+	

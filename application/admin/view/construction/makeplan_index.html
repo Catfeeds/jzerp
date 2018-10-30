@@ -1,0 +1,148 @@
+<div class="ibox float-e-margins">
+	<div class="ibox-title">
+		<h5>施工</h5>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li>
+                    <strong>技术交底</strong>
+                </li>
+            </ol>
+		
+	</div>
+	<div class="ibox-content">
+		<div class="">
+			<a href="{:url('admin/construction/makeplan_add')}" class="btn btn-warning "><i class="iconfont icon-jia"></i>添加</a>
+			<a href="javascript:void(0);" onclick="deleteAll('{:url("makeplan_delete")}')" class="btn btn-danger "><i class="fa fa-trash-o fa-fw"></i>批量删除</a>
+
+			<div class="seach-box">
+			<form method="get" action="{:url('makeplan_index')}">
+              <div class="form-group">
+              	<div class="seach-list">
+                	
+                <label class="">交底名称</label>
+                        <input type="text" name="name" value="{$keywords.name|default=''}" placeholder="请输入交底名称" class="form-control">
+                    </div>
+
+                <div class="seach-list">
+                	
+                <label class="">项目名称</label>
+                        <input type="text" name="title" value="{$keywords.title|default=''}" placeholder="请输入项目名称" class="form-control">
+                    </div>
+                   
+                      <div class="seach-list">
+                    	<label class="">填报人员</label>
+                        <input type="text" name="maker" value="{$keywords.maker|default=''}" placeholder="请输入质检员名称" class="form-control">
+                    </div>
+              
+                        	<button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button> </span>
+               		
+                    </div>
+                    
+                </div>
+			</form>
+            </div>
+        </div>
+		<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+
+			<table class="table table-striped table-bordered table-hover  dataTable" id="editable" aria-describedby="editable_info">
+				<thead>
+					
+					<tr role="row">
+                        <th style="width: 20px;"><input type="checkbox"  class="i-checks check-all" style="opacity: 0;"></th>
+						<th  rowspan="1" colspan="1" style="width: 120px;">交底编号</th>
+						<th  rowspan="1" colspan="1"  style="width: 150px;">交底名称</th>
+						<th  rowspan="1" colspan="1"  style="width: 120px;">交底人</th>
+						<th  rowspan="1" colspan="1"  style="width: 120px;">被交底人</th>
+						<th  rowspan="1" colspan="1"  style="width: 188px;">项目名称</th>
+						<th  rowspan="1" colspan="1"  style="width: 188px;">施工单位</th>
+						<th  onclick="sorts({name: 'create_time', sort: '{$keywords['create_time']}'})" class="sorting_{$keywords['create_time']}"  style="width: 200px;">检查日期</th>
+						<th  rowspan="1" colspan="1"  style="width: 200px;">交底内容</th>
+		
+						<th  rowspan="1" colspan="1"  style="width: 200px;">审批状态</th>
+						
+						<th  rowspan="1" colspan="1"  style="width: 188px;">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{empty name='list'}
+					<tr class="table-empty"  rowspan="10">
+						<td class="text-center empty-info" colspan="13">
+                                <i class="fa fa-database"></i> 暂无数据<br>
+                                        </td>
+                                    </tr>
+					{/empty}
+					{volist name="list" id = 'vo'}
+					<tr class="gradeA even">
+						<td>
+                            <input type="checkbox" class="i-checks ids" style="opacity: 0;" value="{$vo.id}"/>
+						</td>
+						<td><a href="{:url('makeplan_detail', ['id' => $vo['id']])}">{$vo.number}</a></td>
+						<td>{$vo.name}</td>
+						<td>{$vo.tell_man}</td>
+						<td>{$vo.btell_man}</td>	
+						<td>{$vo.title}</td>
+						<td>{$vo.work}</td>
+						<td>{$vo.date|date='Y-m-d',###}</td>
+						<td>{$vo.mes}</td>
+						<td>{$vo.status}</td>
+						<td>
+							<a href="{:url('makeplan_add', ['id' => $vo['id']])}"><span class="btn btns btn-common">编辑</span></a>
+							<span onclick="deletes({$vo.id})" class="btn btns btn-del">删除</span>
+						</td>
+					</tr>
+					{/volist}
+					
+				</tbody>
+			</table>
+			<div class="clearfix">
+				{$list -> render()}
+			</div>
+
+		</div>
+
+	</div>
+</div>
+<script type="text/javascript">
+var keywords = {:json_encode($keywords)};
+	
+	function sorts(option){
+		keywords[option.name] = option.sort == 'asc' ? 'desc' : 'asc';
+		var seach = '';
+		for (var k in keywords) {
+			seach += k + '=' + keywords[k] + '&';
+		}
+		seach = seach.slice(0, -1);
+		location.href = '{:url('makeplan_index')}?' + seach;
+	}
+function deletes(id){
+			layer.confirm('确定要删除吗？',{
+				time:0,
+				btn:['确定','取消'],
+				yes:function(index){
+					$.ajax({
+						type:"POST",
+						data: {ids: id},
+						url:'{:url("makeplan_delete")}',
+						async:true,
+						success:function(res){
+							alert(res.msg);
+							if (res.code == 1) {
+								setTimeout(function(){
+									location.reload()
+								}, 1500)
+							} 
+						}
+					});
+				},	
+			})	  
+	}
+	
+	</script>
+
+
+
+
+
+	

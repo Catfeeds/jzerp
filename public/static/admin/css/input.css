@@ -1,0 +1,74 @@
+.status{
+	border: 1px solid #DDDDDD;
+	display: inline-block;
+	width: 48px;
+	height: 24px;
+	border-radius: 24px;
+}
+.circle{
+	width: 23px;
+	height: 23px;
+	border-radius: 24px;
+	background: #ddd;
+}
+.active_t{
+	transform: translateX(100%);
+}
+.actives{
+
+	animation: ani 300ms;
+	animation-fill-mode: forwards;
+	
+}
+.cancal_t{
+	transform: translateX(0);
+}
+.cancelActive{
+	
+	
+	animation: cancelani  300ms;
+	animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes ani{
+	0%{
+		background: #ddd;
+	}
+	100%{
+		background: #1F98CA;
+		transform: translateX(100%);
+	}
+}
+
+@-webkit-keyframes cancelani{
+	0%{
+		transform: translateX(100%);
+		background: #1F98CA;
+	}
+	100%{
+		background: #ddd;
+		transform: translateX(0);
+		
+	}
+}
+@keyframes ani{
+	0%{
+		background: #ddd;
+	}
+	100%{
+		background: #1F98CA;
+		transform: translateX(100%);
+	}
+}
+
+@keyframes cancelani{
+	0%{
+		transform: translateX(100%);
+		background: #1F98CA;
+	}
+	100%{
+		background: #ddd;
+		transform: translateX(0);
+		
+	}
+}

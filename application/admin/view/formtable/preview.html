@@ -1,0 +1,134 @@
+<style>
+	td {height: 40px;}
+</style>
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-sm-4">
+	    <h2>预览</h2>
+	    <ol class="breadcrumb">
+	        <li>
+	            <a href="index.html">主页</a>
+	        </li>
+	        <li>
+	            <strong>系统设置</strong>
+	        </li>
+	        <li>
+	            <strong>自定义表单</strong>
+	        </li>
+	    </ol>
+	</div>        
+</div>
+<div class="ibox-content"> 
+	<div class="text-center">
+    	<h3>{$title}</h3>
+	</div>
+	<table class="table table-bordered">
+		<colgroup>
+			{switch name="max"}
+			{case value="2"}
+				<col width="20%" /><col width="30%" /><col width="20%" /><col width="30%" />
+			{/case}
+			{case value="3"}
+				<col width="10%" /><col width="23.3%" /><col width="10%" /><col width="23.3%" /><col width="10%" /><col width="23.3%" />
+			{/case}
+			{default /}
+				<col width="30%" /><col width="70%" />
+			{/switch}
+		</colgroup>
+		<tbody>
+			{empty name="list"}
+			<tr>
+				<td></td>
+				<td class="droppable sortable"></td>
+			</tr>
+			{else /}	                    			
+				{volist name="list" id="vo"}
+					{eq name="$vo['type']" value="lists"}
+					{php}
+						$option = json_decode($vo['option'], true);
+					{/php}
+					<tr>
+					<td colspan="6"><div>{$vo.title}</div>
+    				<table class="table table-bordered lists" data-num="{$i}" data-id="{$vo.id}">
+        				<colgroup>
+                			{volist name="$option" id="v"}
+                			<col width="{:intval(10/(count($option)/10))}%">						                    			
+                			{/volist}
+                		</colgroup>
+        				<tbody>
+        				<tr>
+        					{volist name="$option" id="v"}
+        					<td>{$v.title}</td>
+        					{/volist}
+        				</tr>
+        				{if condition="!isset($data['details'])"}
+        					{php}
+        						$data['details'] = [1=>1];
+        					{/php}
+        				{/if}
+        				{volist name="$data['details']" id="vvv"}      				
+        				<tr class="tr">
+        					{volist name="$option" id="v"}
+        					{php}
+								$options = json_decode($v['option'], true);
+							{/php}
+        					<td>       						                                
+            					{switch name="$v.type"}            						
+    							{case value="radio|checkbox"}			                    						
+        									                    							
+        						{/case}							
+        						{case value="select"}
+        
+        						{/case}	
+        						{case value="login_user"}	
+        							
+        						{/case}	
+								{case value="code"}			                    							
+								
+        						{/case}	
+        						{case value="datetime"}		
+        							
+        						{/case}	
+        						{case value="file"}			                    							
+							    
+        						{/case}
+        						{case value=""}
+        						
+        						{/case}	
+        						{case value="money"}
+        						
+        						{/case}	
+        						{case value="bigmoney"}
+        						
+        						{/case}	
+        						{case value="textarea"}			                    							
+        							
+        						{/case}	
+        						{default /}        						
+        												
+            					{/switch}            					                					
+        					</td>
+        					{/volist}        					
+        				</tr>
+        				{/volist}
+        				</tbody>
+    				</table>
+					</td>
+				</tr>
+			{else /}
+					{eq name="$vo['col']" value="1"}
+					<tr>
+					{/eq}
+						<td><span>{$vo.title}</span></td>						
+						<td class="droppable sortable" colspan="{$vo.colspan}" data-id="{$vo.id}">	
+							
+						</td>			                    			
+					{eq name="$vo['col']" value=""}
+					</tr>
+					{/eq}
+					{/eq}
+				{/volist}
+			{/empty}
+		</tbody>
+	</table>  
+	<button onclick="history.back()" class="btn btn-white" type="submit">返回</button>
+</div>        

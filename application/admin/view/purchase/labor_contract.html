@@ -1,0 +1,83 @@
+<div class="ibox float-e-margins">
+
+	<div class="ibox-content">
+		<div class="">
+			<!-- <a href="{:url('DowmLoadExcels')}"  class="btn btn-info"><i class="iconfont icon-daochu"></i>导出</a> -->
+			<a href="javascript:void(0);" onclick="doPrint()" class="btn btn-info"><i class="iconfont icon-daochu"></i>打印</a>
+			<div class="seach-box">
+			<form action="{:url('contract_list')}" method="get">
+              <div class="form-group">
+                <div class="seach-list">
+                <label class="">合同名称:</label>
+                        <input type="text" name="name" value="{$keywords.name|default=''}"  class="form-control">
+                    </div>
+                    <div class="seach-list">
+                    	<label class="">劳务班组:</label>
+                        <input type="text" name="supplier_id" value="{$keywords.supplier_id|default=''}" class="form-control">
+                    </div>
+                   	<div  class="seach-list">
+                   		<label class="">审批状态:</label>
+                   	</div>
+                    <div class="seach-list">
+                        <select class="form-control" name="labor_contract_status">
+                            <option value=""></option>
+                            <option value="1" {eq name="$keywords['labor_contract.status']" value="1"}selected="selected"{/eq}>完成</option>
+                            <option value="0" {if condition="$keywords['labor_contract.status']==0"}selected="selected"{/if}>进行中</option>
+                            <option value="-1" {eq name="$keywords['labor_contract.status']" value="-1"}selected="selected"{/eq}>作废</option>
+                        </select>
+                    </div>
+                	<button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button> </span>
+                    
+                </div>
+			</form>
+            </div>
+		</div>
+		<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+			<!--startprint-->
+			<table class="table table-striped table-bordered table-hover  dataTable" id="editable" aria-describedby="editable_info">
+				<thead>
+					<tr role="row">
+						<th  rowspan="1" colspan="1">合同编号</th>
+						<th  rowspan="1" colspan="1">合同名称</th>
+						<th  rowspan="1" colspan="1">合同金额</th>
+						<th  rowspan="1" colspan="1">劳务班组</th>
+						<th  rowspan="1" colspan="1">所属项目</th>
+						<th  rowspan="1" colspan="1">签订人</th>
+						<th  rowspan="1" colspan="1" >日期</th>
+						<!--startRemove-->
+						<th  rowspan="1" colspan="1" >审批状态</th>
+						<!--endRemove-->
+					</tr>
+				</thead>
+				<tbody>
+					{empty name='data'}
+						<tr class="table-empty"  rowspan="10">
+							<td class="text-center empty-info" colspan="13">
+                                <i class="fa fa-database"></i> 暂无数据<br>
+                            </td>
+                        </tr>
+					{/empty}
+					{volist name="data" id = 'd'}
+						<tr class="gradeA even">
+							<td><a href="{:url('contract_details',['id'=>$d.id])}">{$d['number']}</a></td>
+							<td>{$d['name']}</td>
+							<td>￥{$d['contract_money']}</td>
+							<td>{$d['supplier_id']}</td>
+							<td>{$d['obj_id']}</td>
+							<td>{$d['app_id']}</td>
+							<td>{$d['date']}</td>
+							<!--startRemove-->
+							<td><span class="btn btn-success btn-xs">{$d['status']}</span></td>
+							<!--endRemove-->
+						</tr>
+					{/volist}
+				</tbody>
+			</table>
+			<!--endprint-->
+			<div class="clearfix">
+				{$data -> render()}
+			</div>
+		</div>
+
+	</div>
+</div>

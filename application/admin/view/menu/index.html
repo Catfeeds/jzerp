@@ -1,0 +1,213 @@
+
+<link href="__ADMIN_STATIC__/js/plugins/jquery-nestable/jquery.nestable.css" rel="stylesheet" type="text/css" />
+<link href="__ADMIN_STATIC__/css/modern.min.css" rel="stylesheet" type="text/css" />
+
+
+<style>
+    .block-content {
+        margin: 0 auto;
+        padding: 20px 20px 1px;
+        max-width: 100%;
+        overflow-x: visible;
+        -webkit-transition: opacity 0.2s ease-out;
+        transition: opacity 0.2s ease-out;
+    }
+    .dd3-content {
+        background: #f9f9f9;
+        color: #5A5A5A;
+    }
+    .dd3-content .action {
+        display: inline-block;
+        margin-left: 10px;
+    }
+    .connectedSortable .sortable-item {
+        border: 1px solid #DADADA;
+        margin-right: 10px;
+        padding: 8px 10px;
+        background: #F7F7F7;
+        cursor: move;
+    }
+    .push-20 {
+        margin-bottom: 20px !important;
+    }
+    .link{
+        margin-left: 7px;
+    }
+    .dd-disable .dd3-content {
+    background: #FFD5D0;
+    color: #D2847B;
+	}
+
+    .liStyle {
+        float: left;
+        list-style-type: none;
+        margin: 4px;
+        padding: 10px;
+    }
+    .liStyle:hover {
+        background-color:gainsboro;
+        cursor:pointer;
+    }
+
+</style>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tabs-container">
+                    {notempty name="tab_nav"}
+                    <ul style="margin: 0;padding: 0" >
+                     <a href={:url("index",['group'=>'admin'])}  ><li class="liStyle" {$tab_nav['curr_tab']=='admin' ? "style='background-color:gainsboro;'" :''} >PC</li></a>
+                     <a href={:url("index",['group'=>'mobile'])} ><li class="liStyle" {$tab_nav['curr_tab']=='mobile' ? "style='background-color:gainsboro;'" :''} >MOBILE</li></a>
+                    </ul>
+                    {else/}
+                    <div class="block-header bg-gray-lighter">
+                        <ul class="block-options">
+                            <li>
+                                <button type="button" data-toggle="block-option" data-action="fullscreen_toggle"></button>
+                            </li>
+                            <li>
+                                <button type="button" data-toggle="block-option" data-action="refresh_toggle" data-action-mode="demo"><i class="si si-refresh"></i></button>
+                            </li>
+                            <li>
+                                <button type="button" data-toggle="block-option" data-action="content_toggle"></button>
+                            </li>
+                            <li>
+                                <button type="button" data-toggle="block-option" data-action="close"><i class="si si-close"></i></button>
+                            </li>
+                        </ul>
+                        <h3 class="block-title">{$page_title}</h3>
+                    </div>
+                    {/notempty}
+                    <div class="block-content tab-content">
+                        <div class="tab-pane active" style="margin-bottom: 20px">                           
+                            <div class="row data-table-toolbar">
+                                <div class="col-sm-12">
+                                    <form action="{$Request.url}" method="get">
+                                        <div class="toolbar-btn-action">
+                                            <a title="新增" class="btn btn-primary" href="{:url('add?module='.$tab_nav['curr_tab'])}"><i class="fa fa-plus-circle"></i> 新增</a>
+                                            <button title="保存" type="button" class="btn btn-default disabled" id="save" disabled><i class="fa fa-check-circle-o"></i> 保存节点</button>
+                                            <button title="隐藏禁用节点" type="button" class="btn btn-danger" id="hide_disable"><i class="fa fa-eye-slash"></i> 隐藏禁用节点</button>
+                                            <button title="显示禁用节点" type="button" class="btn btn-info" id="show_disable"><i class="fa fa-eye"></i> 显示禁用节点</button>
+                                            <button title="展开所有节点" type="button" class="btn btn-success" id="expand-all"><i class="fa fa-plus"></i> 展开所有节点</button>
+                                            <button title="收起所有节点" type="button" class="btn btn-warning" id="collapse-all"><i class="fa fa-minus"></i> 收起所有节点</button>
+                                            <span class="form-inline">
+                                    </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="dd" id="menu_list">
+                                <ol class="dd-list">{$menus}</ol>
+                            </div>                                                       
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="__ADMIN_STATIC__/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="__ADMIN_STATIC__/js/plugins/jquery-nestable/jquery.nestable.js"></script>
+<script>
+	function deletes(id){
+		layer.confirm('确定要删除,包括子级',{
+			time:0,
+			btn:['是','否'],
+			yes:function(index){
+				$.ajax({
+					type:"get",
+					url:"{:url('delete')}?id="+id,
+					async:true,
+					success:function(msg){
+						console.log(msg)
+						alert(msg.msg)
+						setTimeout(function(){
+		             		location.reload();
+		                },1000);	
+					}
+				});
+			},	
+		})
+	}
+    $(document).ready(function(){
+        // 模块拖拽
+        $( "#sortable" ).sortable({
+            connectWith: ".connectedSortable"
+        }).disableSelection();
+        // 保存节点
+        $('#save').click(function(){
+            $.post("{:url('save')}", {menus: $('#menu_list').nestable('serialize')}, function(data) {
+                if (data.code) {
+                    $('#save').removeClass('btn-success').addClass('btn-default disabled');
+                    alert(data.msg);
+                } else {
+                    alert(data.msg);
+                }
+            });
+        });
+
+        // 初始化节点拖拽
+        $('#menu_list').nestable({maxDepth:4}).on('change', function(){
+            $('#save').removeAttr("disabled").removeClass('btn-default disabled').addClass('btn-success');
+        });
+
+        // 隐藏禁用节点
+        $('#hide_disable').click(function(){
+            $('.dd-disable').hide();
+        });
+
+        // 显示禁用节点
+        $('#show_disable').click(function(){
+            $('.dd-disable').show();
+        });
+
+        // 展开所有节点
+        $('#expand-all').click(function(){
+            $('#menu_list').nestable('expandAll');
+        });
+		$('#menu_list').nestable('collapseAll');
+        // 收起所有节点
+        $('#collapse-all').click(function(){
+            $('#menu_list').nestable('collapseAll');
+        });
+
+        // 禁用节点
+        $('.dd3-content').delegate('.disable', 'click', function(){
+            var self     = $(this);
+            var ids      = self.data('ids');
+            var ajax_url = '{:url("disable", ["table" => "admin_menu"])}';
+            $.post(ajax_url, {ids:ids}, function(data) {
+                if (data.code) {
+                    self.attr('data-original-title', '启用').removeClass('disable').addClass('enable')
+                        .children().removeClass('fa-ban').addClass('fa-check-circle-o')
+                        .closest('.dd-item')
+                        .addClass('dd-disable');
+                        alert(data.msg);
+                } else {
+                    alert(data.msg);
+                }
+            });
+            return false;
+        });
+
+        // 启用节点
+        $('.dd3-content').delegate('.enable', 'click', function(){
+            var self     = $(this);
+            var ids      = self.data('ids');
+            var ajax_url = '{:url("enable", ["table" => "admin_menu"])}';
+            $.post(ajax_url, {ids:ids}, function(data) {
+                if (data.code) {
+                    self.attr('data-original-title', '禁用').removeClass('enable').addClass('disable')
+                        .children().removeClass('fa-check-circle-o').addClass('fa-ban')
+                        .closest('.dd-item')
+                        .removeClass('dd-disable');
+                        alert(data.msg);
+                } else {
+                    alert(data.msg);
+                }
+            });
+            return false;
+        });
+    });
+</script>

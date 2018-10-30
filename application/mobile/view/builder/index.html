@@ -1,0 +1,98 @@
+{extend name='temp/base' /} 
+
+{block name='headcss'}
+<style>
+	.list{
+		background: #fff;
+		min-height: calc(100vh - 106px);
+	}
+	li{
+		float: left;
+		width: 25%;
+		box-sizing: border-box;
+		border-bottom: 1px solid #e5e5e5;
+		height: 95px;
+		text-align: center;
+		padding-top: 6px;
+	}
+	li p{
+		color: #666666;
+		font-size: 16px;
+	}
+	li:not(:nth-child(4n)){
+		border-right: 1px solid #e5e5e5;
+	}
+	li div{
+		width: 42px;
+		height: 42px;
+		border-radius: 50%;
+		overflow: hidden;
+		margin: 10px auto;
+		padding-top: 10px;
+		box-sizing: border-box;
+	}
+	.list .iconfont{
+		font-size: 24px;
+		color: #fff;
+	}
+</style>
+{/block}
+{block name='content'}
+<div class="content">
+    	<div class="list">
+    		<ul>
+    				    			<a href="/admin.php/mobile/builder/build_notice.html">
+	    				<li>
+		    				<div style="background: rgba(81,161,246,1);">
+		    					<i class="iconfont icon-gonggao"></i>
+		    				</div>
+		    				<p>新建公告</p>
+    					</li>
+	    			</a>
+    				    			<a href="/admin.php/mobile/builder/build_meeting.html">
+	    				<li>
+		    				<div style="background: rgba(246,191,38,1);">
+		    					<i class="iconfont icon-huiyi"></i>
+		    				</div>
+		    				<p>新建会议</p>
+    					</li>
+	    			</a>
+    				    			<a href="/admin.php/mobile/builder/log_book.html">
+	    				<li>
+		    				<div style="background: rgba(239,113,90,1);">
+		    					<i class="iconfont icon-tongxunlu"></i>
+		    				</div>
+		    				<p>工作日志</p>
+    					</li>
+	    			</a>
+    				    			<a href="/admin.php/mobile/builder/work_plan.html">
+	    				<li>
+		    				<div style="background: rgba(52,204,153,1);">
+		    					<i class="iconfont icon-EPCzuodaohangtubiao"></i>
+		    				</div>
+		    				<p>工作计划</p>
+    					</li>
+	    			</a>
+    				    			<a href="/admin.php/mobile/builder/reimbursement.html">
+	    				<li>
+		    				<div style="background: rgba(189,131,205,1);">
+		    					<i class="iconfont icon-hangzheng"></i>
+		    				</div>
+		    				<p>费用报销</p>
+    					</li>
+	    			</a>
+    				    			<a href="/admin.php/mobile/flowpath/index.html">
+	    				<li>
+		    				<div style="background: rgba(53,198,211,1);">
+		    					<i class="iconfont icon-liucheng"></i>
+		    				</div>
+		    				<p>流程审批</p>
+    					</li>
+	    			</a>
+    			    		</ul>
+    	</div>
+    </div>
+    {block name="footermenu"}
+  		{include file="temp/footer" /}
+    {/block}
+{/block}

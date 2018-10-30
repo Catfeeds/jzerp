@@ -1,0 +1,67 @@
+		<div class="row">
+            <div class="col-sm-12">
+            	{php}
+            		$flow_id = input('id');
+            	{/php}
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                    	<a href="{:url('addstep',['flow_id'=>$flow_id])}" class="btn btn-warning "><i class="iconfont icon-jia"></i>添加</a>
+                    	<a href="javascript:void(0);" onclick="javascript:history.back(-1);return false;" class="btn btn-default ">返回</a>
+                        <table class="table table-bordered table-striped dataTables-example">
+                            <thead>
+                                <tr>
+                                    <th>顺序</th>
+                                    <th>步骤名称</th>
+                                    <th>下一步骤</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	{volist name="steplist" id="vo"}
+                                <tr>
+                                	<td>
+                                	{:isset($xh) ? $xh : $xh=1}
+                                	{php}$xh++;{/php}
+                                    </td>
+                                    <td>{$vo.step_title}</td>
+                                   	<td>{eq name="$vo.next_step_id" value="1"}结束{else/}
+                                    	{if condition="isset($steplist[$vo['next_step_id']])"}
+                                    		{$steplist[$vo['next_step_id']]['step_title']}
+                                    	{else/}
+                                    		
+                                    	{/if}
+                                    {/eq}</td>
+                                    <td>
+										<a href="{:url('addstep',['flow_id'=>$flow_id, 'id'=>$vo.id])}" class="btn btns btn-success">编辑</a>
+										<span class="btn btns btn-danger" onclick="deletes(this,{$vo.id})">删除</span>
+                                    </td>
+                                </tr> 
+                            	{/volist}
+                            </tbody>
+                        </table>
+                	</div>
+                </div>
+            </div>
+       </div>
+<script>
+	function deletes(o, id){
+		var hint = $(o).parents('tr').find('td:nth-child(2)').text();
+		layer.confirm('确定要删除'+hint,{
+			time:0,
+			btn:['是','否'],
+			yes:function(index){
+				$.ajax({
+					type:"get",
+					url:"{:url('stepdelete')}?ids="+id,
+					async:true,
+					success:function(msg){
+						alert(msg.msg)
+						setTimeout(function(){
+		             		location.reload();
+		                },1000);	
+					}
+				});
+			},	
+		})
+	}
+</script>

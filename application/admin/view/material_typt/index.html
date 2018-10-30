@@ -1,0 +1,280 @@
+<!--<link href="__ADMIN_STATIC__/css/plugins/jsTree/style.min.css" rel="stylesheet">
+<style type="text/css">
+    .ibox-contents > div{
+        float: left;
+    }
+    .ibox-contents > div:nth-child(1){
+        margin-top: 20px;
+        margin-left: 60px;
+    }
+    .ibox-contents > div:nth-child(2){
+        margin-left: 120px;
+        min-width: 660px;
+    }
+</style>
+    <div class="ibox-title">
+        <h5>材料类型</h5>
+    </div>
+    <div class="row">
+        <div class="" style="display: inline-block;">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="dd" id="nestable">
+                    	 <div id="using_json"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8" style="float: left;">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>添加材料类型</h5>
+                </div>
+                <div  class="ibox-content">
+                    <form class="form-horizontal" id="form" method="post">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" value=""  name="name_type" class="form-control name_type">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">父类型</label>
+
+                            <div class="col-sm-10">
+                                <select class="form-control m-b" id="fid" name="fid">
+                                    <option value="0">--请选择父级类型--</option>
+                                   
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">显示顺序</label>
+                            <div class="col-sm-10">
+                                <input type="number" name="sort" value="" class="form-control sort">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">备注：</label>
+                            <div class="col-sm-10">
+                                <textarea id="notes" name="notes" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-3">
+                                <button id="materialtypeadd" class="btn btn-primary" onclick="add()" type="button">
+                                    提交
+                                </button>
+                                <button id="materialedit" class="btn btn-info" onclick="del()" type="button">
+                                    删除
+                                </button>
+                                <button id="material" class="btn btn-del " onclick="reset()" type="button">
+                                    重置
+                                </button>
+                               
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-1"></div>
+    </div>-->
+    
+    <link href="__ADMIN_STATIC__/css/plugins/jsTree/style.min.css" rel="stylesheet">
+	<style type="text/css">
+		.ibox-contents > div{
+			float: left;
+		}
+		.ibox-contents > div:nth-child(1){
+			margin-top: 20px;
+			margin-left: 60px;
+		}
+		.ibox-contents > div:nth-child(2){
+			margin-left: 120px;
+			min-width: 660px;
+		}
+	</style>
+	<div class="ibox float-e-margins" style="height: 100%;">
+		<div class="ibox-title">
+			<h5>资产类别</h5>
+			
+		</div>
+				
+		<div class="ibox-contents">
+		    <div id="using_json"></div>
+			<div>
+				<div class="wrapper wrapper-content animated fadeInRight"  style="height: 100%;">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>添加资产类别 </h5>
+				</div>
+				<div  class="ibox-content">
+					<form class="form-horizontal" id="form" method="post">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" value=""  name="name_type" class="form-control name_type">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">父类型</label>
+
+                            <div class="col-sm-10">
+                                <select class="form-control m-b" id="fid" name="fid">
+                                    <option value="0">--请选择父级类型--</option>
+                                   
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">显示顺序</label>
+                            <div class="col-sm-10">
+                                <input type="number" name="sort" value="" class="form-control sort">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">备注：</label>
+                            <div class="col-sm-10">
+                                <textarea id="notes" name="notes" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-3">
+                                <button id="materialtypeadd" class="btn btn-primary" onclick="add()" type="button">
+                                    提交
+                                </button>
+                                <button id="materialedit" class="btn btn-info" onclick="del()" type="button">
+                                    删除
+                                </button>
+                                <button id="material" class="btn btn-del " onclick="reset()" type="button">
+                                    重置
+                                </button>
+                               
+                            </div>
+                        </div>
+                    </form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+			
+			</div>
+		</div>
+	</div>
+
+
+<script src="__ADMIN_STATIC__/js/plugins/jsTree/jstree.min.js"></script>
+<script src="__ADMIN_STATIC__/js/plugins/iCheck/icheck.min.js"></script>
+<script type="text/javascript">
+	var trees = {:json_encode($materialtype)} || {},
+	id=null;
+		 $('#using_json').jstree({
+                'core': {
+                    'data': trees
+                }
+            });
+            var strs = '<option value="0">一级分类</option>';
+            	tree(trees);
+	
+	function tree (data, fn){
+		for (var i in data) {
+			if (id == data[i].id) {
+				continue
+			}
+			var level = '';
+			if (data[i]['level'] > 1) {
+			    level = '';
+			    var arr = [];
+			    arr.length = data[i]['level'];
+				level += arr.join('&nbsp&nbsp&nbsp&nbsp');
+				level += '|-'
+			}
+			strs = strs + '<option  value="' + data[i]['id'] + '">' + level + data[i]['name_type'] + '</option>';
+			if(data[i].children.length != 0 && id != data[i].id){
+				tree(data[i].children);
+			}
+		}
+		$("select[name='fid']").html(strs);
+		fn && fn();
+	}
+	        $('#using_json').on("changed.jstree", function (e, data) {
+	        	id = data.node.id;
+	        	strs = '<option value="0">一级分类</option>';
+	        	
+	        	list(id);
+	        });
+    var ids = [];
+    function add() {
+        var seeting = {
+            id : 'form',
+            validate: [
+                ['name_type', '名称不能为空'],
+                ['fid',  '父类型不能为空'],
+            ],
+            append: [],
+            url: '{:url("save")}'
+        };
+        layer.confirm('确定执行此操作吗?', {
+            btn: ['确定','取消'], //按钮
+            shade: false //不显示遮罩
+        }, function(){
+            util.ajax(seeting).then(function(res) {
+                if(res.code == 9) {
+                    location.reload();
+                }
+            }).catch(e => {
+                console.error(e)
+                alert('错误, 请联系管理员.');
+            })
+        });
+
+
+    }
+
+    function list(id) {
+        $.get("{:url('read')}",{id:id},function(res){
+        	tree(trees);
+        	$('option[value="'+res.fid+'"]').prop('selected', 'selected');
+            $('.name_type').attr('value', res.name_type);
+            $('.sort').attr('value', res.sort);
+
+
+            $("#notes").val(res.notes);
+            ids = res.id;
+        })
+    }
+
+
+    function del() {
+        layer.confirm('确定删除吗?', {
+            btn: ['确定','取消'], //按钮
+            shade: false, //不显示遮罩
+            icon: 2,
+        }, function(){
+            if(ids != ""){
+                $.ajax({
+                    type:"post",
+                    url:"{:url('delete')}",
+                    data: {id: ids},
+                    async:true,
+                    success: function(res){
+                        if(res.code == 9){
+                            location.reload();
+                        }
+                    }
+                });
+            }else{
+                alert('请选择要删除的类型')
+            }
+
+        });
+    }
+
+    function reset(){
+        document.getElementById("form").reset();
+    }
+</script>

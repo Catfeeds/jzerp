@@ -1,0 +1,172 @@
+<style>
+	.styleLi {
+		background-color: silver;
+		margin: 5px;
+		padding: 5px;
+		/*border: 1px solid red;*/
+		cursor: pointer;
+	}
+	.styleLi:hover{
+		border: 1px solid #b94a48;
+	}
+</style>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>节点添加</h5>
+        </div>
+        <div class="ibox-content">
+            <form class="form-builder row" id="form" action="{:url('add')}" method="post" autocomplete="off">
+                <div class="form-group col-md-12 col-xs-12 " id="form_group_pid">
+				    <label class="col-xs-12" for="pid">所属节点</label>
+				    <div class="col-sm-12">
+				        <select class="form-control js-example-basic-single" name="pid" placeholder="请选择一项">
+				           {volist name="title" id="vo"}
+				           		<option {notempty name="$pid"}{eq name="$key" value="$pid"}selected="selected"{/eq}{else /}{eq name="$key" value="$data['pid']"}selected="selected"{/eq}{/notempty} value="{$key}">{$vo}</option>
+				           {/volist}
+	                    </select>
+		                <div class="help-block">所属上级节点</div>
+		            </div>
+				</div>
+                <div class="form-group col-md-12 col-xs-12 " id="form_group_title">
+				    <label class="col-xs-12" for="title">节点标题</label>
+				    <div class="col-sm-12">				        
+				        <input class="form-control" type="text" name="title" value="{$data['title']}" placeholder="请输入节点标题">
+					</div>
+				</div>
+                <div class="form-group col-md-12 col-xs-12 " id="form_group_url_value">
+				    <label class="col-xs-12" for="url_value">节点链接</label>
+				    <div class="col-sm-12">
+						<span onclick="openMenu()"  style="cursor: pointer" class="input-group-addon icon" data-toggle="tooltip" data-placement="bottom" title="点击选填路径"><i class="fa fa-plus-circle"></i></span>
+				        <input id="url" class="form-control" type="text" name="url_value" value="{$data['url_value']}" placeholder="请输入节点链接">
+						<div class="help-block">可留空，如果是模块链接，请填写<code>模块/控制器/操作</code>，如：<code>admin/menu/add</code>。</div>
+				    </div>
+				</div>
+                <div class="form-group col-md-12 col-xs-12 " id="form_group_icon">
+				    <label class="col-xs-12" for="icon">图标</label>
+				    <div class="col-sm-12">
+				        <div class="input-group js-icon-picker">
+				            <span class="input-group-addon icon" data-toggle="tooltip" data-placement="bottom" title="点击选择图标"><i class="fa fa-plus-circle"></i></span>
+				            <input class="form-control icon_input" onclick="opicon()" type="text" name="icon" value="{$data['icon']}" placeholder="请选择图标">
+				            <span class="input-group-addon delete-icon" data-toggle="tooltip" data-placement="bottom" data-original-title="删除图标"><i class="fa fa-times"></i></span>
+				        </div>
+				        <div class="help-block">导航图标</div>
+				    </div>
+				</div>
+				<div class="form-group col-md-12 col-xs-12 " id="form_group_status">
+				    <label class="col-xs-12" for="status">是否隐藏</label>
+				    <div class="col-sm-12 i-checks">	
+				    	<label class="radio-inline"><input type="radio" name="status" value="0" {eq name="$data['status']" value="0"} checked {/eq} />是
+        								<input type="radio" name="status" value="1" {empty name="$data['status']"}checked{else/}{eq name="$data['status']" value="1"} checked {/eq}{/empty} />否
+        						</label>				 
+					</div>
+				</div>
+				<div class="form-group col-md-12 col-xs-12 " id="form_group_sort">
+				    <label class="col-xs-12" for="sort">排序</label>
+				    <div class="col-sm-12">
+				        <input class="form-control" type="text" name="sort" value="{$data['sort']}" placeholder="请输入排序">
+					</div>
+				</div>
+                <div class="form-group col-md-12 col-xs-12">
+                    <div class="col-xs-12">
+                        <button class="btn btn-minw btn-primary" target-form="form-builder" onclick="add()" type="button">提交</button>
+                        <button class="btn btn-default" type="button" onclick="javascript:history.back(-1);return false;">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="menuList" onclick="hh()" style="display: none;" >
+	<ul style="list-style-type: none;margin:10px;padding: 0" >
+	{volist name="menu" id="me"}
+		<?php if(is_array($me)){ ?>
+		<li class="styleLi" >{$key}</li>
+		<ul style="list-style-type: none">
+			{volist name="me" id="m"}
+			<li class="styleLi" >{$m}</li>
+			{/volist}
+		</ul>
+		<?php }else{  ?>
+			<li class="styleLi" >{$me}</li>
+		<?php } ?>
+	{/volist}
+	</ul>
+</div>
+<link href="__ADMIN_STATIC__/css/select.css" rel="stylesheet"/>
+<script src="__ADMIN_STATIC__/js/select.js"></script>
+<script>
+
+	function hh() {
+
+		var node=$(event.target)[0];
+        if ( node.nodeName==='LI') {
+            console.log(node.innerHTML)
+            $('#url').val(node.innerHTML)
+            layer.close(hhhh);
+        }
+    }
+
+	function openMenu() {
+		hhhh=layer.open({
+            type: 1,
+            title:'点击选填路径',
+            area: ['auto', '500px'],
+            shadeClose: true,
+            maxmin:true,
+            content: $('#menuList'),
+
+        })
+    }
+
+function opicon(){
+	index=layer.open({
+	  type: 1, 
+	  title:'图标',
+	  area: ['850px', 'auto'],
+	  shadeClose: true,
+	  maxmin:true,
+	  content: `{include file="public/icon"}` 
+	});
+}
+function iconClick(i){
+	$('.icon_input').val(i);
+	$('.icon_input').prev().find('i').attr('class','fa '+i);
+	layer.close(index);
+}
+    $(document).ready(function () {
+        $('.js-example-basic-single').select2();
+    });
+
+   function add(){
+	var seeting = {
+		id: "form",
+		url: "{:url('add')}",
+		validate:[
+			["title", '节点标题不能为空']
+		],
+		append:[],
+	}
+
+       seeting.append.push(['module', "{$data['module']}"]);
+		{notempty name="$data['id']"}
+			seeting.append.push(['id', {$data['id']}]);
+		{/notempty}
+		util.ajax(seeting).then(function(res){
+			alert(res.msg);
+			if(res.code == 0){
+				$('input[name="'+res.data+'"]').focus();
+			}
+			if (res.code == 1) {
+				setTimeout(function(){
+					location.href ="{:url('index?group='.$data['module'])}";
+				}, 1500)
+			}
+		}).catch(e => {
+			console.log(e);
+			alert('系统错误, 请联系管理员');
+		})
+}
+
+</script>
+

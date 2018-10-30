@@ -1,0 +1,143 @@
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="nav-close"><i class="fa fa-times-circle"></i>
+    </div>
+    <div style="position: relative; width: auto; height: 100%;">
+        <div class="sidebar-collapse" style="width: auto; height: 100%;">
+            <ul class="nav none" id="side-menu">
+                <li style="background-color: 444755;" class="nav-header">
+                    <div class="dropdown profile-element">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="">
+                            <span class="clear">
+                                <span class="block m-t-xs" style="font-size:20px;">
+                                    <i class="fa fa-area-chart"></i>
+                                    <strong class="font-bold">建筑ERP</strong>
+                                </span>
+                            </span>
+                        </a>
+                    </div>
+                </li>
+                {$_sidebar_menus}
+            </ul>
+        </div>
+        <div class="slimScrollBar"
+             style="background: rgb(0, 0, 0); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 974px;"></div>
+        <div class="slimScrollRail"
+             style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.9; z-index: 90; right: 1px;"></div>
+    </div>
+</nav>
+<script type="text/javascript">
+	var vice_menu = null,
+//	J_iframe = null,
+	vice_menu_arr = ['adminindexhome'],
+	iframeBox = null,
+	activeIframeClass = 'adminindexhome',
+	activeTitle = null,
+	oldActiveLi = null;
+	
+    $(function () {
+        //菜单点击
+        $(".J_menuItem").on('click', function () {
+        
+        	var o = $(this);
+            var url = o.attr('hrefs');
+            var rurl = url.replace(/\//g, '');
+            activeTitle = o.attr("data-title");
+            if(vice_menu_arr.includes(rurl)) {
+	            $("iframe[class='"+ activeIframeClass +"']").hide();
+	            $("iframe[class='"+ rurl +"']").attr('src', url + '?temp=' + new Date().getTime()).load(function(){
+	            	this.style.display = 'block';
+	            });
+            	set_vice_style(oldActiveLi, false);
+            	set_vice_style(oldActiveLi = document.querySelector('#' + rurl));
+            } else {
+        		if(vice_menu_arr.length > 10){
+	        		alert('您打开的链接过多,严重影响性能,最多可打开十个, 请关闭部分链接!');
+	        		return false;
+        		}
+	            var iframe = document.createElement('iframe');
+	            iframe.src = url;
+	            iframe.style.border = 'none';
+	            iframe.className = rurl;
+	            $("iframe[class='"+ activeIframeClass +"']").hide();
+	            (iframeBox || (iframeBox = $("#content-main"))).append(iframe);
+            
+				setTimeout(()=> {
+					oldActiveLi?(set_vice_style(oldActiveLi, false)):(set_vice_style(document.querySelector('#home_vice'), false));
+		            var li = oldActiveLi = document.createElement('span');
+		            set_vice_style(li);
+		            li.setAttribute('id', rurl);
+		            var i = document.createElement('i');
+		            var t = li.innerHTML = o.attr("data-title");
+		
+		            li.addEventListener('click', function(){
+		            	vice_menu_click(rurl, t, this)
+		            }, false)
+		            i.addEventListener('click', function(){
+		            	close_vice_menu_click(event, rurl, this)
+		            }, false)
+		            i.className = 'iconfont icon-cha';
+		            li.append(i);
+		            (vice_menu || (vice_menu =  $('#vice_menu div'))).append(li);
+		            
+		            vice_menu_arr.push(rurl);
+				}, 0)
+            
+            }
+            activeIframeClass = rurl;
+            return false;
+        });
+    });
+    function set_vice_style(obj, active = true){
+    	if(!obj){
+    		return false;
+    	}
+    	if(active){
+    		obj.style.background = '#5bc0de';
+    		obj.style.color = '#fff';
+    	} else {
+    		obj.style.background = 'none';
+    		obj.style.color = '#676a6c';
+    	}
+    }
+    function vice_menu_click(rurl, t, o){
+//  	if(activeIframeClass === rurl){
+//          return false;
+//      }
+		set_vice_style(oldActiveLi, false);
+		set_vice_style(o);
+    	 oldActiveLi = o;
+    	 $("iframe[class='"+ activeIframeClass +"']").hide();
+    	 $("iframe[class='"+ rurl +"']").show();
+         activeIframeClass = rurl;
+         activeTitle = t;
+    }
+    function close_vice_menu_click(e, url, o){
+      	e.cancelBubble = true;
+        e.stopPropagation();
+    	if(url){
+    		$(o).parent('span').remove();
+	    	if (url === activeIframeClass) {
+				activeIframeClass = $("iframe[class='"+ url +"']").prev().show().attr('class');
+	    	}
+	    	
+			$("iframe[class='"+ url +"']").remove();
+	    	
+	
+	    	
+	    	var index = vice_menu_arr.indexOf(url);
+	    	if (index != -1) {
+	    		vice_menu_arr.splice(index, 1);
+	    	}
+    	} else {
+    		vice_menu.empty();
+    		$("iframe").not('.adminindexhome').remove();
+    		
+    	 	$("iframe[class='adminindexhome']").show();
+			vice_menu_arr = ['adminindexhome'];
+			activeIframeClass = 'adminindexhome';
+			
+    	}
+    	return false;
+    }
+</script>

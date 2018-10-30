@@ -1,0 +1,89 @@
+<div class="ibox float-e-margins">
+
+	<div class="ibox-content">
+		<div class="">
+			<!-- <a href="{:url('DowmLoadExcels')}"  class="btn btn-info"><i class="iconfont icon-daochu"></i>导出</a> -->
+			<a href="javascript:void(0);" onclick="doPrint()" class="btn btn-info ">打印</a>
+			<div class="seach-box">
+			<form action="{:url('Certificates/certificatelist')}" method="get">
+              <div class="form-group">
+                <div class="seach-list">
+                	<label class="">证件编号:</label>
+                        <input type="text" name="certificate_number" value="{$keywords.certificate_number|default=''}" class="form-control">
+                    </div>
+                    <div class="seach-list">
+                    	<label class="">姓名:</label>
+                        <input type="text" name="username" value="{$keywords.username|default=''}" class="form-control">
+                    </div>
+                    <div class="seach-list">
+                    	<label class="">身份证号:</label>
+                        <input type="text" name="id_card" value="{$keywords.id_card|default=''}" class="form-control">
+                    </div>
+                    <div  class="seach-list">
+                   		<label class="">证件名称:</label>
+                   	</div>
+                    <div class="seach-list">
+                        <select class="form-control" name="certificate_type">
+                            <option value=""></option>
+                            {volist name="type" id="vo"}
+                            	<option value="{$key}">{$vo}</option>
+							{/volist}
+                        </select>
+                    </div>
+                	<button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button> </span>
+                    
+                </div>
+			</form>
+            </div>
+		</div>
+		<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+			<!--startprint-->
+			<table class="table table-striped table-bordered table-hover  dataTable" id="editable" aria-describedby="editable_info">
+				<thead>
+					<tr role="row">
+						<th>证书编号</th>
+						<th>证书名称</th>
+						<th>身份证号</th>
+						<th onclick="sort({sort: '{$keywords['sort']}'})" class="sorting_{$keywords['sort']}">状态</th>
+						<th>证件姓名</th>
+					</tr>
+				</thead>
+				<tbody>
+					{empty name='data'}
+						<tr class="table-empty"  rowspan="10">
+							<td class="text-center empty-info" colspan="13">
+                                <i class="fa fa-database"></i> 暂无数据<br>
+                            </td>
+                        </tr>
+					{/empty}
+					{volist name="data" id = 'd'}
+						<tr class="gradeA even">
+							<td><a href="{:url('zzck',['id'=>$d.id])}">{$d['certificate_number']}</a></td>
+							<td>{$d['certificate_type']}</td>
+							<td>{$d['id_card']}</td>
+							<td>
+								{volist name="d['status']" id = 'v'}
+									<span class="btn btn-success btn-xs">{$v}</span>
+								{/volist}
+							</td>
+							<td>{$d['username']}</td>
+							
+						</tr>
+					{/volist}
+				</tbody>
+			</table>
+			<!--endprint-->
+			<div class="clearfix">
+				{$data -> render()}
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	function sort(option){
+		option.sort = option.sort == 'asc' ? 'desc' : 'asc';
+		location.href = `{:url('certificatelist')}?statu=statu&sort=${option.sort}&page={$page}`;
+	}
+</script>

@@ -1,0 +1,157 @@
+<div class="wrapper wrapper-content animated fadeInRight" style="height: 100%;">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>编辑物料 </h5>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-builder row" id="form" method="post" autocomplete="off">
+                        <div class="form-group col-md-6 col-xs-12 ">
+                            <label class="col-xs-12" for="name">物品名称</label>
+                            <div class="col-sm-12">
+                                <input class="form-control" type="text" name="name" value="{$data['name']}" placeholder="请输入物品名称">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6 col-xs-12 ">
+                            <label class="col-xs-12" >规格型号</label>
+                            <div class="col-sm-12">
+
+                                <input class="form-control" type="text" name="specifications" value="{$data['specifications']}" placeholder="请输入规格型号">
+
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6 col-xs-12 ">
+                            <label class="col-xs-12" for="customer_name">物品类型</label>
+                            <div class="col-sm-12">
+                                <select class="s-select2 form-control" name="type_id">
+                                    <option value="0">--一级类型--</option>
+                                    {volist name="type_id" id="vo"}
+                                        <option value="{$vo.id}" {eq name="$data['type_id']" value="$vo.id"}selected="selected"{/eq}>{$vo._name_type}</option>
+                                    {/volist}
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6 col-xs-12 ">
+                            <label class="col-xs-12" for="customer_name">仓库</label>
+                            <div class="col-sm-12">
+                                <select class="s-select2 form-control" name="house_id">
+                                    <option value="">--选择仓库--</option>
+                                    {volist name="house" id="vo"}
+                                        <option value="{$key}" {eq name="$data['house_id']" value="$key"}selected="selected"{/eq}>{$vo}</option>
+                                    {/volist}
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6 col-xs-12 ">
+                            <label class="col-xs-12" >计量单位</label>
+                            <div class="col-sm-12">
+                                <input class="form-control" type="text" name="metering" value="{$data['metering']}" placeholder="请输入计量单位">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6 col-xs-12 ">
+                            <label class="col-xs-12" >显示顺序</label>
+                            <div class="col-sm-12">
+                                <input class="form-control" type="text" name="sort" value="{$data['sort']}" placeholder="请输入显示顺序">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12 col-xs-12 ">
+                            <label class="col-xs-12" for="note">备注</label>
+                            <div class="col-xs-12">
+                                <textarea class="form-control" id="note" rows="7" name="notes" placeholder="请输入备注">{$data['notes']}</textarea>
+                            </div>
+                        </div>
+                         <div class="form-group col-md-6 col-xs-12 ">
+                            <label class="col-xs-12" for="file">图片</label>
+                            <div class="col-sm-12 js-upload-files">
+                                {notempty name="$images"}
+                                    {volist name="images" id="vo"}
+                                    <div>
+                                        <img src="{$vo.path}" class="logo">
+                                        <input type="hidden" class="logo_in" name="img_id"  id="img_id" value="{$vo.id}"> 
+                                    </div>
+                                    {/volist}
+                                {else /}
+                                    <div>
+                                        <img src="" class="logo">
+                                        <input type="hidden" class="logo_in" name="img_id"  id="img_id" value=""> 
+                                    </div>
+                                {/notempty}
+                                <div onclick="document.querySelector('#addFiles').click()" class="webuploader-pick">上传</div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <button class="btn btn-minw btn-primary ajax-post" onclick="add()" target-form="form-builder" type="button">
+                                提交                                       
+                            </button>
+                            <button class="btn btn-default" type="button" onclick="javascript:history.back(-1);return false;">
+                                返回 
+                            </button>
+                        </div>
+                    </form>
+                    <form id="image">
+                        <input class="none" type="file" id="addFiles" name="image[]" onchange="addFile()"  value="" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function addFile(){
+        var seeting = {
+            id: 'image',
+            validate: [
+                ["name", '物品名称不能为空'],
+                ["name", '物品名称不能为空'],
+            ],
+            append: [['to_dir', 'system'], ['name','image']],
+            url: "{:url('AdminFiles/UpLoadFiles')}",
+        }
+        util.ajax(seeting).then(function(res){
+
+           $('.logo').attr('src', res.data.success[0].path);
+           $('.logo_in').attr('value', res.data.success[0].id);
+          
+        
+        }).catch(e=>{
+            console.log(e)
+        })
+    }
+
+    function add(){
+        var seeting = {
+            id: 'form',
+            validate: [
+                ['name_type', '物品名称不能为空'],
+                ['number',  '物品编号不能为空'],
+                ['specifications',  '规格型号不能为空'],
+                ['metering',  '计量单位不能为空'],
+            ],
+            append: [],
+            url: "{:url('Material/create')}",
+        }
+
+        var id = '{$data.id}';
+        if(id != "" || id != null || id != undefined){
+            seeting.append.push(['id',id]);
+        }
+
+        util.ajax(seeting).then(function(res){
+            alert(res.msg);
+            console.log(res);
+            if(res.code == 9) {
+                setTimeout(function(){
+                    window.location=res.url;
+                }, 2000)
+            }
+        }).catch(e=>{
+            console.log(e)
+        })
+    }
+</script>

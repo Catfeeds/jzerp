@@ -1,0 +1,113 @@
+
+                    ╭════════════════╮
+                    ║       未来软件园下载说明       ║ 
+  ╭════════┤    网站:http://www.orsoon.com  ├═════════╮
+  ║                ║    邮箱:andrewfxh@163.com      ║                  ║
+  ║                ║    论坛:http://bbs.orsoon.com  ║                  ║ 
+  ║                ╰════════════════╯                  ║
+　║                                                                      ║
+  ║                 未来软件园(www.orsoon.com)                           ║
+  ║                                                                      ║
+  ║ ¤搜罗精品，与您共享，实用易用，满足应用                             ║
+  ║                                                                      ║
+  ║ ¤本站收录大量注册破解，汉化补丁，书籍教程，大型正版，免费           ║
+  ║   软件，游戏等精品软件。                                             ║
+  ║                                                                      ║
+  ║ ¤所收录软件均经过严格测试，无需额外购买注册，全部本地无死           ║
+  ║   链高速下载，保证品质。                                             ║
+  ║                                                                      ║
+  ║ ¤每天持续更新时间在10个小时以上!你的支持是我们工作的动力,           ║  
+  ║   你的要求是我们努力的方向!谢谢支持!^_^                              ║
+  ║                                                                      ║ 
+  ║ ¤本站真诚的欢迎各位朋友在本站发布你的软件或者汉化,破解补            ║
+  ║ 丁,和大家一起分享你的快乐!谢谢!                                      ║ 
+  ║                                                                      ║
+　║ ¤版权：本软件版权归作者所有                                         ║
+　║                                                                      ║
+  ║ ¤说明：本软件由www.orsoon.com 搜集整理，本站不承担任何技术          ║
+  ║        及版权问题。本站只收集免费软件，破解软件，绿色软件在          ║
+  ║        本站下载任何软件仅提供学习参考，不得用于商业用途，请          ║
+  ║        在下载后在24小时内删除。本站不保证软件的完整性和是否          ║
+  ║        隐含病毒，请自行调试及杀毒，如不同意本条款请勿使用，          ║  
+  ║						                 	  ║
+  ║        谢谢合作！                                                    ║
+  ║                                                                      ║
+  ║ ¤建议和要求：如果您对本站有好的建议，以及对本站存在的问题           ║
+  ║ 有什么好的提议，请发信息至andrewfxh@163.com或者联系QQ                ║
+  ║ ： 583379817留言。                                                   ║
+  ║                                                                      ║
+  ║ ¤本站统一解压密码: www.orsoon.com                                   ║
+  ║                                                                      ║
+  ║ ¤再次感谢您对我们的支持，谢谢！                                     ║
+  ║                                                                      ║
+  ║ ¤转载请保留本信息，谢谢！						  ║
+  ║                                      				  ║
+  ║ ¤本站广告联系 QQ：583379817       		    		  ║
+  ║    E-MAIL-   andrewfxh@163.com  				          ║
+  ║              ╭════════════════════╮            ║
+  ║              ║                                        ║            ║
+  ╰═══════┤  网络共享,资源无限,未来精品,天天更新!  ├══════╯
+                  ║                                        ║
+                  ╰════════════════════╯ 
+
+****************************************************************
+
+Photoshop CC 提供了眾多新增功能。您可使用全新的智慧型锐利化 (Smart Sharpen) 工具使细节更為鲜明，还可将低解析度的相片转化為高解析度的大型影像，更可取得所有先进的 3D 编辑和影像分析工具，先前只有 Adobe Photoshop Extended 才提供这些工具。而且不只如此！
+
+Adobe Photoshop CC Extended (64 bit) 的新增功能：
+更紧密连接的 Photoshop、全新的智慧型锐利化、智慧型增加取样、内含 Extended 功能、Camera Raw 8 和图层支援、可编辑的圆角矩形、多重形状和路径选择、相机防手震、扩充的智慧型物件支援、改良的 3D 绘图、改善的文字样式、CSS 属性复製、条件动作、改良的 3D 场景面板、工作流程省时功能、改良的 3D 效果、从网页档案读入顏色、用於文字的系统消除锯齿、改良的最小和最大滤镜等。
+1.相机防抖功能
+
+　　挽救您以为因为相机抖动而失败的照片。不论模糊是由于慢速快门或长焦距造成的，相机防抖功能都能通过分析曲线来恢复其清晰度。
+
+
+图02
+
+
+图03
+
+　　2.Camera RAW修复功能改进
+
+　　您可以将Camera Raw所做的编辑以滤镜方式应用到Photoshop内的任何图层或文档中，然后再随心所欲地加以美化。在最新的Adobe Camera Raw 8 中，您可以更加精确地修改图片、修正扭曲的透视。你现在可以像画笔一样使用污点修复画笔工具在你想要去除的图像区域绘制。
+
+
+图04
+
+　　3.Camera Raw 径向滤镜
+
+　　在最新的Camera Raw 8 中，你可以在你的图像上创建出圆形的径向滤镜。这个功能可以用来实现多种效果，就像所有的Camera Raw调整效果一样，都是无损调整。
+
+
+图05
+
+
+图06
+
+　　4.Camera Raw自动垂直功能
+
+　　在Camera Raw 8 中，你可以利用自动垂直功能很轻易地修复扭曲的透视。并且你有很多选项来修复透视扭曲的照片。
+
+
+图07
+
+
+
+
+Photoshop CC此绿色版特点：
+1. 精简了Bridge CC、Extension Manager、多国语言、激活系统等组件.
+2. 鉴于自带的 Digimarc 水印插件基本没人使用，所以换成了比较实用又强大的皮肤美化滤镜 Portraiture v2.3 build 2308U1
+3. 保留了Camera Raw 8、颜色预置、PDF预置、Kuler调色板。
+4. 精简了dynamic link，但是如果装了After Effects或者Premiere的话，AE和PR会给PS补上dynamic link功能。
+5. 能完整关联所有Photoshop能编辑的文件。包括CLASS、FILETYPE、MIME等特殊方式关联。
+6. 使用SQLLite准确注册程序,为以后安装其他Adobe程序做好准备。
+7. 程序已经集成和谐文件。并且不含任何第三方插件。保持纯净。
+8. 修复了Windows8下面绿色版CS6必须要管理员运行的缺陷（错误16），并且还有VC支持库导致的错误（错误0x00000007）。
+9. 修复了“文件菜单-文件信息”没内容的bug。
+
+安装方法：
+方法一：运行“QuickInstall.exe”安装软件。
+方法二：使用命令行“QuickInstall.exe /i”安装；“QuickInstall.exe /u”卸载。
+
+运行环境: Windows Vista/7.0/2008/8.0 平台：只限于x64
+
+****************************************************************

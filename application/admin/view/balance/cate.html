@@ -1,0 +1,272 @@
+	<link href="__ADMIN_STATIC__/css/plugins/jsTree/style.min.css" rel="stylesheet">
+	<style type="text/css">
+		.ibox-contents > div{
+			float: left;
+		}
+		.ibox-contents > div:nth-child(1){
+			margin-top: 20px;
+			margin-left: 60px;
+		}
+		.ibox-contents > div:nth-child(2){
+			margin-left: 120px;
+			min-width: 660px;
+		}
+	</style>
+	<div class="ibox float-e-margins" style="height: 100%;">
+		<div class="ibox-title">
+			<h5>资产类别</h5>
+			
+		</div>
+				
+		<div class="ibox-contents">
+		    <div id="using_json"></div>
+			<div>
+				<div class="wrapper wrapper-content animated fadeInRight"  style="height: 100%;">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>添加资产类别 </h5>
+				</div>
+				<div  class="ibox-content">
+					<form class="form-horizontal" id="form" method="post">
+						<div class="form-group">
+							<label class="col-sm-2 control-label">名称</label>
+							<div class="col-sm-10">
+								<input type="text" value=""  name="title" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">父类型</label>
+
+							<div class="col-sm-10">
+								<select class="form-control m-b" name="pid">
+									
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">折旧年限</label>
+							<div class="col-sm-10">
+								<input type="number" name="age_limit" value="" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">残值率</label>
+							<div class="col-sm-10">
+								<input type="number" name="remaining" value="" class="form-control">
+							</div>
+						</div>
+				
+						<div class="form-group">
+							<label class="col-sm-2 control-label">显示顺序</label>
+							<div class="col-sm-10">
+								<input type="number" onfocus="persons(this)" name="cid" value="" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">选人：</label>
+							<div class="col-sm-10">
+								<textarea onfocus="persons(this)" id="ccomment" name="note" class="form-control"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-4 col-sm-offset-3">
+								<button id="cateAdd" class="btn btn-primary" onclick="add()" type="button">
+									添加
+								</button>
+									<button id="dels" class="btn btn-danger none" onclick="del()" type="button">删除</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+			
+			</div>
+		</div>
+	</div>
+{include file="public/person"/}
+{include file="public/supplier"/}
+	<script src="__ADMIN_STATIC__/js/plugins/jsTree/jstree.min.js"></script>
+	<script src="__ADMIN_STATIC__/js/plugins/iCheck/icheck.min.js"></script>
+<script type="text/javascript">
+	function purchase(){
+		supplier.init().setCheck('39,40').open();
+	}
+	var trees = {:json_encode($tree);} || {},
+	id = null,
+	pid = null,
+	strs = '<option value="0">一级分类</option>',
+	input = $("form input"),
+	select = $("select"),
+	cateAdd = $("#cateAdd"),
+	dels = $("#dels"),
+	
+	textarea = $("textarea");
+	 $('#using_json').jstree({
+                'core': {
+                    'data': trees
+                }
+            });
+
+           $('#using_json').on("changed.jstree", function (e, data) {
+           		$.ajax({
+           			type:"post",
+           			url:"{:url('CateGetOne')}",
+           			data: {id: data.node.id},
+           			async:true,
+           			success: function(res){
+           				var data = res.data;
+
+           				input.each(function(){
+           					var t = $(this);
+           					t.val(data[t.attr('name')]);
+           				})
+//         				select.attr('disabled', 'disabled');
+           				textarea.val(data['note']);
+           				cateAdd.text('编辑');
+           				dels.removeClass('none');
+           				id = data.id;
+           				pid = data.pid;
+           				strs = '<option value="0">一级分类</option>';
+						tree(trees, function(){
+							$("option[value="+ data.pid +"]").prop('selected', 'selected');
+						});
+           			}
+           		});
+           });
+
+
+//(function(){
+	
+	
+	tree(trees);
+	
+	function tree (data, fn){
+		for (var i in data) {
+			if (id == data[i].id) {
+				continue
+			}
+			var level = '';
+			if (data[i]['level'] > 1) {
+			    level = '';
+			    var arr = [];
+			    arr.length = data[i]['level'];
+				level += arr.join('&nbsp&nbsp&nbsp&nbsp');
+				level += '|-'
+			}
+			strs = strs + '<option  value="' + data[i]['id'] + '">' + level + data[i]['title'] + '</option>';
+			if(data[i].children.length != 0 && id != data[i].id){
+				tree(data[i].children);
+			}
+		}
+		$("select[name='pid']").empty().append(strs);
+		fn && fn();
+	}
+
+//})(trees)
+
+    
+//  $(document).ready(function () {
+//          $('.i-checks').iCheck({
+//              radioClass: 'iradio_square-green',
+//          });
+//      });
+    
+	function add() {
+		var seeting = {
+			id : 'form',
+			validate: [
+				['title', '名称不能为空'],
+				['pid',  '父类型不能为空'],
+				['age_limit', '折旧年限不能为空'],
+				['remaining', '残值率不能为空'],
+				['cid', '排序不能为空'],
+//				{name: 'phone',  msg: '手机号不正确', regx: /^\d{11}$/, right: false},
+			],
+			append: [],
+			//			del: ['pid'],
+//			dispose: true,
+//			type: 'POST',
+			debug: true,
+			url: '{:url("cate")}'
+		};
+		if (id) {
+			seeting.append.push(['id',  id]);
+		}
+		layer.confirm('确定执行此操作吗?', {
+		    btn: ['确定','取消'], //按钮
+		    shade: false //不显示遮罩
+		}, function(){
+    		util.ajax(seeting).then(function(res) {
+				alert(res.msg);
+				if(res.code == 1) {
+					setTimeout(function(){
+						location.reload();
+					}, 2000)
+				}
+			}).catch(e => {
+				console.error(e)
+				alert('错误, 请联系管理员.');
+			})
+		});
+
+
+	}
+
+	function del() {
+		layer.confirm('确定删除吗?', {
+		    btn: ['确定','取消'], //按钮
+		    shade: false, //不显示遮罩
+		    icon: 2,
+		}, function(){
+			$.ajax({
+				type:"post",
+				url:"{:url('delete')}",
+				data: {ids: id},
+				async:true,
+				success: function(res){
+					alert(res.msg);
+					if(res.code == 1) {
+						setTimeout(function(){
+							location.reload();
+						}, 2000)
+					}
+				}
+			});
+		});
+	}
+	
+	function persons(o){
+		//皆为非传参数, 默认 多选人员
+		var seeting = {
+			//是否只选部门或职位
+			onlyOrganization: true,
+			//是否单选
+			radio: true,
+			//默认选中 checked支持,隔开的字符串及数组
+			checked: '9',
+//			是否是选择职位
+			position: true,
+			//文字赋值input或textarea
+			name: o,
+			//id赋值input
+//			hiddenname: 'ids',
+			//确定回调方法
+//			callback: function(option){
+				//...do you someting
+				//console.log(option)
+//			}
+//取消回调
+//			cancel: function(option){
+				//...do you someting
+				//console.log(option)
+//			}
+		};
+		
+		window.person = new openPerson(seeting);
+	}
+</script>

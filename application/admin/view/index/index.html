@@ -1,0 +1,172 @@
+<link href="__ADMIN_STATIC__/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+<style type="text/css">
+	iframe{
+		width: 100%;
+		height: 100%;
+	}
+.page_tip{
+		position: fixed;
+		bottom: 0;
+		right: 0;
+		/*transition: all 300ms ease-in;*/
+		animation: page_tip .25s, 100ms;
+		min-width: 260px;
+		
+		/*width: 100%;*/
+		/*transform: translateY(200px);*/
+	}
+	.page_tip .alert{
+		margin-bottom: 0;
+	}
+	@-webkit-keyframes page_tip{
+		from{
+		transform: translateY(100%);
+			
+		}
+		to{
+		transform: translateY(0);
+			
+			
+		}
+	}
+	@keyframes page_tip{
+		from{
+		transform: translateY(100%);
+		}
+		to{
+			transform: translateY(0);
+			
+		}
+	}
+</style>
+ <script defer="defer" src="__ADMIN_STATIC__/js/plugins/toastr/toastr.min.js"></script>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden;">
+	<div id="wrapper">
+		{include file="public/menus"}
+		<div class="gray-bg dashbard-1" id="page-wrapper">
+			<div class="row border-bottom">
+				{include file="public/title"}
+			</div>
+			
+			<div id="content-main" class="row J_mainContent">
+				<iframe id="J_iframe" class="adminindexhome"  src="{:url('home')}" frameborder="0" ></iframe>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	 
+    var m_func_type = {
+    	data: null,
+    	page_tip: null,
+    	msg_type: {notice: '公告', meeting: '会议', audit: '审核', flow: '流程'},
+    	init(){
+		  $.ajax({
+            	type:"post",
+            	data: {'client_id': this.data.client_id},
+            	url:"{:url('gateway/message/bindUid')}",
+            	async:true,
+            	success: function(res){
+            		console.log(res)
+            	}
+            });
+          
+            toastr.options = {
+				  "closeButton": true,
+				  "debug": false,
+				  "progressBar": true,
+				  "positionClass": "toast-bottom-right",
+				  "onclick": null,
+				  "showDuration": "0",
+				  "hideDuration": "0",
+				  "timeOut": "0",
+				  "extendedTimeOut": "0",
+				  "showEasing": "swing",
+				  "hideEasing": "linear",
+				  "showMethod": "fadeIn",
+				  "hideMethod": "fadeOut"
+			}
+    	},
+    	notice(){
+    		this.alert()
+    	},
+    	meeting(){
+    		this.alert()
+    		
+    	},
+    	audit(){
+    		this.alert()
+    		
+    	},
+    	flow(){
+    		this.alert()
+    		
+    	},
+    	offline(){
+	    	layer.confirm(this.data.msg, {
+			  btn: ['确定'], //按钮
+			  closeBtn: 0,
+			  title: '下线通知'
+			}, function(){
+				top.location.href = '{:url('admin/public/signin')}';
+			})
+   		},
+   		alert(success){
+   			toastr['info']((this.data.msg || ''), (this.msg_type[this.data.type] || '') + '消息提醒');
+// 			var str = `<div class="page_tip"><div class="alert alert-danger alert-dismissable">
+//				    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+//				    <h3 class="font-w300 push-15">${this.msg_type[this.data.type] + '消息提醒'}</h3>
+//				    <p>${this.data.msg}</p>
+//				</div></div>`;
+//				(this.page_tip||(this.page_tip = $("body"))).append(str)
+//	    	layer.confirm(this.data.msg, {
+//			  btn: ['确定'], //按钮
+//			  closeBtn: 0,
+//			   offset:['center', 'center'],
+//			  
+//			  title: this.msg_type[this.data.type] + '消息提醒'
+//			}, function(index){
+//				success && success();
+//				layer.close(index)
+//			})
+   		
+   		}
+    }
+    ws = new WebSocket('{:config('websocketAddress')}');
+    // 服务端主动推送消息时会触发这里的onmessage
+    ws.onmessage = function(e){
+    	
+         // json数据转换成js对象
+        var data = JSON.parse(e.data);
+//      console.error(data)
+        var type = data.type || '';
+        if(m_func_type.hasOwnProperty(type)){
+        	console.log(data)
+        	m_func_type.data = data;
+        	m_func_type[type]();
+        }
+
+
+    }
+
+
+  
+    //发送消息
+//  function sendMsg(){
+//  	ws.send();
+//  }
+    
+    ws.onopen = function(evt){
+    	
+    }
+    ws.onclose = function(evt){
+    	
+    }
+    ws.onerror = function(evt){
+    	
+    }
+  
+  
+</script>
+
+ 

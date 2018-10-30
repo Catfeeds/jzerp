@@ -1,0 +1,142 @@
+<script src="__ADMIN_STATIC__/js/vue.js"></script>
+<style type="text/css">
+	#app ul{
+		width: 100%;
+		padding: 0;
+		margin: 0;
+	}
+	#app li{
+		height: 280px;
+
+		float: left;
+		list-style-type: none;
+
+		position: relative;
+		box-sizing: border-box;
+		padding: 6px;
+		
+	}
+	.abs{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		background-color: #ECF1F8;
+	
+		line-height: 36px;
+		border-bottom: 1px solid #D3D4D3;
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		user-select: none;
+	}
+	.abs span{
+		padding: 0 6px;
+		display: inline-block;
+		height: 39px;
+	}
+	#app li .iconfont{
+		font-size: 40px !important;
+		align-self: center;
+		margin: 0 auto !important;
+
+	}
+	#app .content{
+		position: relative;
+		width: 100%;
+		display: flex;
+		border: 1px solid #DDDDDD;
+		/*box-sizing: border-box;*/
+		/*margin: 12px;*/
+		height: 100%;
+
+		
+	}
+	#layer span{
+		display: inline-block;
+		width: 20%;
+	}
+	.activeSpan{
+	    background-color: #fff;
+	    border-left: 1px #ddd solid;
+	    border-right: 1px #ddd solid;
+	    transform: translateY(1px);
+	    
+	}
+	.abs span:first-child{
+	    border-left: none !important;
+	}
+	.titleList{
+		margin-top: 40px !important;
+	}
+	.titleList li{
+		height: 36px !important;
+		width: 100%;  
+	    border-bottom: 1px dotted #ddd;
+	}
+	.titleList span{
+		float: right;
+	}
+
+</style>
+<div id="app">
+	
+	<div class="box">
+
+		<ul>
+			<template v-for="(item, index) in list">
+				<li :style="{width: item.width}">
+					<div class="content">
+						<div class="abs">
+							<span v-for="(v, k) in item.top" @click="topClick(index, k, v.type)" :class="{activeSpan: v.type == item.active}">{{v.title}}</span>
+						</div>
+						<ul class="titleList">
+							<li v-for="i in dataList[item.active]"><a href="javascript:" title="[2016-12-13]--[2024-12-14](黄燕)家中有事请假一天">{{i.title}}</a><span>[{{i.time}}]</span></li>
+						</ul>
+					</div>
+				</li>
+
+			</template>
+			<div class="clearfix">
+				
+			</div>
+		</ul>
+	</div>
+
+</div>
+<script type="text/javascript">
+	new Vue({
+		el: '#app',
+		data: {
+			list: JSON.parse({:json_encode($data)}),
+			topActive: {
+				outer: null,
+				within: null
+			},
+			dataList: {:json_encode($dataList)},
+		},
+
+		methods: {
+			topClick(i, k, type){
+				var t = this;
+				if(!t.dataList.hasOwnProperty(type)){
+					$.ajax({
+						type: 'post',
+						url: '{:url('getTypeList')}',
+						async: true,
+						data: {type: [type]},
+						success: function(res){
+							t.$set(t.dataList, type , res[type]);
+						}
+					})
+				}
+			
+				t.$set(t.list[i], 'active', type)
+				t.topActive.outer = i;
+				t.topActive.within = k;
+			},
+
+		},
+		//watch: {},
+
+	})
+</script>

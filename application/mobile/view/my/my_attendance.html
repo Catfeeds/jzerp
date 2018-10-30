@@ -1,0 +1,212 @@
+{extend name='temp/base' /}
+{block name='headcss'}
+<style type="text/css">
+    html {
+        height: 100%
+    }
+
+    body {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+    }
+
+    #container {
+        height: 93%;
+
+    }
+
+    #yuan {
+        width: 125px;
+        height: 125px;
+        background: rgba(250, 247, 241, 0.5);
+        position: fixed;
+        top: 355px;
+        left: 115PX;
+        border: 10px solid rgba(0, 178, 254, 1);
+        border-radius: 100px;
+        margin: 0 auto;
+        display: flex;
+    }
+
+    #datetime {
+        font-size: 27px;
+    }
+
+    #info {
+        margin: 0 auto;
+        align-self: center;
+        display: block;
+        font-size: 20px;
+        align-content: center;
+    }
+    #test {
+        margin: 0 auto;
+        align-self: center;
+    }
+</style>
+{/block}
+{block name="goback"}
+<div class="goback" onclick="goback()">
+</div>
+{/block}
+{block name='content'}
+<div id="container"></div>
+<div id="yuan">
+    <div id="test">
+        <p id="datetime"></p>
+        <p id="info"></p>
+    </div>
+</div>
+{/block}
+{block name="footerjs"}
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=PdphHUin6wG5kABoi9bB8BNGyClU0VmO"></script>
+<script type="text/javascript">
+    /**
+     * 对Date的扩展，将 Date 转化为指定格式的String
+     * 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，
+     * 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
+     * 例子：
+     * (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
+     * (new Date()).Format("yyyy-M-d h:m:s.S")   ==> 2006-7-2 8:9:4.18
+     *
+     * @param fmt
+     * @returns {*}
+     * @constructor
+     */
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    };
+    //动态的获取时间
+    showTime();
+    setInterval(showTime, 1000); //定义一个计时器。1s执行一次
+
+
+    function showTime() {
+        var time1 = new Date().Format('ss');
+        if (parseInt(time1) % 2 == 1) {
+            var time2 = new Date().Format("hh:mm");
+        } else {
+            var time2 = new Date().Format("hh mm");
+        }
+        $('#datetime').text(time2);
+    }
+    // 创建地图实例
+    var map = new BMap.Map("container");
+    // 初始化地图，设置中心点坐标和地图级别
+    // 115.746071。28.716072
+    var point = new BMap.Point({:config('lng')}, {:config('lat')});
+
+    map.centerAndZoom(point, 17);
+    //增加控件
+    var opts = {anchor: BMAP_ANCHOR_TOP_LEFT};
+    map.addControl(new BMap.NavigationControl(opts));
+    map.addControl(new BMap.GeolocationControl());
+
+    //添加点
+    var marker = new BMap.Marker(point);        // 创建标注
+    map.addOverlay(marker);
+
+    //添加圆
+    var radius = {:config('radius')};  //半径
+    var circle = new BMap.Circle(point, radius, {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5});
+    map.addOverlay(circle);
+    // // 点击事件显示点击坐标点
+    // map.addEventListener("click", function(e){
+    //     document.write(e.point.lng + ", " + e.point.lat);
+    // });
+    //获取当前位置；
+    var geolocation = new BMap.Geolocation();
+    // 开启SDK辅助定位
+    geolocation.enableSDKLocation();
+    geolocation.getCurrentPosition(function (r) {
+        if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+            var mpoint = r.point;
+            var mk = new BMap.Marker(r.point);
+            map.addOverlay(mk);
+            map.panTo(r.point);
+
+            //获得两点之间的距离
+            var distance = map.getDistance(mpoint, point).toFixed(2);
+            var a;
+            if ((a = parseInt(distance) - radius) > 0) {
+                //连线
+                var polyline = new BMap.Polyline([
+                    mpoint,//起始点的经纬度
+                    point//终止点的经纬度
+                ], {
+                    strokeColor: "red",//设置颜色
+                    strokeWeight: 3, //宽度
+                    strokeOpacity: 0.5
+                });//透明度
+                map.addOverlay(polyline);
+            }
+            document.getElementById("yuan").onclick = function () {
+
+                $.ajax({
+                    url: "clock_in?a=" + a,
+                    type: 'GET',
+                    contentType: "application/json",
+                    dataType: 'json',//
+                    success: function (res) {
+                        var a = JSON.parse(res);
+                        if (a.code == '1') {
+                            alert(a.msg);
+                            document.querySelector('#info').innerHTML = "打卡下班";
+                        } else if (a.code == "2") {
+                            alert(a.msg);
+                            document.querySelector('#info').innerHTML = "已完成";
+                        } else {
+                            alert(a.msg);
+                        }
+
+                    },
+                    cancel: function (res) {
+                        alert('获取信息失败')
+                    }
+
+                })
+            };
+        }
+        else {
+            alert('无法定位');
+        }
+    });
+    //获取时间下面的信息
+    $.ajax({
+        url: "today2Work",
+        type: "GET",
+        contentType: "application/json",
+        dataType: "json",
+        success: function (res) {
+            var a = JSON.parse(res);
+            if (a.code == '1') {
+                document.querySelector('#info').innerHTML = a.msg;
+            } else if (a.code == "2") {
+                document.querySelector('#info').innerHTML = a.msg;
+            } else if (a.code == "3") {
+                document.querySelector('#info').innerHTML = a.msg;
+            } else {
+                document.querySelector('#info').innerHTML = a.msg;
+            }
+        }, cancel: function (res) {
+            alert('获取信息失败');
+        }
+
+    })
+
+
+</script>
+{/block}

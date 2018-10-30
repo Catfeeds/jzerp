@@ -1,0 +1,124 @@
+
+{extend name='temp/base' /} 
+  <!-- 正文内容 -->
+{block name='content'}
+<style>
+	.list_box{
+		background: #fff;
+		min-height: calc(100vh - 106px);
+	}
+	.list{
+		position: relative;
+		padding: 12px;
+		min-height: 48px;
+		border-bottom: 1px solid #dcdcdc;
+	}
+	.list_img{
+		position: absolute;
+		left: 15px;
+		width: 45px;
+		height: 45px;
+		border-radius: 50%;
+		overflow: hidden;
+		text-align: center;
+		padding-top: 9px;
+		box-sizing: border-box;
+		/*background-position: center center;
+		background-size: 30px auto;
+		background-repeat: no-repeat;*/
+	}
+	
+	.list_content{
+		padding-left: 60px;
+	}
+	.list_img i{
+		font-size: 28px;
+		color: #fff;
+	}
+	/*.notice{
+		background-color: #ED5754;
+		background-image: url('/static/mobile/img/notice.png');
+	}*/
+	.list_content p:first-child{
+		font-size: 18px;
+		padding-top: 4px;
+	}
+	.list_content p:last-child{
+		font-size: 16px;
+		padding-top: 6px;
+		color: #999999;
+	}
+	.text_overflow{
+    	-webkit-line-clamp: 1;
+	}
+	.circle{
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: #FF0000;
+		display: inline-block;
+		margin-right: 8px;
+	}
+</style>
+    <div class="list_box">
+    		    		 	<a href="{:url('notice_lists')}">
+	    	<div class="list">
+	    		<div style="background: rgba(237,87,84,1);" class="list_img notice">
+	    			<i class="iconfont icon-gonggao1"></i>
+	    		</div>
+	    		<div class="list_content">
+	    			<p>公告</p>
+	    			<p class="text_overflow">666</p>
+	    		</div>
+	    	</div>
+		</a>
+		    		 	<a href="/admin.php/mobile/message/meeting_lists.html">
+	    	<div class="list">
+	    		<div style="background: rgba(246,191,38,1);" class="list_img notice">
+	    			<i class="iconfont icon-EPCzuodaohangtubiao"></i>
+	    		</div>
+	    		<div class="list_content">
+	    			<p>会议</p>
+	    			<p class="text_overflow">ces</p>
+	    		</div>
+	    	</div>
+		</a>
+		    		 	<a href="/admin.php/mobile/message/log_list.html">
+	    	<div class="list">
+	    		<div style="background: rgba(37,167,153,1);" class="list_img notice">
+	    			<i class="iconfont icon-hangzheng"></i>
+	    		</div>
+	    		<div class="list_content">
+	    			<p><i class="circle"></i>工作日志</p>
+	    			<p class="text_overflow">666</p>
+	    		</div>
+	    	</div>
+		</a>
+		    		 	<a href="/admin.php/mobile/message/plan_list.html">
+	    	<div class="list">
+	    		<div style="background: rgba(189,131,205,1);" class="list_img notice">
+	    			<i class="iconfont icon-hetong"></i>
+	    		</div>
+	    		<div class="list_content">
+	    			<p><i class="circle"></i>工作计划</p>
+	    			<p class="text_overflow">手机端计划</p>
+	    		</div>
+	    	</div>
+		</a>
+		    		 	<a href="/admin.php/mobile/examine/lists.html">
+	    	<div class="list">
+	    		<div style="background: rgba(0,0,255,1);" class="list_img notice">
+	    			<i class="iconfont icon-yuancailiaoshujuku"></i>
+	    		</div>
+	    		<div class="list_content">
+	    			<p><i class="circle"></i>待办流程</p>
+	    			<p class="text_overflow">33333</p>
+	    		</div>
+	    	</div>
+		</a>
+		    </div>
+        		
+    
+{include file="temp/footer"/}
+
+{/block}

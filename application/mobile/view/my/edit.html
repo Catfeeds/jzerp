@@ -1,0 +1,320 @@
+{extend name='temp/base' /}
+{block name='title'}首页{/block}
+{block name='headcss'}
+<style>
+    .list_box {
+        background: #fff;
+        margin-top: 12px;
+    }
+
+    .list {
+        position: relative;
+        border-bottom: 1px solid #DCDCDC;
+        line-height: 45px;
+        min-height: 45px;
+        color: #333333;
+    }
+
+    .posi_left {
+        position: absolute;
+        left: 12px;
+    }
+
+    .btn {
+        color: #fff;
+        background-color: #03A9F4;
+        line-height: 48px;
+        text-align: center;
+        margin: 20px 12px;
+        border-radius: 4px;
+        font-size: 18px;
+    }
+
+    .pos_center {
+        padding-left: 100px;
+        display: inline-block;
+    }
+
+    input {
+        width: 200px;
+        line-height: 36px;
+        border: none;
+        outline: none;
+    }
+
+    .changepassword {
+        background: #fff;
+        margin-top: 10px;
+        line-height: 36px;
+        padding-left: 12px;
+        line-height: 46px;
+        border-top: 1px solid #DCDCDC;
+        border-bottom: 1px solid #DCDCDC;
+    }
+
+    .iconfont {
+        float: right;
+        padding-right: 12px;
+    }
+
+    #image {
+        height: 150px;
+        width: 150px;
+        border-radius: 88px;
+    }
+
+    .file {
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 4px 12px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+    }
+
+    .file input {
+        position: absolute;
+        font-size: 100px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+    }
+
+    .file:hover {
+        background: #AADFFD;
+        border-color: #78C3F3;
+        color: #004974;
+        text-decoration: none;
+    }
+</style>
+{/block}
+{block name='content'}
+<div class="head-title">
+    <div onclick="goback()" class="goback">
+
+    </div>
+    高级设置
+
+</div>
+<div class="list_box">
+    <div class="list">
+        <div class="posi_left">
+            头像:
+        </div>
+        <div class="pos_center">
+            <img id="image" src="{:get_avatar($a['avatar'])}"/>
+            <a href="javascript:;" class="file">选择头像
+
+            </a>
+        </div>
+    </div>
+    <div class="list">
+        <div class="posi_left">
+            昵称:
+        </div>
+        <div class="pos_center">
+            <input id="name" type="text" value="{$a->nickname}"/>
+        </div>
+    </div>
+    <div class="list">
+        <div style="padding-left: 1em;" class="posi_left">
+            手机号:
+        </div>
+        <div class="pos_center">
+            <input id="phone" type="number" value="{$a->mobile}"/>
+        </div>
+    </div>
+    <div class="list">
+        <div style="padding-left: 1em;" class="posi_left">
+            邮箱:
+        </div>
+        <div class="pos_center">
+            <input id="email" type="text" value="{$a->email}"/>
+        </div>
+    </div>
+
+
+</div>
+<a href="{:url('change_password')}">
+    <div class="changepassword">
+        修改密码<i class="iconfont icon-arrow-right"></i>
+    </div>
+</a>
+<div class="btn" id="btn">
+    修改
+</div>
+
+{/block}
+{block name="footerjs"}
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script type="text/javascript">
+
+    wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: "{$appId}",   // 必填，公众号的唯一标识
+        timestamp: "{$timestamp}", // 必填，生成签名的时间戳
+        nonceStr: "{$nonceStr}", // 必填，生成签名的随机串
+        signature: "{$signature}",// 必填，签名
+        jsApiList: [
+            'previewImage',
+        ]
+    });
+
+    //将图片转换为base64
+    function getBase64Image(img) {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+        var ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
+        var dataURL = canvas.toDataURL("image/" + ext);
+        return dataURL;
+    }
+
+    var images = {
+        localId: [],
+        serverId: []
+    };
+    //预览头像
+    wx.ready(function () {
+     document.getElementById('image').onclick=function () {
+         var a=[];
+         a[0] = this.src;
+         wx.previewImage({
+             current: this.src,
+             urls: a
+         });
+     };
+
+
+        // var s=[];
+        // for (var j = 0; j <i.length ; j++) {
+        //     s[j]= i[j].src;
+        // }
+        // var _loop = function _loop(j) {
+        //     i[j].onclick = function () {
+
+        //     };
+        // };
+        // for (var k = 0; length = s.length, k < length; k++) {
+        //     _loop(k);
+        // }
+
+
+
+
+
+
+
+
+        $file = document.getElementsByClassName('file')[0];
+
+
+        $file.onclick = function () {
+            wx.chooseImage({
+                count: '1',
+                success: function (res) {
+                    images.localId = res.localIds;
+                    wx.uploadImage({
+                        localId: images.localId[0],
+                        success: function (res) {
+                            images.serverId = res.serverId;
+                            $.ajax({
+                                url: '/admin.php/mobile/my/downLoad/?serverId=' + images.serverId,
+                                type: 'GET',
+                                async: true,
+                                contentType: "application/json",
+                                dataType: 'json',
+                                success: function (data) {
+                                    if (data) {
+                                        document.getElementById('image').src = images.localId;
+                                        alert('修改头像成功');
+                                    } else {
+                                        alert('修改头像失败');
+                                    }
+                                },
+                                cancel: function (data) {
+
+                                    return false;
+                                }
+                            });
+                        },
+                        fail: function (res) {
+                            console.log(res);
+                        }
+                    });
+                }
+            });
+
+        };
+
+
+    });
+
+
+    //姓名正则
+    var pat = new RegExp("[^a-zA-Z0-9\_\u4e00-\u9fa5]", "i");
+    //手机号正则；
+    var re = /^1\d{10}$/;
+    //邮箱正则
+    var reg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"); //正则表达式
+
+    // throw SyntaxError('强制中断');
+    document.getElementById('btn').onclick = function () {
+        if (!document.getElementById('name').value) {
+            alert('姓名不能为空');
+            return;
+        }
+        if (!document.getElementById('phone').value) {
+            alert('手机号码不能为空');
+            return;
+        }
+        if (!document.getElementById('email').value) {
+            alert('邮箱不可为空');
+            return;
+        }
+        if (pat.test(document.getElementById('name').value)) {
+            alert('姓名包含非法字符!');
+            return;
+        }
+        if (!re.test(document.getElementById('phone').value)) {
+            alert('手机号格式错误,必须为1开头的11位数字!');
+            return;
+        }
+        if (!reg.test(document.getElementById('email').value)) {
+            alert('邮箱格式错误!');
+            return;
+        }
+
+        $.ajax({
+            url: 'modification?name=' + document.getElementById('name').value + "&mobile=" + document.getElementById('phone').value+'&email='+document.getElementById('email').value,
+            type: 'GET',
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (result) {
+                var a = Number(result);
+
+                if (a) {
+                    alert('修改成功');
+                }else if (a == 0) {
+                    alert('修改失败');
+                }
+                else {
+                    alert(result);
+                }
+            },
+            cancel: function (result) {
+                alert('获取信息失败:' + result);
+            }
+
+        });
+
+    }
+</script>
+{/block}

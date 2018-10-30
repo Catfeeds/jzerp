@@ -1,0 +1,14 @@
+<html lang="en">
+	{include file="public/header"}
+	<body onkeyup="keydow(event)">
+		{__CONTENT__}
+	</body>
+	<script type="text/javascript">
+		function keydow(event){
+			var e = event || window.event;
+			if (e.keyCode == 13) {
+				$(".ajax-post").click()
+			}
+		}
+	</script>
+</html>

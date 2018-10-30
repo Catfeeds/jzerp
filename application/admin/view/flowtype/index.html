@@ -1,0 +1,198 @@
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+    	<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+        	<a href="javascript:void(0);" onclick="add()" class="btn btn-warning "><i class="iconfont icon-jia"></i>添加</a>
+        	<a href="javascript:void(0);" onclick="deleteAll('{:url('delete')}')" class="btn btn-danger "><i class="fa fa-trash-o fa-fw"></i>批量删除</a>
+            <div class="seach-box">
+			<form action="{:url('index')}" method="get">
+              <div class="form-group">		              		
+                <div class="seach-list">
+                	<label class="">流程类型:</label>
+                    <input type="text" name="title" value="{$keywords.title}" placeholder="流程类型" class="form-control">
+                </div>			                     
+                <div class="seach-list">			                    	
+                	<button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button> </span>
+                </div>			                    
+        	</div>
+			</form>
+            </div>
+            <table class="table table-bordered table-striped dataTables-example">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" class="i-checks check-all"></th>
+                        <th>流程类型</th>
+                        <th onclick="sorts({name: 'sort', sort: '{$keywords['sort']}'})" class="sorting_{$keywords['sort']}">排序</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	{empty name='list'}
+					<tr class="table-empty" >
+						<td class="text-center empty-info" colspan="100%">
+                			<i class="fa fa-database"></i> 暂无数据<br>
+                        </td>
+                    </tr>
+					{/empty}
+                	{volist name="list" id="vo"}
+                    <tr>
+                    	<td>
+                            <input type="checkbox" class="i-checks ids" value="{$vo.id}"/>
+                        </td>
+                        <td>{$vo.title}</td>
+                        <td>{$vo.sort}</td>
+                        <td>                                    																									
+                        	<span onclick="edit(this,{$vo.id})" class="btn btns btn-success">编辑</span>		
+                        	<span onclick="deletes({$vo.id})" class="btn btns btn-danger">删除</span>                                    	
+                        </td>
+                    </tr>
+                    {/volist}
+                </tbody>
+            </table>
+            {$list->render()}
+        </div>
+    </div>
+</div>
+<div class="addinp" style="display: none;height: 100%;overflow: auto;">
+	<div class="ibox-content">
+		<div class="form-group">
+            <label>流程类型</label>
+            <input type="text" id="add" placeholder="请输入类型名称" class="form-control">
+    	</div>
+    	<div class="form-group">
+            <label>排序</label>
+            <input type="number" id="sort" placeholder="请输入排序" value="100" class="form-control">
+		</div>       	
+	</div>
+</div>
+<div class="editinp" style="display: none;height: 100%;overflow: auto;">
+	<div class="ibox-content">
+		<div class="form-group">
+            <label>流程类型</label>
+            <input type="text" id="edit" placeholder="请输入类型名称" class="form-control">
+    	</div>
+    	<div class="form-group">
+            <label>排序</label>
+            <input type="number" id="esort" placeholder="请输入排序" class="form-control">
+		</div>       	
+	</div>
+</div>
+<script>
+//$('.dataTables-example').dataTable();
+var keywords = {:json_encode($keywords)};
+	function sorts(option){
+		keywords[option.name] = option.sort == 'asc' ? 'desc' : 'asc';
+		keywords.important = option.name;
+		var seach = '';
+		for (var k in keywords) {
+			seach += k + '=' + keywords[k] + '&';
+		}
+		seach = seach.slice(0, -1);
+		location.href = '{:url('index')}?' + seach;
+	}
+	function add(){
+		layer.open({
+			type:1,
+			title:'新增类型',
+			maxmin: true,
+			scrollbar: false,
+			content:$('.addinp'),
+			btn:['确定','取消'],
+			yes:function (index,layero) {	
+				var vals = $('#add').val();
+				var sort = $('#sort').val();
+				if(vals == ''){
+					alert('类型不能为空');
+					return false;
+				}
+				$.ajax({
+					type:"post",
+					async:false,
+					data:{title:vals,sort:sort},
+					url:"{:url('add')}",
+					success:function(msg){	
+						if(msg.code == 2){
+							alert(msg.data.title + msg.msg);
+							next = false;
+						}else{
+							alert(msg.data.title + msg.msg)
+							layer.close(index);	
+							$('#add').text('');
+							setTimeout(function(){
+			             		location.reload();
+			                },1000);	
+						}
+					}
+						               
+            	})		
+			}
+		})
+	}	
+	function edit(t, id){
+		$.ajax({
+			type:"get",
+			async:false,
+			url:"{:url('edit')}?id="+id,
+			success:function(data){						
+				$('#edit').val(data.title)
+				$('#esort').val(data.sort)
+				if(data.code == 0){
+					alert(data.msg)
+				}else{							
+					layer.open({
+						type:1,
+						title:'编辑类型',
+						maxmin: true,
+						scrollbar: false,
+						content:$('.editinp'),
+						btn:['确定','取消'],
+						yes:function (index,layero) {	
+							var vals = $('#edit').val();
+							var sort = $('#esort').val();
+							if(vals == data.title){
+								alert('无变化');
+								return false;
+							}
+							if(vals == ''){
+								alert('类型不能为空');
+								return false;
+							}							
+							$.ajax({
+								'type':"post",
+								'data':{title:vals,sort:sort},
+								'url':"{:url('edit')}?id="+id,
+								'async':true,
+								'success':function(res){
+									alert(res.data.title + res.msg)
+							layer.close(index);
+							setTimeout(function(){
+			             		location.reload();
+			                },1000);		               
+			            }	
+							});							
+						},	
+					})
+				}				
+			}
+		})			
+	}
+	function deletes(id){
+		layer.confirm('确定要删除',{
+			time:0,
+			btn:['是','否'],
+			yes:function(index){
+				$.ajax({
+					type:"get",
+					url:"{:url('delete')}?ids="+id,
+					async:true,
+					success:function(msg){
+						alert(msg.msg)
+						setTimeout(function(){
+		             		location.reload();
+		                },1000);	
+					}
+				});
+			},	
+		})
+	}
+
+</script>

@@ -1,0 +1,228 @@
+<div class="wrapper wrapper-content animated fadeInRight" style="height: 100%;">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>修改供应商信息 </h5>
+				</div>
+				<div class="ibox-title">
+					<h5>基本信息 </h5>
+				</div>
+				<div class="ibox-content">
+					<form class="form-builder row" id="form" name ="form" method="post" autocomplete="off">
+						
+						<input type="hidden" name="id"  value="{$vo.id|default=''}">
+						
+						<div class="form-group col-md-5 col-xs-4 ">
+							<label class="col-xs-12" for="name">供应商名称 <span style="color: red;"><b>*</b></span></label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="supplier_name"  value="{$vo.supplier_name}" placeholder="请输入供应商名称">
+							</div>
+						</div>
+					<div class="form-group col-md-5 col-xs-4 ">
+							<label class="col-xs-12" >供应商类型 <span style="color: red;"><b>*</b></span></label>
+							<div class="col-sm-12">
+								<select class="s-select2 form-control select2-hidden-accessible" name="supplier_type">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+
+							</div>
+						</div>
+						
+
+						<div class="form-group col-md-5 col-xs-4 ">
+							<label class="col-xs-12" >供应商编号</label>
+							<div class="col-sm-12">
+
+								<input class="form-control" type="text" name="supplier_number" value="{$vo.supplier_number}" placeholder="请输入供应商编号">
+
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-4 ">
+							<label class="col-xs-12" >供应商所属行业</label>
+							<div class="col-sm-12">
+								<select class="s-select2 form-control select2-hidden-accessible" name="supplier_industry">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >电话</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="supplier_tell" value="{$vo.supplier_tell}" placeholder="请输入电话">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >供应商区域</label>
+							<div class="col-sm-12">
+								<select class="s-select2 form-control select2-hidden-accessible" name="supplier_area">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >email</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="supplier_email" value="{$vo.supplier_email}" placeholder="请输入email">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >供应商规模</label>
+							<div class="col-sm-12">
+								<select class="s-select2 form-control select2-hidden-accessible" name="supplier_size">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >传真</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="supplier_fax" value="{$vo.supplier_fax}" placeholder="请输入传真">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >供应商来源</label>
+							<div class="col-sm-12">
+								<select class="s-select2 form-control select2-hidden-accessible" name="supplier_source">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >负责人</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="supplier_leader" value="{$vo.supplier_leader}" placeholder="请输入负责人">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >供应商等级</label>
+							<div class="col-sm-12">
+								<select class="s-select2 form-control select2-hidden-accessible" name="supplier_level">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+							</div>
+						</div>
+		
+						<br/>
+					</div>
+						<div class="ibox-title">
+							<h5>联系人信息 </h5>
+						</div>
+						<div class="ibox-content-bottun" style="height: 50%;">
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >手机</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="phone" value="{$vo.phone}" placeholder="请输入手机">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >QQ</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="qq" value="{$vo.qq}" placeholder="请输入QQ">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >开户银行</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="bank" value="{$vo.bank}" placeholder="请输入开户银行">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >银行账号</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="bank_account" value="{$vo.bank_account}" placeholder="请输入银行账号">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >开户名</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="bank_name" value="{$vo.bank_name}" placeholder="请输入开户名">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >主页</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="index" value="{$vo.index}" placeholder="请输入主页">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >地址</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="address" value="{$vo.address}" placeholder="请输入地址">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >邮编</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="postcode" value="{$vo.postcode}" placeholder="请输入邮编">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >备注</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="remark" value="{$vo.remark}" placeholder="请输入备注">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >附件</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="file" value="{$vo.file}" placeholder="上传附件">
+							</div>
+						</div>
+						</br>
+					<div class="col-xs-12">
+                          <button class="btn btn-minw btn-primary ajax-post" target-form="form-builder" onclick="add()" type="button">
+                        		修改                                       
+                          </button>
+                           <button class="btn btn-default" type="button" onclick="javascript:history.back(-1);return false;">
+                            	返回 
+                           </button>
+                         </div>
+					</form>
+					<form id="file">
+						<input class="none" type="file" id="addFiles" name="file[]" multiple="multiple" onchange="addFile()"  value="" />
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script type="text/javascript">
+	function add(){
+		var seeting = {
+			id: 'form',
+			url: '{:url("edit")}',
+			validate: [
+				["supplier_name",'供应商名称不能为空'],
+			    ["suplier_type",  '供应商类型不能为空'],	    
+			],
+			append: []
+		}
+			
+		//提交
+		util.ajax(seeting).then(function(res){
+			alert(res.msg);
+			if (res.code == 1) {
+				setTimeout(function(){
+					location.href = '{:url("index")}'
+				}, 1500)
+			}
+		})
+
+	}	
+</script>

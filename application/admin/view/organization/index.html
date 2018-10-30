@@ -1,0 +1,671 @@
+<link href="__ADMIN_STATIC__/css/plugins/jsTree/style.min.css" rel="stylesheet">
+<link href="http://at.alicdn.com/t/font_735883_69vf4b7dn38.css">
+<style type="text/css">
+    .icon {
+        width: 1em;
+        height: 1em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+        overflow: hidden;
+    }
+</style>
+
+<div class="ibox float-e-margins" style="height: 100%;">
+    <div class="ibox-title">
+        <h5>组织管理</h5>
+    </div>
+
+    <div class="ibox-contents row" style=" margin-top: 8px;">
+        <div id="using_json" class="col-sm-3" style="padding-left: 5%"></div>
+        <div class="col-sm-9" style=" text-align: right; ">
+            <div>
+                <form id="sub" style="display: initial">
+                    <label>姓名：</label>
+                    <input name="user_name"  style="margin-right: 5px" type="text">
+                    <input  value="查询" class="btn btn-default" onclick="search(user_name.value)" type="button"/>
+                    <!--<input type="text"  style="display: none"/>-->
+
+                </form>
+                <!--<button class="btn btn-default" type="button">导入用户</button>-->
+                <!--<button class="btn btn-default" type="button">导出用户</button>-->
+                <button class="btn btn-default" onclick="addUser()" type="button">增加用户</button>
+                <button class="btn btn-default" onclick="addOrganization()" type="button">增加部门</button>
+            </div>
+            <table class="table table-striped table-bordered table-hover dataTable" id="editable"
+                   aria-describedby="editable_info">
+                <thead>
+                <tr role="row">
+                    <th rowspan="1" colspan="1" style="width: 205px;">名称</th>
+                    <th rowspan="1" colspan="1" style="width: 150px;">职位</th>
+                    <th rowspan="1" colspan="1" style="width: 150px;">显示顺序</th>
+                    <th rowspan="1" colspan="1" style="width: 210px;">操作</th>
+                </tr>
+                </thead>
+                <tbody id="tbody" >
+                    <tr id="tr"  rowspan="10" style="display: none;">
+                        <td class="text-center empty-info" colspan="13">
+                            <i class="fa fa-database"></i> 暂无数据<br>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="clearfix">
+
+            </div>
+        </div>
+    </div>
+    <div class="editinp" style="display: none;height: 100%;overflow: auto;">
+        <div class="ibox-content">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>姓名</label>
+                    <input type="text" id="edit_title" name="nickname" placeholder="" class="form-control">
+                    <input type="hidden" name="id"/>
+                </div>
+                <div class="form-group">
+                    <label>工号</label>
+                    <input type="text" id="edit_title" name="job_number" placeholder="" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>部门</label>
+                    <select class="form-control m-b flowtype" name="group" id="edit_flow_type">
+                        <option value="">请选择</option>
+                        {volist name="tree2" id="t"}
+                        <option value="{$t->id}">{$t->title_display}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>菜单角色</label>
+                    <select class="form-control m-b" name="role">
+                        <option>请选择</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>性别</label>
+                    <div>
+                        男：<input type="radio" name="sex"  value="男"/>&nbsp
+                        女：<input type="radio" name="sex"  value="女" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>手机</label>
+                    <input type="text" id="edit_title" name="mobile" placeholder="" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>工作电话</label>
+                    <input type="number" id="edit_sort" name="work_phone" placeholder="" value="100"
+                           class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>家庭电话</label>
+                    <input type="text" id="edit_explain" name="home_telephone" placeholder="" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>QQ</label>
+                    <input type="text" id="edit_title" name="qq" placeholder="" class="form-control">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>帐号</label>
+                    <input type="text" id="edit_title" name="username" placeholder="" class="form-control">
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>显示顺序</label>
+                    <input type="text" id="edit_title" name="order" placeholder="" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>状态</label>
+                    <div>
+                        在职：<input type="radio" name="status" value="1"/>
+                        注销：<input type="radio" name="status" value="0" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>工作排班</label>
+                    <select class="form-control m-b flowtype" name="Job_scheduling" id="edit_flow_type">
+                        <option value="">请选择</option>
+                        <option value="1">早班</option>
+                        <option value="2">晚班</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>出生年月</label>
+                    <input type="text" id="rq" name="date_of_birth" placeholder="" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>邮箱</label>
+
+                    <input type="text" id="edit_title" name="email" placeholder="" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>地址</label>
+                    <input type="text" id="edit_title" name="address" placeholder="" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>直接上级</label>
+                    <!--<input type="number" id="edit_sort" name="direct_superior" placeholder="" value="100"-->
+                           <!--class="form-control">-->
+
+                    <textarea id="textarea" onfocus="person({name: this,hiddenname: 'direct_superior',})" id="ccomment"  class="form-control"></textarea>
+                    <input id="textareaId"  type="hidden" name="direct_superior"/>
+
+                </div>
+                <div class="form-group">
+                    <label>登录设置</label>
+                    <div>
+                        密码登录：<input type="radio" name="login_set" value="1"/>
+                        令牌登录：<input type="radio" name="login_set"  value="2"/>
+                        不允许登录：<input type="radio" name="login_set"  value="3"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="editinp2" style="display: none;height: 100%;overflow: auto;">
+        <div class="ibox-content">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>部门名称 *</label>
+                    <input type="text" id="edit_title" name="title" placeholder="" class="form-control">
+                    <input type="hidden" id="edit_title" name="id" placeholder="" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>编码</label>
+                    <input type="text" id="edit_title" name="code" placeholder="" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>显示顺序</label>
+                    <input type="number" id="edit_sort" name="order" placeholder="" value="10" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>上级部门</label>
+                    <select class="form-control m-b flowtype" name="pid" id="edit_flow_type">
+                        <option value="">--请选择--</option>
+                        {volist name="tree2" id="t"}
+                        <option value="{$t->id}">{$t->title_display}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>是否独立组织</label>
+                    <input name="organization_independent" type="checkbox" id="ck" />
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>地址</label>
+                    <input type="text"  name="site" placeholder="" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>邮编</label>
+                    <input type="text"  name="zip_code" placeholder="" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>电话</label>
+                    <input type="text" name="phone" placeholder="" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>备注</label>
+                    <input type="text"  name="note" placeholder="" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="editinp3" style="display: none;height: 100%;overflow: auto;">
+        <div class="ibox-content">
+            <div class="form-group">
+                <label>职位名称</label>
+                <select class="form-control m-b flowtype">
+                    {volist name="tree3" id="z"}
+                    <option value="{$z->id}">{$z->title_display}</option>
+                    {/volist}
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="radio" name="main_position" checked >主职
+                <input type="radio" name="main_position" >兼职
+            </div>
+            <div class="form-group">
+                <label>任职日期</label>
+                <input id="rzrq" name="" type="text" placeholder=""  class="form-control">
+            </div>
+            <div class="form-group">
+                <label>关联部门</label>
+                <textarea  onclick="person({name: this,hiddenname: 'positionId',onlyOrganization: true,})" value="" name="remarks"   class="form-control"></textarea>
+                <input type="hidden"  name="positionId" />
+            </div>
+
+        </div>
+    </div>
+</div>
+{include file="public/person"/}
+<script src="__ADMIN_STATIC__/js/plugins/jsTree/jstree.min.js"></script>
+<script src="__ADMIN_STATIC__/js/plugins/iCheck/icheck.min.js"></script>
+<script type="text/javascript">
+    var form= document.getElementById('sub');
+
+    form.onsubmit=function () {
+        search(event.target.user_name.value);
+        event.preventDefault();
+    }
+
+
+    function search(value) {
+        if (value) {
+            $.ajax({
+                type: "post",
+                url: "{:url('getChildren')}",
+                data: {"id": value, "name": true},
+                async: true,
+                success: function (res) {
+                    $('#tbody tr').not('#tr').remove();
+                    if (res) {
+                        $('#tr').hide();
+                        $("#tr").after(res);
+                    } else {
+                        $('#tr').show();
+                    }
+                }
+            });
+        }
+    }
+
+    var trees = {:json_encode($tree);}|| { },id = null, pid = null;
+
+    input = $("form input"),
+        select = $("select"),
+        cateAdd = $("#cateAdd"),
+        dels = $("#dels"),
+        textarea = $("textarea");
+    $(document).ready(function () {
+        $('#using_json').jstree({
+            'core': {
+                'data': trees
+            }
+        });
+        laydate.render({
+            elem: '#rq' //指定元素
+        });
+        laydate.render({
+            elem: '#rzrq' //指定元素
+        });
+        $('#using_json').on("changed.jstree", function (e, data) {
+            $.ajax({
+                type: "post",
+                url: "{:url('getChildren')}",
+                data: {id: data.selected['0']},
+                async: true,
+                success: function (res) {
+
+                    $('#tbody tr').not('#tr').remove();
+                    if (res) {
+                        $('#tr').hide();
+                        $("#tr").after(res);
+                    } else {
+                        $('#tr').show();
+                    }
+                }
+            });
+        });
+
+    });
+
+    editinp = $('.editinp input, .editinp select').not('input[type=radio]');
+    editinp12 = $('.editinp input, .editinp select');
+    function edit(value) {
+        editinp.each(function () {
+            var t = $(this);
+            t.val(value[t.attr('name')]);
+        });
+        $('.editinp2 select[name=group]').find("option[value=" + value.group + "]").attr("selected", true);
+        $('.editinp2 select[name=Job_scheduling]').find("option[value=" + value.Job_scheduling + "]").attr("selected", true);
+
+        $("input[type=radio][name=sex][value="+value.sex+"]").attr("checked", "checked");
+        $("input[type='radio'][name='status'][value="+value.status+"]").attr("checked", "checked");
+        $("input[type='radio'][name='login_set'][value="+value.login_set+"]").attr("checked", "checked");
+        $('#textarea').text(value.direct_superiorName);
+
+
+        $('#zw_tbody').empty();
+        // $('#zw_tbody').append(Position);
+        layer.open({
+            type: 1,
+            title: '编辑',
+            btn: ['提交'],
+            skin: 'layui-layer-molv',
+            offset: '30px',
+            area: ['900px', '500px'],
+            content: $('.editinp'),
+            yes: function () {
+                var a = {};
+                editinp12.each(function () {
+                    a[$(this).attr('name')] = $(this).val();
+                });
+
+                a['sex']=$("input[type=radio][name=sex]:checked").val();
+                a['status']= $("input[type=radio][name=status]:checked").val();
+                a['login_set']=$("input[type=radio][name=login_set]:checked").val();
+
+
+                $.ajax({
+                    type: "post",
+                    url: "{:url('save2')}",
+                    data: a,
+                    async: true,
+                    success: function (res) {
+                        if (res[0]) {
+                            layer.msg('提交成功');
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500)
+                        } else {
+                            layer.msg(res[1]);
+                        }
+                    }
+                })
+            }
+        });
+    }
+
+    editinp2 = $('.editinp2 input, .editinp2 select');
+
+    function edit2(res) {
+        editinp2.each(function () {
+            var t = $(this);
+            t.val(res[t.attr('name')]);
+        });
+        if (res.organization_independent===1) {
+            $("#ck").prop("checked", true);
+        } else {
+            $("#ck").prop("checked", false);
+        }
+        $(".editinp2 select").find("option[value=" + res.pid + "]").attr("selected", true);
+        layer.open({
+            type: 1,
+            title: '编辑',
+            skin: 'layui-layer-molv',
+            btn: ['提交'],
+            offset: '30px',
+            area: ['900px', 'auto'],
+            content: $('.editinp2'),
+            yes: function () {
+                var a = {};
+                editinp2.each(function () {
+                    a[$(this).attr('name')] = $(this).val();
+                });
+                if ($("#ck").prop('checked')) {
+                    a.organization_independent=1;
+                } else {
+                    a.organization_independent=0;
+                }
+                $.ajax({
+                    type: "post",
+                    url: "{:url('save')}",
+                    data: a,
+                    async: true,
+                    success: function (res) {
+                        if (res[0]) {
+                            layer.msg('提交成功');
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500)
+                        } else {
+                            layer.msg(res[1]);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+
+    function addUser() {
+        editinp.each(function () {
+            var t = $(this);
+            t.val('');
+        });
+        $("input[type=radio][name=sex][value='男']").attr("checked", true);
+        $("input[type='radio'][name='status'][value='1']").attr("checked", true);
+        $("input[type='radio'][name='login_set'][value='1']").attr("checked", true);
+
+        $('#textarea').text('');
+        $('#textareaId').val('');
+
+        $('#zw_tbody').empty();
+        // // $('#zw_tbody').append(Position);
+        layer.open({
+            type: 1,
+            title: '编辑',
+            btn: ['提交'],
+            skin: 'layui-layer-molv',
+            offset: '30px',
+            area: ['900px', '500px'],
+            content: $('.editinp'),
+            yes: function () {
+                var a = {};
+                editinp12.each(function () {
+                    a[$(this).attr('name')] = $(this).val();
+                });
+
+
+                a['sex']=$("input[type=radio][name=sex]:checked").val();
+                a['status']= $("input[type=radio][name=status]:checked").val();
+                a['login_set']=$("input[type=radio][name=login_set]:checked").val();
+
+
+                $.ajax({
+                    type: "post",
+                    url: "{:url('save2')}",
+                    data: a,
+                    async: true,
+                    success: function (res) {
+                        if (res[0]) {
+                            layer.msg('提交成功');
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500)
+                        } else {
+                            layer.msg(res[1]);
+                        }
+                    }
+                })
+            }
+        });
+
+    }
+    function addOrganization() {
+        editinp2.each(function () {
+            var t = $(this);
+            t.val('');
+        });
+        $("#ck").prop("checked", false);
+        layer.open({
+            type: 1,
+            title: '编辑',
+            skin: 'layui-layer-molv',
+            btn: ['提交'],
+            offset: '30px',
+            area: ['900px', 'auto'],
+            content: $('.editinp2'),
+            yes: function () {
+                var a = {};
+                editinp2.each(function () {
+                    a[$(this).attr('name')] = $(this).val();
+                });
+                if ($("#ck").prop('checked')) {
+                    a.organization_independent=1;
+                } else {
+                    a.organization_independent=0;
+                }
+                $.ajax({
+                    type: "post",
+                    url: "{:url('save')}",
+                    data: a,
+                    async: true,
+                    success: function (res) {
+                        if (res[0]) {
+                            layer.msg('提交成功');
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500)
+                        } else {
+                            layer.msg(res[1]);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+
+    function add() {
+        var seeting = {
+            id: 'form',
+            validate: [
+                ['title', '名称不能为空'],
+                ['pid', '父类型不能为空'],
+                ['age_limit', '折旧年限不能为空'],
+                ['remaining', '残值率不能为空'],
+                ['cid', '排序不能为空'],
+//				{name: 'phone',  msg: '手机号不正确', regx: /^\d{11}$/, right: false},
+            ],
+            append: [],
+//			del: ['pid'],
+//			dispose: true,
+//			type: 'POST',
+            url: '{:url("cate")}'
+        };
+        if (id) {
+            seeting.append.push(['id', id], ['pid', pid]);
+        }
+        layer.confirm('确定执行此操作吗?', {
+            btn: ['确定', '取消'], //按钮
+            shade: false //不显示遮罩
+        }, function () {
+            util.ajax(seeting).then(function (res) {
+                alert(res.msg);
+                if (res.code == 1) {
+                    setTimeout(function () {
+                        parent.location.reload();
+                    }, 2000)
+                }
+            }).catch(e => {
+                console.error(e)
+                alert('错误, 请联系管理员.');
+            })
+        });
+
+
+    }
+
+
+
+    function del(id) {
+        layer.confirm('确定删除吗?', {
+            btn: ['确定', '取消'], //按钮
+            shade: false, //不显示遮罩
+            icon: 2,
+        }, function () {
+            $.ajax({
+                type: "post",
+                url: "{:url('delete')}",
+                data: {id: id},
+                async: true,
+                success: function (res) {
+
+                    // if (res.code == 1) {
+                    //     setTimeout(function () {
+                    //         location.reload()
+                    //     }, 1500)
+                    // }
+
+                    if (res.code) {
+                        layer.msg(res.msg);
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        layer.msg(res.msg);
+                    }
+                }
+            });
+        });
+    }
+
+    //职位编辑
+    // function editPosition() {
+    //     layer.open({
+    //         type: 1,
+    //         title: '编辑',
+    //         btn: ['提交'],
+    //         skin: 'layui-layer-molv',
+    //         offset: '30px',
+    //         area: ['500px', '500px'],
+    //         content: $('.editinp3'),
+    //         yes:function () {
+    //             $.ajax({
+    //                 type: "post",
+    //                 url: "{:url('delete')}",
+    //                 data: {id: id},
+    //                 async: true,
+    //                 success: function (res) {
+    //
+    //                     // if (res.code == 1) {
+    //                     //     setTimeout(function () {
+    //                     //         location.reload()
+    //                     //     }, 1500)
+    //                     // }
+    //
+    //                     if (res.code) {
+    //                         layer.msg(res.msg);
+    //                         setTimeout(function () {
+    //                             location.reload();
+    //                         }, 1500);
+    //                     } else {
+    //                         layer.msg(res.msg);
+    //                     }
+    //                 }
+    //             });
+    //         }
+    //     });
+    // }
+
+    function person(seeting){
+        //皆为非传参数, 默认 多选人员
+//         var seeting = {
+//             //是否只选部门或职位
+// 			// onlyOrganization: true,
+//             //是否单选
+// 			radio: true,
+//             //默认选中 checked支持,隔开的字符串及数组
+// //			checked: '4',
+// //			是否是选择职位
+// //			position: true,
+//             //文件赋值input或textarea
+// 			name: o,
+//             //id赋值input
+// //			hiddenname: 'ids',
+//             //确定回调方法
+// 			callback: function(option){
+//             // ...do you someting
+//                 $('#textarea').text(option.text[0]);
+//                 $('#textareaId').val(option.ids[0]);
+// 			}
+// //取消回调
+// //			cancel: function(option){
+//             //...do you someting
+//             //console.log(option)
+// //			}
+//         };
+
+        new openPerson(seeting);
+    }
+</script>

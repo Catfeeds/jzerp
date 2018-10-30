@@ -1,0 +1,154 @@
+<div class="ibox float-e-margins">
+	<div class="ibox-content">
+		{php}
+			$state = input('state');
+		{/php}
+		<div class="">
+			<a {eq name="$state" value="1"}href="{:url('addin', ['state' => $state])}"{else/}href="{:url('addout', ['state' => $state])}"{/eq} class="btn btn-success"><i class="iconfont icon-jia"></i>添加</a>
+			<a href="javascript:void(0);" onclick="deleteAll('{:url('delete')}')" class="btn btn-danger "><i class="fa fa-trash-o fa-fw"></i>批量删除</a>
+			<a href="javascript:void(0);" onclick="doPrint()" class="btn btn-info ">打印</a>
+			<div class="seach-box">
+			<form action="{:url('index')}" method="get">
+              <div class="form-group">
+                    <div class="seach-list">
+                    	<label class="">制单人:</label>
+                        <input type="text" name="maker_name" value="{$keywords.maker_name}" placeholder="制单人" class="form-control">
+                    </div>
+                    <div class="seach-list">
+                    	{eq name="$state" value="1"}
+                    	<label class="">供应商:</label>
+                        <input type="text" name="s_name" value="{$keywords.s_name}" placeholder="供应商" class="form-control">
+                        {else/}
+                        <label class="">项目:</label>
+                        <input type="text" name="obj_name" value="{$keywords.obj_name}" placeholder="项目" class="form-control">
+                        {/eq}
+                    </div>
+                    <div class="seach-list">
+                    	<select class="form-control" name="type">
+                    		{eq name="$state" value="1"}
+                            <option value="">--入库类型--</option>                                    
+                            <option value="0" {eq name="$keywords.type" value="0"}selected="selected"{/eq}>采购入库</option>
+                            <option value="1" {eq name="$keywords.type" value="1"}selected="selected"{/eq}>完工入库</option>
+                            {else/}
+                             <option value="">--出库类型--</option>                                    
+                            <option value="0" {eq name="$keywords.type" value="0"}selected="selected"{/eq}>采购出库</option>
+                            <option value="1" {eq name="$keywords.type" value="1"}selected="selected"{/eq}>完工入库</option>
+                            {/eq}
+                        </select>
+                    </div>
+                    <div class="seach-list">
+                    	<label class="">开始时间:</label>
+                        <input autocomplete="off" type="text" id="s_time" name="s_time" value="" placeholder="开始时间" class="form-control">
+                    </div>
+                    <div class="seach-list">
+                    	<label class="">结束时间:</label>
+                        <input autocomplete="off" id="e_time" name="e_time" placeholder="结束时间" value="" class="form-control">
+                    </div>
+                    <div class="seach-list">  
+                    	<input type="hidden" name="state" value="{$state}" />
+                        <button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button> </span>
+                    </div>                   
+                </div>
+			</form>
+            </div>
+		</div>
+		<div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+			<!--startprint-->
+			<table class="table table-striped table-bordered table-hover  dataTable" id="editable" aria-describedby="editable_info">
+				<thead>
+					<tr role="row">
+						<!--startRemove-->
+                        <th><input type="checkbox" class="i-checks check-all"></th>						
+						<!--endRemove-->
+						<th>编号</th>
+						<th>制单人</th>
+						<th>类型</th>
+						<th>{eq name="$state" value="1"}供应商{else/}项目{/eq}</th>						
+						<th onclick="sorts({name: 'create_time', sort: '{$keywords['create_time']}'})" class="sorting_{$keywords['create_time']}">操作时间</th>						
+						<!--startRemove-->
+						<th>操作</th>
+						<!--endRemove-->
+					</tr>
+				</thead>
+				<tbody>
+					{empty name='list'}
+					<tr class="table-empty" >
+						<td class="text-center empty-info" colspan="100%">
+                                <i class="fa fa-database"></i> 暂无数据<br>
+                                        </td>
+                                    </tr>
+					{/empty}
+					{volist name="list" id='l'}
+					<tr class="gradeA even">
+						<!--startRemove-->
+						<td>
+                            <input type="checkbox" class="i-checks ids" style="opacity: 0;" value="{$l.id}"/>							
+						</td>
+						<!--endRemove-->
+						<td><a {eq name="$state" value="1"}href="{:url('detail',['id'=>$l.id])}"{else/}href="{:url('details',['id'=>$l.id])}"{/eq}>{$l.code}</a></td>
+						<td>{$l.maker_name}</td>
+						<td><span class="btn btn-success btn-xs">{eq name="$state" value="1"}{eq name="$l.type" value="0"}采购入库{else/}完工入库{/eq}{else/}{eq name="$l.type" value="0"}采购出库{else/}完工出库{/eq}{/eq}</span></td>		
+						<td>{eq name="$state" value="1"}{$l.s_name}{else/}{$l.obj_name}{/eq}</td>														
+						<td>{$l.create_time}</td>					
+						<!--startRemove-->
+						<td>
+							<!--<a href="{:url('addin',['id'=>$l.id])}" class="btn btns btn-success">编辑</a>-->
+							<span onclick="deletes({$l.id})" class="btn btns btn-danger">删除</span>
+						</td>
+						<!--endRemove-->
+					</tr>
+					{/volist}
+				</tbody>
+			</table>
+			<!--endprint-->
+			<div class="clearfix">
+				{$list -> render()}
+			</div>
+		</div>
+
+	</div>
+</div>
+<script type="text/javascript">
+  laydate.render({
+    elem: '#s_time', 
+    event: 'focus',
+	value: '{$keywords.s_time}',
+   });
+     laydate.render({
+    elem: '#e_time', 
+    event: 'focus',
+	value: '{$keywords.e_time}',
+   });
+	var keywords = {:json_encode($keywords)};	
+	function sorts(option){
+		keywords[option.name] = option.sort == 'asc' ? 'desc' : 'asc';
+		var seach = '';
+		for (var k in keywords) {
+			seach += k + '=' + keywords[k] + '&';
+		}
+		seach = seach.slice(0, -1);
+		location.href = '{:url('index')}?' + seach;
+	}
+	function deletes(id){
+			layer.confirm('确定要删除',{
+				time:0,
+				btn:['确定','取消'],
+				yes:function(index){
+					$.ajax({
+						type:"POST",
+						data: {ids: id},
+						url:'{:url("delete")}',
+						async:true,
+						success:function(res){
+							alert(res.msg);
+							if (res.code == 1) {
+								setTimeout(function(){
+									location.reload()
+								}, 1500)
+							} 
+						}
+					});
+				},	
+			})	  
+	}
+</script>

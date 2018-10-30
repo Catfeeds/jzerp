@@ -1,0 +1,303 @@
+<div class="wrapper wrapper-content animated fadeInRight" style="height: 100%;">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>添加供应商 </h5>
+				</div>
+				<div class="ibox-title">
+					<h5>基本信息 </h5>
+				</div>
+				<div class="ibox-content">
+					<form class="form-builder row" id="form" name ="form" method="post" autocomplete="off">
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" for="name">供应商名称 <span style="color: red;"><b>*</b></span></label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="supplier_name"  placeholder="请输入供应商名称">
+							</div>
+						</div>
+					<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >供应商类型 <span style="color: red;"><b>*</b></span></label>
+							<div class="col-sm-12">
+								<select class="form-control m-b formid" name="supplier_type">
+									<option value="">--选择--</option>
+									{volist name = "type" id="vo"}
+									<option value="{$key}">{$vo}</option>
+									{/volist}									
+								</select>
+							</div>
+					</div>						
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >供应商编号</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="supplier_number" value="" placeholder="请输入供应商编号">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >供应商所属行业</label>
+							<div class="col-sm-12">
+								<select class="form-control m-b formid" name="supplier_industry">
+									<option value="">--选择--</option>
+									{volist name = "industry" id="vo"}
+									<option value="{$key}">{$vo}</option>
+									{/volist}
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >电话</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="supplier_tell" value="" placeholder="请输入电话">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >供应商区域</label>
+							<div class="col-sm-12">
+								<select class="form-control m-b formid" name="supplier_area">
+									<option value="">--选择--</option>
+									{volist name = "area" id="vo"}
+									<option value="{$key}">{$vo}</option>
+									{/volist} 
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >email</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="supplier_email" value="" placeholder="请输入email">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >供应商规模</label>
+							<div class="col-sm-12">
+								<select class="form-control m-b formid" name="supplier_size">
+									<option value="">--选择--</option>
+									{volist name = "size" id="vo"}
+									<option value="{$key}">{$vo}</option>
+									{/volist} 
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >传真</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="supplier_fax" value="" placeholder="请输入传真">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >供应商来源</label>
+							<div class="col-sm-12">
+								<select class="form-control m-b formid" name="supplier_source">
+									<option value="">--选择--</option>
+									{volist name = "source" id="vo"}
+									<option value="{$key}">{$vo}</option>
+									{/volist} 
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >负责人</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="supplier_leader" value="" placeholder="请输入负责人">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >供应商等级</label>
+							<div class="col-sm-12">
+								<select class="form-control m-b formid" name="supplier_level">
+									<option value="">--选择--</option>
+									{volist name = "class" id="vo"}
+									<option value="{$key}">{$vo}</option>
+									{/volist} 
+								</select>
+							</div>
+						</div>
+		
+						<br/>
+					</div>
+						<div class="ibox-title">
+							<h5>联系人信息 </h5>
+						</div>
+						<div class="ibox-content-bottun" style="height: 50%;">
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >手机</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="phone" value="" placeholder="请输入手机">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >QQ</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="qq" value="" placeholder="请输入QQ">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >开户银行</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="bank" value="" placeholder="请输入开户银行">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >银行账号</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="bank_account" value="" placeholder="请输入银行账号">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >开户名</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="bank_name" value="" placeholder="请输入开户名">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >主页</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="index" value="" placeholder="请输入主页">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >地址</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="address" value="" placeholder="请输入地址">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >邮编</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="postcode" value="" placeholder="请输入邮编">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+							<label class="col-xs-12" >备注</label>
+							<div class="col-sm-12">
+								<input class="form-control" type="text" name="remark" value="" placeholder="请输入备注">
+							</div>
+						</div>
+						<div class="form-group col-md-5 col-xs-12 ">
+						    <label class="col-xs-12" for="file">附件</label>
+						    <div class="col-sm-12 js-upload-files">
+						    	<ul class="list-group uploader-list" id="file_list_file">
+                    				{notempty name="$files"}
+                    				{volist name="files" id="f"}
+                    				<li class="list-group-item file-item">
+                    					<span class="pull-right file-state">
+                    						<span class="text-success">已上传</span>
+                    					</span>
+                    					<i class="fa fa-file"></i> 
+                    					{$f['name']}
+                    					 [<a href="{$f['path']}" class="download-file" download="{$f['name']}">下载</a>]
+                    					 [<a class="remove-file" onclick="deleteFile({$f['id']}, this)">删除</a>]
+                    				</li>
+                    				{php}
+                    					$files_ids = [];
+                    					array_push($files_ids, $f['id']);
+                    				{/php}
+                    				{/volist}
+                    				{/notempty}
+						    	</ul>
+						    	<div onclick="document.querySelector('#addFiles').click()" class="webuploader-pick">上传多个文件</div>
+			            </div>
+						</div>
+						</br>
+					<div class="col-xs-12">
+                          <button class="btn btn-minw btn-primary ajax-post" target-form="form-builder" onclick="add()" type="button">
+                        		提交                                       
+                          </button>
+                           <button class="btn btn-default" type="button" onclick="javascript:history.back(-1);return false;">
+                            	返回 
+                           </button>
+                         </div>
+					</form>
+					<form id="file">
+						<input class="none" type="file" id="addFiles" name="file[]" multiple="multiple" onchange="addFile()"  value="" />
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script type="text/javascript">
+	function add(){
+		var seeting = {
+			id: 'form',
+			url: '{:url("add")}',
+			validate: [
+				["supplier_name",'供应商名称不能为空'],
+			    ["suplier_type",  '供应商类型不能为空'],	    
+			],
+			append: []
+		}
+			
+		//提交
+		if (fileids.length > 0) {
+			seeting.append.push(['file', fileids.join(',')]);
+		}
+		util.ajax(seeting).then(function(res){
+			alert(res.msg);
+			if (res.code == 1) {
+				setTimeout(function(){
+					location.href = '{:url("index")}'
+				}, 1500)
+			}
+		})
+
+	}	
+	function addFile(){
+		
+		var seeting = {
+			id: 'file',
+			validate: [
+				["file",  '附件不能为空'],
+			],
+			append: [['to_dir', 'balance']],
+			url: "{:url('AdminFiles/UpLoadFiles')}",
+		}
+		//提交
+		util.ajax(seeting).then(function(res){
+			
+			if (res.code == 1) {
+				var success = res.data.success;
+				var str = '';
+				for (var i = 0;  i < success.length; i ++) {
+					fileids.push(Number(success[i]['id']));
+					str += `<li class="list-group-item file-item">
+                    					<span class="pull-right file-state">
+                    						<span class="text-success">上传成功</span>
+                    					</span>
+                    					<i class="fa fa-file"></i> 
+                    					${success[i]['name']}
+                    					 [<a href="${success[i]['path']}" class="download-file" download="${success[i]['name']}">下载</a>]
+                    					 [<a class="remove-file" onclick="deleteFile(${success[i]['id']}, this)">删除</a>]
+                    				</li>`;
+				}
+				var fail = res.data.fail;
+				
+				for (var i = 0;  i < fail.length; i ++) {
+					str += `<li class="list-group-item file-item">
+                    					<span class="pull-right file-state">
+                    						<span class="text-success">上传失败(${fail[i]['err']})</span>
+                    					</span>
+                    					<i class="fa fa-file"></i> 
+                    					${fail[i]['name']}
+                    				</li>`;
+				}
+				$("#file_list_file").append(str);
+			} else {
+				alert('上传失败');
+			}
+		}).catch(e => {
+			console.log(e);
+			alert('上传失败, 请联系管理员');
+		})	
+	}
+	function deleteFile(id, o){
+		var index = fileids.indexOf(Number(id));
+		if (index !== -1) {
+			fileids.splice(index, 1);
+			$(o).parents('li').remove();
+		}
+	}
+</script>

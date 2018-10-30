@@ -1,0 +1,140 @@
+<div class="ibox float-e-margins">
+    <div class="ibox-title">
+        <h5>尾款结算</h5>
+    </div>
+    <div class="ibox-content">
+        <div class="">
+            <div class="seach-box">
+                <form action="{:url('index')}" method="get">
+                    <div class="form-group">
+                        <div class="seach-list">
+                            <label class="">项目:</label>
+                            <label>
+                                <select style="width: 140px" name="project" class="js-example-basic-single" >
+                                    <option  value="0" >请选择</option>
+                                    {volist name="project"   id="p"}
+                                    <option  value="{$key}">{$p}</option>
+                                    {/volist}
+                                </select>
+                            </label>
+                        </div>
+                        <div class="seach-list">
+                            <label class="">类型:</label>
+                            <label>
+                                <select style="width: 140px" name="type" class="js-example-basic-single" >
+                                    <option  value="0" >请选择</option>
+                                    {volist name='type'  id='t'}
+                                    <option  value="{$key}" >{$t}</option>
+                                    {/volist}
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="seach-list">
+                            <label class="">合同名称:</label>
+                            <input type="text" name="title" value="{$keywords['title']}" placeholder="标题"
+                                   class="form-control">
+                        </div>
+                        <div class="seach-list">
+                            <label class="">创建开始时间:</label>
+                            <input autocomplete="off" type="text" id="s_time" name="s_time" value="" placeholder="开始时间"
+                                   class="form-control">
+                        </div>
+                        <div class="seach-list">
+                            <label class="">创建结束时间:</label>
+                            <input autocomplete="off" id="e_time" name="e_time" placeholder="结束时间" value=""
+                                   class="form-control">
+                            <button type="submit" class="btn btn-sm btn-primary seach-btn"> 搜索</button>
+                            <button onclick=location.href="{:url('index')}"  type="button" class="btn btn-white"> 清空</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+            <table class="table table-striped table-bordered table-hover  dataTable" id="editable"
+                   aria-describedby="editable_info">
+                <thead>
+                <tr role="row">
+                    <th  rowspan="1" colspan="1" style="width: 205px;">编号</th>
+                    <th  rowspan="1" colspan="1" style="width: 205px;">项目名称</th>
+                    <th rowspan="1" colspan="1" style="width: 150px;">分包/劳务合同</th>
+                    <th rowspan="1" colspan="1" style="width: 150px;">付款申请名称</th>
+                    <th rowspan="1" colspan="1" style="width: 150px;">已结算金额（元）</th>
+                    <th rowspan="1" colspan="1" style="width: 210px;">已结算未付款金额（元）</th>
+                    <th rowspan="1" colspan="1" style="width: 210px;">已付款金额（元）</th>
+                    <th onclick="sorts({name: 'create_times', sort: '{$keywords['create_times']}'})"
+                        class="sorting_{$keywords['create_times']}" rowspan="1" colspan="1" style="width: 188px;">创建时间
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {empty name='data'}
+                <tr class="table-empty" rowspan="10">
+                    <td class="text-center empty-info" colspan="13">
+                        <i class="fa fa-database"></i> 暂无数据<br>
+                    </td>
+                </tr>
+                {else/}
+                {volist name="data" id="d"}
+                <tr class="gradeA even">
+                    <td><a href="{$d['href']}" >{$d['number']}</a></td>
+                    <td>{$d['title']}</td>
+                    <td>{$d['name']}</td>
+                    <td>{$d['fkname']}</td>
+                    <td>￥{$d['clear_money']}</td>
+                    <td>￥{$d['yjswfk']}</td>
+                    <td>￥{$d['back_money']}</td>
+                    <td>{$d['create_time']}</td>
+                </tr>
+                {/volist}
+                {/empty}
+
+                </tbody>
+            </table>
+            <div class="clearfix">
+                {$data->render()}
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+    });
+
+    laydate.render({
+        elem: '#s_time',
+        event: 'focus',
+        value: '{$keywords.s_time}',
+    });
+    laydate.render({
+        elem: '#e_time',
+        event: 'focus',
+        value: '{$keywords.e_time}',
+    });
+
+    var keywords = {:json_encode($keywords)};
+
+
+    if (keywords.project) {
+        $('select[name=project]').find("option[value="+keywords['project']+"]").prop("selected",true);
+    }
+    if (keywords.type){
+        $('select[name=type]').find("option[value="+keywords.type+"]").prop("selected",true);
+    }
+
+
+    function sorts(option) {
+        keywords[option.name] = option.sort == 'asc' ? 'desc' : 'asc';
+        var seach = '';
+        for (var k in keywords) {
+            seach += k + '=' + keywords[k] + '&';
+        }
+        seach = seach.slice(0, -1);
+        location.href = '{:url('index')}?' + seach;
+    }
+</script>

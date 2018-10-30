@@ -1,0 +1,336 @@
+<script src="__ADMIN_STATIC__/js/vue.js"></script>
+<style type="text/css">
+	#supplier .material_active{
+	    background: #428bca;
+    	color: #ffff;
+	}
+	::-webkit-scrollbar {
+        width: 0px;
+        height: 0px;
+	}
+   #supplier input[type='checkbox']{
+	width: 18px;
+	height: 18px;
+    }
+     #supplier .col-sm-3{
+    	z-index: 100000;
+    }
+      .table-responsive{
+	    height: 430px;
+    	overflow: scroll;
+    }
+</style>
+<div id="supplier" class="sidebar-l side-scroll purchase_show" style="display: none;">
+    <!-- Main Container -->
+    <main style="min-height: 640px;">
+        <!-- Page Content -->
+        <div class="content">
+            
+            
+        <div class="row">
+    	<div class="col-sm-3">
+        	<div class="block">
+        	<div class="block-header bg-gray-lighter">
+        		<h2 class="block-title">供应商类型</h2>
+        	</div>
+          <div class="block-content">
+          <div id="treeview1" class="treeview"><ul class="list-group">
+          
+          	<li v-for="(item, index) in type" @click="choose(item.id)" :class="{'list-group-item': true, 'node-treeview1': true, 'material_active' : item.id == active}">
+          		<span class="icon glyphicon"></span><span class="icon node-icon"></span>{{item.name}}
+          	</li>
+          </div>
+          </div>
+        </div>  
+        
+    </div>
+<div class="col-md-9">
+            <div class="block">
+                    <div class="block-header bg-gray-lighter">
+                    <h3 class="block-title">选择供应商</h3>
+                </div>
+                                <div class="block-content tab-content">
+                    <div class="tab-pane active">
+                        
+                        
+                                                <div class="row data-table-toolbar">
+                            <div class="col-sm-12">
+                                
+                                                                <div class="pull-right search-bar">
+                                    <div class="input-group">
+                                            <input v-model="keywords" style="margin-bottom: 15px;" type="text" class="form-control" value="" name="keyword" placeholder="请输入供应商名称进行筛选">
+                                    </div>
+                                </div>
+                                
+
+                            </div>
+                        </div>
+                                                <div class="table-responsive">
+                                                        <table class="table table-builder table-hover table-bordered table-striped js-table-checkable">
+                                <thead>
+                                    <tr>
+                                                                                <th class="text-center" style="min-width: 70px;padding: 10px;">
+                                           选择
+                                           <!--<label class="css-input css-checkbox css-checkbox-primary remove-margin-t remove-margin-b">
+                                                <input v-model="all" type="checkbox"><span></span>
+                                            </label>-->
+                                        </th>
+                  
+                                                                                <th width="120px" class="column-code ">
+                                            
+                                            供应商编号                                            <span>
+                                            
+                                                                                        </span>
+                                        </th>
+                                                                                <th width="160px" class="column-name ">
+                                            
+                                            供应商                                            <span>
+                                            
+                                                                                        </span>
+                                        </th>
+                                                                                                  <th class="column-name ">
+                                            
+                                            所属行业                                            <span>
+                                            
+                                                                                        </span>
+                                        </th>
+                                                                                <th class="column-version ">
+                                            
+                                            联系电话                                            <span>
+                                            
+                                                                                        </span>
+                                        </th>
+                                                                                <th class="column-unit ">
+                                            
+                                            所在区域                                            <span>
+                                            
+                                                                                        </span>
+                                        </th>
+                                                                                <th class="column-price ">
+                                            
+                                            负责人                                           <span>
+                                            
+                                                                                        </span>
+                                        </th>
+                                                                                           <th class="column-price ">
+                                            
+                                            供应商等级                                           <span>
+                                            
+                                                                                        </span>
+                                        </th>
+                                                                               
+                                                                            </tr>
+                                </thead>
+                                <tbody>
+                                                                        <tr  v-for="(l, i) in list" v-show="show(l.supplier_type, l.supplier_name)" >
+                                                                                <td class="text-center">
+                                            <label class="css-input css-checkbox css-checkbox-primary">
+                                                <input ref="check" @change="changes(i, l.id)" :checked="ids.includes(l.id)" class="ids" type="checkbox" name="ids[]" value="33"><span></span>
+                                            </label>
+                                        </td>
+                                                              
+                                                                                <td class="">
+                                                                                            {{l.supplier_number}}                                        </td>
+                                                                                <td class="">
+                                                                                            {{l.supplier_name}}                                        </td>
+                                                                                                                            </td>
+                                                                                                                               <td class="">
+                                                                                            {{l.supplier_industry}}                                        </td>
+                                                                                                                            </td>
+                                                                                <td class="">
+                                                                                            {{l.supplier_tell}}                                       </td>
+                                                                                <td class="">
+                                                                                            {{l.supplier_area}}                                        </td>
+                                                                                <td class="">
+                                                                                            {{l.supplier_leader}}                                       </td> 
+                                                                                            <td class="">
+                                                                                            {{l.supplier_level}}                                 
+                                                                                            </td>
+                                                                               
+                                                                            </tr>
+                                                                    </tbody>
+                            </table>
+                                                    </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+
+</div>
+
+<script type="text/javascript" defer="defer">
+			var supplier = new Vue({
+			el: '#supplier',
+			data: {
+				type: [{
+					id: 0,
+					name: '综合'
+				}],
+				list: [],
+//				checked: [],
+				active: 0,
+				keywords: '',
+				ids: [],
+				allIds: [],
+				all: false,
+				callback: null,
+			},
+			beforeCreate:function(){
+				var t = this;
+				
+					$.ajax({
+						type: 'post',
+						async: true,
+						url: '{:url('Supplier/getAllType')}',
+						success: function({code, data}){
+							
+							if(code == 1){
+								t.type.push.apply(t.type, data);
+							} else {
+								alert('请求失败,请刷新重试!');
+							}
+						}
+					})
+					$.ajax({
+						type: 'post',
+						async: true,
+						url: '{:url('Supplier/getAllSupplier')}',
+						success: function({code, data}){
+							
+							if(code == 1){
+								t.list = data;
+							
+								t.reset();
+							} else {
+								alert('请求失败,请刷新重试!');
+							}
+						}
+					})
+			},
+			methods: {
+				setCallback(fn){
+					if(fn){
+						this.callback = fn;
+					}
+					return this;
+				},
+				init(){
+					this.active = 0;
+					this.keywords = '';
+					this.all = false;
+					this.callback = null;
+					return this;
+				},
+				
+				choose(id){
+					this.active = id;
+				},
+				show(type, name){
+					if((this.active == 0 || type == this.active) && name.indexOf(this.keywords) !== -1){
+
+						return true;
+						
+					} else {
+						return false;
+					}
+				},
+				open: function(){
+					var t = this;
+//					t.init();
+					t.setCheck();
+					layer.open({
+					  type: 1, 
+					  title: '选项',
+					   area: ['90%', '650px'],
+					   offset:[ Number((window.innerHeight - 650)/2) + 'px', '5%'],
+			            maxmin: true, 
+			            closeBtn: 1,
+					   btn: ['确定', '取消'],
+					  content: $("#supplier"),
+					  yes: function(index){
+					  	console.error(t.type)
+					  	var ids = t.ids;
+					  	var list = t.list;
+					  	var text = [];
+			  		  	text = list.filter((v)=>{
+					  		return ids.includes(v['id']);
+					  	})
+//					  	for (var i in list) {
+//					  		if(ids.includes(list[i]['id'])){
+//					  			text.push(list[i]['supplier_name']);
+//					  		}
+//					  	
+//					  	}
+					  	t.callback && t.callback({ids: ids, text: text});
+					  	layer.close(index);
+					  },
+					  btn2: function(index){
+					  	layer.close(index)
+					  }
+					});
+				},
+				changes: function(o, id){
+					if (this.$refs.check[o].checked) {
+						this.ids = [];
+						this.ids.push(id)
+					} else {
+						var index = this.ids.indexOf(id);
+						if(index !== -1) {
+							this.ids.splice(index, 1);
+						}
+					}
+				},
+				reset(){
+					this.allIds = [];
+					var list = this.list;
+					var active = this.active;
+					var keywords = this.keywords;
+					for (var i in list) {
+						if((active == 0 || list[i].type_id == active) && list[i].supplier_name.indexOf(keywords) !== -1){
+							this.allIds.push(list[i].id)
+						}
+					}
+				},
+				setCheck(ids = []){
+					if (!ids) {
+						return this;
+					}
+					ids = typeof(ids)=="string" ? ids.split(',') : ids;
+					for (var i in ids) {
+						ids[i] = Number(ids[i]);
+					}
+					this.$set(this, 'ids', ids);
+					return this;
+				},
+			},
+			watch: {
+				'keywords': function(){
+					this.reset();
+				},
+				'active': function(){
+					this.reset();
+				},
+				'all': function(val){
+					
+					if(val){
+						this.ids.push.apply(this.ids, this.allIds)
+						this.ids = Array.from(new Set(this.ids));
+					} else {
+						for (var j in this.allIds) {
+							var index = this.ids.indexOf(this.allIds[j]);
+							if(index !== -1) {
+								this.ids.splice(index, 1);
+							}
+						}
+					}
+			
+				
+				}
+			}
+		})
+</script>

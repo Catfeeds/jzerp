@@ -1,0 +1,132 @@
+{extend name='temp/base' /}
+
+{block name='headcss'}
+<link rel="stylesheet" href="__STATIC__/mobile/css/seach.css"/>
+<style>
+    .list_content {
+        background: #fff;
+        margin: 0 18px;
+        padding: 15px;
+        border-radius: 4px;
+    }
+
+    .list > p {
+        text-align: center;
+        color: #A3A3A4;
+        padding: 12px 0;
+    }
+
+    .list_content span:first-child {
+        font-size: 18px;
+    }
+
+    .list_content span:last-child {
+        float: right;
+        color: #999999;
+    }
+
+    .descript {
+        color: #666666;
+        padding-top: 24px;
+        border-bottom: 1px solid #E2E2E2;
+        padding-bottom: 15px;
+    }
+
+    .lookdetails {
+        color: #505050;
+        position: relative;
+        padding-top: 15px;
+    }
+
+    .lookdetails:after {
+        content: '';
+        position: absolute;
+        right: 20px;
+        width: 12px;
+        height: 12px;
+        border-bottom: 1px solid #989898;
+        border-right: 1px solid #989898;
+        transform: rotate(-45deg);
+    }
+
+    .p {
+        font-size: 15px;
+        margin-bottom: 6px;
+
+    }
+
+</style>
+{/block}
+{block name="goback"}
+<div onclick="goback()" class="goback"></div>{/block}
+{block name='content'}
+<div class="seach-box">
+    <div class="input-box">
+        <input type="text" placeholder="请输入项目名"/>
+        <div class="seach-btn">
+            <i class="seach-icon iconfont icon-sousuo"></i>
+        </div>
+    </div>
+</div>
+<div class="list_box">
+    {if condition="is_array($data_list)"}
+    {volist name="data_list" id="vo"}
+
+        <div class="list">
+            <p>{$vo.create_time}</p>
+            <div class="list_content">
+                <p class="p">所在位置：{$vo.wz}</p>
+                <p class="p">拜访客户：{$vo.kh}</p>
+                <p class="p">相关描述：{$vo.ms}</p>
+                <p>图片:</p>
+                <div>
+                    {volist name="vo.id" id="v"}
+                        <img style="width: 50px;height: 50px;margin-right: 5px;margin-top: 5px" class="images" src="{:get_file_path($v)}">
+                    {/volist}
+                </div>
+            </div>
+        </div>
+
+    {/volist}
+    {else}
+    <div class="empty-list-item">暂无数据</div>
+    {/if}
+</div>
+{block name="footermenu"}
+{/block}
+{/block}
+{block name="footerjs"}
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script type="text/javascript">
+    wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: "{$appId}",   // 必填，公众号的唯一标识
+        timestamp: "{$timestamp}", // 必填，生成签名的时间戳
+        nonceStr: "{$nonceStr}", // 必填，生成签名的随机串
+        signature: "{$signature}",// 必填，签名
+        jsApiList: [
+            'previewImage',
+        ] // 必填，需要使用的JS接口列表
+    });
+
+    wx.ready(function () {
+        //图片预览
+        var i=document.getElementsByClassName('images');
+        var s=[];
+        for (var j = 0; j <i.length ; j++) {
+            s[j]= i[j].src;
+        }
+        var _loop = function _loop(j) {
+            i[j].onclick = function () {
+                wx.previewImage({
+                    current: s[j],
+                    urls: s
+                });
+            };
+        };
+        for (var k = 0; length = s.length, k < length; k++) {
+            _loop(k);
+        }
+    })
+</script>
+{/block}

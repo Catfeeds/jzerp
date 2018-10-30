@@ -1,0 +1,296 @@
+<style>
+    #vice_menu {
+       
+        white-space: nowrap;
+        overflow-y: hidden;
+        overflow-x: auto;
+        margin-bottom: 0;
+       position: relative;
+    }
+
+    #vice_menu span {
+        /*float: left;
+        list-style-type: none;*/
+        display: inline-block;
+       
+        line-height: 36px;
+        border-right: 1px solid #83BCE8;
+    
+        /*border-radius: 4px 4px 0 0;*/
+        padding: 0 12px;
+        cursor: pointer;
+        
+    }
+
+    /*滚动条样式*/
+    ::-webkit-scrollbar {
+        width: 0px;
+        height: 0px;
+        /*background-color: #ad5656;*/
+    }
+    /*.table>caption+thead>tr:first-child>td, 
+    .table>caption+thead>tr:first-child>th,
+    .table>colgroup+thead>tr:first-child>td, 
+    .table>colgroup+thead>tr:first-child>th,
+    .table>thead:first-child>tr:first-child>td, 
+    .table>thead:first-child>tr:first-child>th {
+   
+    min-width: 159px;
+}*/
+
+.close_all{
+	/*float: right;*/
+	position: absolute;
+	right: -1px;
+	border: none;
+}
+.icon-cha:hover{
+	color: red;
+}
+.user_avatar_box{
+	border: 1px solid #D0D0D0;
+	height: 26px;
+	width: 26px;
+	overflow: hidden;
+	border-radius: 50%;
+	/*float: left;*/
+	display: inline-block;
+	vertical-align: text-bottom;
+	
+}
+
+.user_info_box{
+	color: #39A6C1;
+	font-size: 16px;
+	/*margin-right: 40px;*/
+	/*height: 50px;*/
+}
+.user_info_box a:hover{
+	background: none !important;
+	color: #FF0000 !important;
+}
+.message-pos{
+	position: relative;
+	display: inline-block;
+	margin-right: 12px;
+}
+.message-iconfont{
+	color: #39A6C1;
+	font-size: 20px;
+}
+.icon-guanji1{
+	color: #39A6C1;
+	
+}
+.message_info{
+	background-color: #f0ad4e;
+	position: absolute;
+	top: calc(-50% + 4px);
+	left: 50%;
+	color: #fff;
+	padding: 0 6px;
+	font-size: 12px;
+	border-radius: 3px;
+}
+	/*#page_tip {
+		
+	}*/
+	.pull_dowm{
+		position: relative;
+		-ms-user-select: none;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+	}
+	.pull_dowm ul{
+		position: absolute;
+		left: 0;
+		margin: 0 !important;
+		padding: 0 !important;
+		background: #fff;
+		margin-left: 28px !important;
+		animation: pull_down .1s ease-in-out;
+	}
+	@-webkit-keyframes pull_down{
+		from{
+			transform: translateY(24px);
+		}
+		to{
+			transform: translateY(0);
+		}
+	}
+	.pull_dowm ul li{
+		margin: 0 !important;
+		padding: 10 !important;
+		white-space: nowrap;
+		border-top:1px solid #D3D4D3;
+		/*line-height: 36px;*/
+	}
+	.fa-bell{
+		font-size: 20px;
+	}
+	
+</style>
+<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+        <a class="navbar-minimalize minimalize-styl-2 btn btn-info " href="#"><i class="fa fa-bars"></i> </a>
+        <!--<form role="search" class="navbar-form-custom" method="post" action="search_results.html">
+            <div class="form-group">
+                <input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">
+            </div>
+        </form>-->
+    </div>
+    <!--<ul class="nav navbar-top-links navbar-right">
+        <li class="dropdown">
+            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" aria-expanded="false">
+                <i class="fa fa-envelope"></i> <span class="label label-warning">16</span>
+            </a>
+          
+        </li>
+           <li class="dropdown">
+            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" aria-expanded="false">
+                <i class="fa fa-envelope"></i> <span class="label label-warning">16</span>
+            </a>
+          
+        </li>
+
+    </ul>-->
+    	<ul class="nav navbar-top-links navbar-right user_info_box">
+    	
+    		<li>
+    			<div class="message-pos">
+    			<a class="J_menuItem" data-title="消息类表" hrefs="{:url('message_config/lists')}">
+    				<i class="fa fa-envelope message-iconfont"></i>
+    				<!--<span class="message_info">
+    					12
+    				</span>-->
+    			</a>
+    			</div>
+    		</li>
+			<li>
+    			<div class="message-pos">
+    				<i class="fa fa-bell"></i>
+    				<!--<span class="message_info">
+    					12
+    				</span>-->
+    			</div>
+    		</li>
+    		<!--<li> <i class="fa fa-envelope"></i></li>-->
+    		<li  class="pull_dowm">
+    			<div class="user_avatar_box">
+				    <img style="height: 26px;" src="{:get_files_path(session('user_auth')['avatar'])?:'__ADMIN_STATIC__/img/user.png'}"/>
+				</div>
+	            <span onclick="pull_down(this)">{:session('user_auth')['nickname']?:''}</span>
+	            	<ul onclick="$(this).addClass('none')" class="none">
+	    				<li onclick="updatePass()">修改密码</li>
+	    				<li>个人信息</li>
+	    			</ul>
+    		</li>
+    			<li>
+				<a title="退出登录" href="{:url('/admin/public/signout')}"><i class="iconfont icon-guanji1" style="font-size: 20px !important;"></i></a>
+    		
+    		</li>
+    	</ul>
+</nav>
+<!--副导航-->
+<div id="vice_menu">
+<span id="home_vice" style="background: #5bc0de;color: #fff;" onclick="vice_menu_click('adminindexhome', '首页', this)">首页</span>
+<div style="display: inline-block; transform: translateX(-4px);"></div>
+<span class="close_all" title="关闭全部打开链接"><i onclick="close_vice_menu_click(event, false)" class="iconfont icon-cha"></i></span>
+</div>
+<!--<div class="clearfix">
+</div>-->
+<!--页面提示-->
+
+<!--<div id="page_tip">-->
+	<!--<div class="alert alert-danger alert-dismissable">
+	    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	    <h3 class="font-w300 push-15">安全提示</h3>
+	    <p>超级管理员默认密码未修改，建议马上 <a class="alert-link link-effect" href="/admin.php/user/index/edit/id/1.html">修改</a>。</p>
+	</div>-->
+<!--</div>-->
+<div class="editinp" style="display: none;height: 100%;overflow: auto;">
+    <div class="ibox-content">
+        <form name="form" id="changePassword" >
+            <div class="form-group">
+                <label>原密码</label>
+                <input pattern="/[^\w_]/g" type="password" id="oldPass" class="form-control"/>
+                <p style="color: red;margin: 6px;display: none">不可为空</p>
+            </div>
+            <div class="form-group">
+                <label>新密码</label>
+                <input type="password" id="newPass" class="form-control"/>
+                <p style="color: red;margin: 6px;display: none">不可为空</p>
+            </div>
+            <div class="form-group">
+                <label>确认密码</label>
+                <input type="password" id="determinePass" class="form-control"/>
+                <p style="color: red;margin: 6px;display: none">两次输入不一致</p>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+	function pull_down(o){
+		$(o).next('ul').toggleClass('none')
+	}
+	setTimeout(() => {
+		$("#message_lists").on('click', function(){
+			$(this).parents('.dropdown').removeClass('open');
+		})
+	}, 0)
+	function updatePass() {
+
+        var form = document.querySelector('#changePassword');
+        form.reset();
+        var index = layer.open({
+            type: 1,
+            title: '编辑',
+            btn: ['提交'],
+            skin: 'layui-layer-molv',
+            // offset: '30px',
+            area: ['400px', '400px'],
+            content: $('.editinp'),
+            yes: function () {
+                var regExp = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,21}$/;
+                var newP = $('#newPass').val();
+                if (!$('#oldPass').val()) {
+                    layer.msg('原密码不可为空');
+                    return false;
+                }
+                if (!newP) {
+                    layer.msg('新密码不可为空');
+                    return false;
+                } else if (!regExp.test(newP)) {
+                    layer.msg('密码格式错误,密码由6-21字母和数字组成，不能是纯数字或纯英文!');
+                    return false;
+                }
+                if (!($('#determinePass').val() === newP)) {
+                    layer.msg('两次输入密码不一致');
+                    return false;
+                }
+
+                $.ajax({
+                    type: "post",
+                    url: "{:url('personnel/updatePass')}",
+                    data: {old: $('#oldPass').val(), new: newP, determine: $('#determinePass').val()},
+                    async: true,
+                    success: function (res) {
+                        if (res['code']) {
+                            layer.msg(res['msg']);
+                            setTimeout(function () {
+                                layer.msg("请重新登录");
+                                setTimeout(function () {
+                                    var zx= document.getElementById('zx');
+                                    window.location.href = zx.href;
+                                }, 1500)
+                            }, 1500)
+                        } else {
+                            layer.msg(res['msg']);
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+</script>

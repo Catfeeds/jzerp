@@ -1,0 +1,174 @@
+<link rel="stylesheet" type="text/css" href="__ADMIN_STATIC__/css/input.css"/>
+<style type="text/css">
+</style>
+<div class="col-sm-12">
+    <div class="ibox-title">
+        <h5>系统设置</h5>
+    </div>
+    <div class="tabs-container">
+        <ul class="nav nav-tabs">
+            {volist name="list_group" id="vo"}
+                <li  {eq name="$key" value="$group" }  class="active" {/eq}>
+                    <a href="{:url('system/index',['group'=>$key])}" >{$vo}</a>
+                </li>
+            {/volist}
+        </ul>
+        <div class="tab-content">
+            <div class="panel-body">
+                <div class="ibox-content">
+                    <form id="form1"  class="form-horizontal">
+                        {volist name="data_list" id="vo"}
+                            {switch name="vo.type"}
+                                {case value="switch"}
+                                <!-- switch:开关 -->
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">{$vo.title}</label>
+                                            <div class="col-sm-10">
+            		                           	<div class="status">
+            						    			<div class="circle {if condition="$vo.value == 1"} actives active_t{else /}cancal_t{/if}">
+            							    				
+            						    			</div>
+            					    			<input type="hidden" name="{$vo.name}" value="{$vo.value}" />
+            					                </div>
+                                            </div>
+            			    		</div>
+                                {/case}
+                                {case value="text"}
+                                    <!-- text:单行文本 -->
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">{$vo.title}</label>
+
+                                        <div class="col-sm-10">
+                                            <input type="text" value="{$vo.value}" id="{$vo.name}" name="{$vo.name}" placeholder="提示信息" class="form-control"><span class="help-block m-b-none">{$vo.tips}</span>
+                                        </div>
+                                    </div>
+                                <div class="hr-line-dashed"></div>
+                                {/case}
+                                {case value="number"}
+                                    <!-- number:数字 -->
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">{$vo.title}</label>
+
+                                        <div class="col-sm-10">
+                                            <input type="text" value="{$vo.value}" id="{$vo.name}" name="{$vo.name}" placeholder="提示信息" class="form-control"><span class="help-block m-b-none">{$vo.tips}</span>
+                                        </div>
+                                    </div>
+                                <div class="hr-line-dashed"></div>
+                                {/case}
+                                {case value="tags"}
+                                    <!-- tags:标签 -->
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">{$vo.title}</label>
+
+                                        <div class="col-sm-10">
+                                            <input type="text" value="{$vo.value}" id="{$vo.name}" name="{$vo.name}" placeholder="提示信息" class="form-control"><span class="help-block m-b-none">{$vo.tips}</span>
+                                        </div>
+                                    </div>
+                                <div class="hr-line-dashed"></div>
+                                {/case}
+                                {case value="textarea|array"}
+                                    <!-- textarea:多行文本 array:数组-->
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">{$vo.title}</label>
+
+                                        <div class="col-sm-10">
+                                            <textarea type="text" id="{$vo.name}" name="{$vo.name}" rows="10" placeholder="" class="form-control">{$vo.value}</textarea><span class="help-block m-b-none">{$vo.tips}</span>
+                                        </div>
+                                    </div>
+                                <div class="hr-line-dashed"></div>
+                                {/case}
+                                {case value="image"}
+                                    <!-- image:单张图片 -->
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">{$vo.title}</label>
+                                        <div class="col-sm-10">
+                                            {notempty name="images"}
+                                                <div>
+                                                    <img src="{$images.path}" class="logo">
+                                                    <input type="hidden" class="logo_in" name="{$vo.name}"  id="{$vo.name}" value="{$images.id}"> 
+                                                </div>
+                                            {else /}
+                                                <div>
+                                                    <img src="" class="logo">
+                                                    <input type="hidden" class="logo_in" name="{$vo.name}"  id="{$vo.name}" value=""> 
+                                                </div>
+                                            {/notempty}
+
+
+                                            
+                                            <div onclick="document.querySelector('#addFiles').click()" class="webuploader-pick">上传单张图片</div>
+                                        </div>
+                                    </div>
+                                <div class="hr-line-dashed"></div>
+                                {/case}
+                                {case value="radio"}
+                                    <!-- radio:单选按钮 -->
+                                   <div class="form-group">
+                                        <label class="col-sm-2 control-label">{$vo.title}</label>
+                                        <div class="col-sm-10">
+                                            {volist name="$vo.options" id="options"}
+                                                <input type="radio" value="{$key}" name="{$vo.name}" {equal name="$key" value="$vo.value"}checked="checked"{/equal}>{$options}
+                                            {/volist}
+                                        </div>
+                                    </div>
+                                <div class="hr-line-dashed"></div>
+                                {/case}
+                                
+                            {/switch}
+                        {/volist}
+                                
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+<button class="btn btn-primary" type="submit"  onclick="editsytyem()">保存内容</button>
+                                <button class="btn btn-white" type="submit">取消</button>                            </div>
+                        </div>
+                    </form>
+                    <form id="image">
+                        <input class="none" type="file" id="addFiles" name="image[]" onchange="addFile()"  value="" />
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+    <script src="__ADMIN_STATIC__/js/input.js"></script>
+<script>
+    function addFile(){
+            var seeting = {
+            id: 'image',
+            validate: [
+                ["image",  '附件不能为空'],
+            ],
+            append: [['to_dir', 'system'], ['name', 'image']],
+            url: "{:url('AdminFiles/UpLoadFiles')}",
+        }
+        util.ajax(seeting).then(function(res){
+
+           $('.logo').attr('src', res.data.success[0].path);
+           $('.logo_in').attr('value', res.data.success[0].id);
+          
+        
+        }).catch(e=>{
+            console.log(e)
+        })
+    }
+
+    function editsytyem(){
+        var group = '{$group}';
+
+       var seeting = {
+            id: 'form1',
+            append: [['group', group]],
+            url: "{:url('system/update')}",
+        }
+        
+        util.ajax(seeting).then(function(res){
+
+            alert('更新成功');
+        }).catch(e=>{
+            console.log(e)
+        })
+    }
+</script>

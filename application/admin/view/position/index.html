@@ -1,0 +1,248 @@
+	<link href="__ADMIN_STATIC__/css/plugins/jsTree/style.min.css" rel="stylesheet">
+	<style type="text/css">
+		.ibox-contents > div{
+			float: left;
+		}
+		.ibox-contents > div:nth-child(1){
+			margin-top: 20px;
+			margin-left: 60px;
+		}
+		.ibox-contents > div:nth-child(2){
+			margin-left: 120px;
+			min-width: 660px;
+		}
+	</style>
+	<div class="ibox float-e-margins" style="height: 100%;">
+		<div class="ibox-title">
+			<h5>职位管理</h5>
+			
+		</div>
+				
+		<div class="ibox-contents">
+		    <div id="using_json"></div>
+			<div>
+				<div class="wrapper wrapper-content animated fadeInRight"  style="height: 100%;">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>添加职位类别 </h5>
+				</div>
+				<div  class="ibox-content">
+					<form class="form-horizontal" id="form" method="post">
+						<div class="form-group">
+							<label class="col-sm-2 control-label">名称：</label>
+							<div class="col-sm-10">
+								<input type="text" value=""  name="name" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">上级职位：</label>
+
+							<div class="col-sm-10">
+								<select class="form-control m-b" name="pid">
+									<option value="0">顶级类型</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">编制人数：</label>
+							<div class="col-sm-10">
+								<input type="number" value=""  name="prepare_number" class="form-control">
+							</div>
+						</div>
+						<!--<div class="form-group">
+							<label class="col-sm-2 control-label">状态</label>
+							
+							<div class="radio i-checks">
+								<label class="">
+		                            <div class="iradio_square-green" style="position: relative;">
+		                            	<input type="radio" value="1" name="status"  style="position: absolute; opacity: 0;">
+		                            	<ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+		                            </div>
+		                            <i></i> 启用
+								</label>
+								<label class="">
+		                            <div class="iradio_square-green" style="position: relative;">
+		                            	<input type="radio"  value="0" name="status" style="position: absolute; opacity: 0;">
+		                            	<ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+		                            </div>
+		                            <i></i> 禁用
+								</label>
+							</div>
+						</div>-->
+						<div class="form-group">
+							<label class="col-sm-2 control-label">岗位职责：</label>
+							<div class="col-sm-10">
+								<textarea id="responsibility" name="responsibility" class="form-control"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">岗位要求：</label>
+							<div class="col-sm-10">
+								<textarea id="requirements" name="requirements" class="form-control"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">岗位描述：</label>
+							<div class="col-sm-10">
+								<textarea id="description" name="description" class="form-control"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-4 col-sm-offset-3">
+								<button id="cateAdd" class="btn btn-primary" onclick="add()" type="button">
+									添加
+								</button>
+									<button id="dels" class="btn btn-danger none" onclick="del()" type="button">删除</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+			
+			</div>
+		</div>
+	</div>
+
+	<script src="__ADMIN_STATIC__/js/plugins/jsTree/jstree.min.js"></script>
+	<script src="__ADMIN_STATIC__/js/plugins/iCheck/icheck.min.js"></script>
+<script type="text/javascript">
+	var trees = {:json_encode($tree);} || {},
+	id = null,
+	pid = null;
+	strs = '<option value="0">顶级类型</option>';
+	input = $("form input"),
+	select = $("select"),
+	cateAdd = $("#cateAdd"),
+	dels = $("#dels"),
+	responsibility = $("#responsibility");
+	requirements = $("#requirements");
+	description = $("#description");
+    $('#using_json').jstree({
+        'core': {
+            'data': trees
+        }
+    });
+    $('#using_json').on("changed.jstree", function (e, data) {
+        $.ajax({
+            type: "post",
+            url: "{:url('CateGetOne')}",
+            data: {id: data.node.id},
+            async: true,
+            success: function (res) {
+                var data = res.data;
+                strs = '<option value="0">顶级类型</option>';
+                input.each(function () {
+                    var t = $(this);
+                    t.val(data[t.attr('name')]);
+                })
+                responsibility.val(data['responsibility']);
+                requirements.val(data['requirements']);
+                description.val(data['description']);
+                cateAdd.text('编辑');
+                dels.removeClass('none');
+                id = data.id;
+                tree(trees, id);
+                $("option[value=" + data.pid + "]").prop('selected', 'selected');
+                pid = data.pid;
+            }
+        });
+    });
+
+
+    tree(trees);
+	
+	function tree (data){
+		for (var i in data) {
+			if((data[i]['id']==id)){
+				continue;
+			}
+			var level = '';
+			if (data[i]['level'] > 1) {
+			    level = '|';
+			    var arr = [];
+			    arr.length = data[i]['level'];
+				level += arr.join('--');
+			}
+
+			strs = strs + '<option  value="' + data[i]['id'] + '">' + level + data[i]['name'] + '</option>';
+			if(data[i].children.length != 0 && data[i]['pid']!=id){
+				tree(data[i].children,id);
+			}
+		}
+		$("select[name='pid']").html(strs);
+	}
+
+
+
+    
+//  $(document).ready(function () {
+//          $('.i-checks').iCheck({
+//              radioClass: 'iradio_square-green',
+//          });
+//      });
+    
+	function add() {
+		var seeting = {
+			id : 'form',
+			validate: [
+				['name', '职位名称不能为空'],
+				['pid',  '上级职位不能为空'],
+//				{name: 'phone',  msg: '手机号不正确', regx: /^\d{11}$/, right: false},
+			],
+			append: [],
+//			del: ['pid'],
+//			dispose: true,
+//			type: 'POST',
+			url: '{:url("index")}'
+		};
+		if (id) {
+			seeting.append.push(['id',  id]);
+		}
+		layer.confirm('确定执行此操作吗?', {
+		    btn: ['确定','取消'], //按钮
+		    shade: false //不显示遮罩
+		}, function(){
+    		util.ajax(seeting).then(function(res) {
+				alert(res.msg);
+				if(res.code == 1) {
+					setTimeout(function(){
+						window.location.reload();
+					}, 2000)
+				}
+			}).catch(e => {
+				console.error(e)
+				alert('错误, 请联系管理员.');
+			})
+		});
+
+
+	}
+
+	function del() {
+		layer.confirm('确定删除吗?', {
+		    btn: ['确定','取消'], //按钮
+		    shade: false, //不显示遮罩
+		    icon: 2,
+		}, function(){
+			$.ajax({
+				type:"post",
+				url:"{:url('delete')}",
+				data: {ids: id},
+				async:true,
+				success: function(res){
+					alert(res.msg);
+					if(res.code == 1) {
+						setTimeout(function(){
+							window.location.reload();
+						}, 2000)
+					}
+				}
+			});
+		});
+	}
+</script>

@@ -1,0 +1,315 @@
+<div class="ibox float-e-margins">
+    <div class="ibox-title">
+        <h5>基础信息</h5>
+
+    </div>
+    <div class="ibox-content">
+        <div id="editable_wrapper" class="dataTables_wrapper form-inline" role="grid">
+
+            <table class="table table-striped table-bordered table-hover  dataTable" id="editable"
+                   aria-describedby="editable_info">
+                <thead>
+                <tr role="row">
+                    <th rowspan="1" colspan="1" style="width: 150px;">名称</th>
+                    <th rowspan="1" colspan="1" style="width: 150px;">编码</th>
+                    <th rowspan="1" colspan="1" style="width: 205px;">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {empty name='data'}
+                <tr class="table-empty" rowspan="10">
+                    <td class="text-center empty-info" colspan="13">
+                        <i class="fa fa-database"></i> 暂无数据<br>
+                    </td>
+                </tr>
+                {/empty}
+                {volist name="data" id="d"}
+                <tr class="gradeA even">
+                    <td>{$d->name}</td>
+                    <td>{$d->coding}</td>
+                    <td>
+                        <button class="btn btn-w-m btn-primary" onclick="edit(this,{$d->id})">编辑</button>
+                        <input id="pid" type="hidden" value="{$d->id}">
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+            <div class="clearfix">
+                {$data->render()}
+            </div>
+        </div>
+        <div class="editinp" style="display: none;height: 100%;overflow: auto;">
+            <table class="table table-striped table-bordered table-hover  dataTable" id="editable"
+                   aria-describedby="editable_info">
+                <thead>
+                <tr role="row">
+                    <th rowspan="1" colspan="1" style="width: 150px;">名称</th>
+                    <th rowspan="1" colspan="1" style="width: 205px;">编码</th>
+                    <th rowspan="1" colspan="1" style="width: 205px;">顺序</th>
+                    <th rowspan="1" colspan="1" style="width: 205px;">操作</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+
+                <tr class="table-empty" rowspan="10" id="tr">
+                    <td class="text-center empty-info" colspan="13">
+                        <i class="fa fa-database"></i> 暂无数据<br>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="editinp2" style="display: none;height: 100%;overflow: auto;">
+            <table class="table table-striped table-bordered table-hover  dataTable" id="editable"
+                   aria-describedby="editable_info">
+                <tr>
+                    <td>昵称:</td>
+                    <td>
+                        <input id="nc" type="text"/>
+                        <input id="id" type="hidden"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>编码:</td>
+                    <td>
+                        <!--<input id="bm" type="text"/>-->
+                        <input id="bm" type="text" onkeyup="this.value=this.value.replace(/[^a-z0-9_]/g,'');">
+                    </td>
+                </tr>
+                <tr>
+                    <td>顺序:</td>
+                    <td>
+                        <!--<input id="sx" type="text"/>-->
+                        <input id="sx" type="text" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function edit(o, id) {
+        var pid = $(o).next().val();
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "{:url('base_edit')}?id=" + id,
+            success: function (data) {
+                if (data) {
+                    $('#tr').hide();
+                    $('#tbody tr').not('#tr').remove();
+                    $('#tr').after(data);
+                    index1 = layer.open({
+                        type: 1,
+                        title: '编辑子选项',
+                        btn: ['添加'],
+                        offset: '80px',
+                        area: ['550px', '500px'],
+                        content: $('.editinp'),
+                        yes: function () {
+                            $('#nc').val('');
+                            $('#bm').val('');
+                            $('#sx').val('');
+
+                            layer.open({
+                                type: 1,
+                                title: '添加',
+                                btn: ['提交'],
+                                offset: '130px',
+                                area: ['350px', '300px'],
+                                content: $('.editinp2'),
+                                yes: function (index, layero) {
+
+
+                                    var nc = $('#nc').val();
+                                    var bm = $('#bm').val();
+                                    var sx = $('#sx').val();
+                                    if (nc == '') {
+                                        layer.msg('名称不能为空');
+                                    }
+                                    else {
+                                        $.ajax({
+                                            type: "get",
+                                            async: false,
+                                            url: "{:url('base_save')}?pid=" + pid + "&name=" + nc + "&coding=" + bm + "&order=" + sx,
+                                            success: function (data) {
+                                                if (data[0]) {
+                                                    layer.msg('添加成功');
+                                                    layer.close(index);
+                                                    layer.close(index1);
+                                                } else {
+                                                    layer.msg(data[1]);
+                                                }
+                                            }
+                                        });
+                                    }
+
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    $('#tr').show();
+                    $('#tbody tr').not('#tr').remove();
+                    index1 = layer.open({
+                        type: 1,
+                        title: '编辑子选项',
+                        btn: ['添加'],
+                        offset: '80px',
+                        area: ['550px', ''],
+                        content: $('.editinp'),
+                        yes: function () {
+                            $('#nc').val('');
+                            $('#bm').val('');
+                            $('#sx').val('');
+
+                            layer.open({
+                                type: 1,
+                                title: '添加',
+                                btn: ['提交'],
+                                offset: '130px',
+                                area: ['350px', '300px'],
+                                content: $('.editinp2'),
+                                yes: function (index, layero) {
+                                    var nc = $('#nc').val();
+                                    var bm = $('#bm').val();
+                                    var sx = $('#sx').val();
+                                    if (nc == '') {
+                                        layer.msg('名称不能为空');
+                                    }
+                                    else {
+                                        $.ajax({
+                                            type: "get",
+                                            async: false,
+                                            url: "{:url('base_save')}?pid=" + pid + "&name=" + nc + "&coding=" + bm + "&order=" + sx,
+                                            success: function (data) {
+                                                if (data[0]) {
+                                                    layer.msg('添加成功');
+                                                    layer.close(index);
+                                                    layer.close(index1);
+                                                } else {
+                                                    layer.msg([1]);
+                                                }
+                                            }
+                                        });
+                                    }
+
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    function edit2(id) {
+        $.ajax({
+            type: "get",
+            async: false,
+            url: "{:url('base_edit')}?id=" + id + "&bool=" + true,
+            success: function (data) {
+                if (data) {
+                    $('#id').val(data.id);
+                    $('#nc').val(data.name)
+                    $('#bm').val(data.coding)
+                    $('#sx').val(data.order)
+                    layer.open({
+                        type: 1,
+                        title: '编辑',
+                        btn: ['提交'],
+                        offset: '130px',
+                        area: ['350px', '300px'],
+                        content: $('.editinp2'),
+                        yes: function (index, layero) {
+                            var id = $('#id').val();
+                            var nc = $('#nc').val();
+                            var bm = $('#bm').val();
+                            var sx = $('#sx').val();
+                            if (nc == '') {
+                                layer.msg('名称不能为空');
+                            }
+                            else {
+
+                                $.ajax({
+                                    type: "get",
+                                    async: false,
+                                    url: "{:url('base_update')}?id=" + id + "&name=" + nc + "&coding=" + bm + "&order=" + sx,
+                                    success: function (data) {
+                                        if (data[0]) {
+                                            layer.msg('修改成功');
+                                            layer.close(index);
+                                            layer.close(index1);
+
+                                        } else {
+
+                                            layer.msg('修改失败');
+                                        }
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                } else {
+                    layer.msg('参数错误');
+                }
+            }
+        });
+    }
+
+    function drop(o, id) {
+        layer.confirm('确定要删除？', {
+            time: 0,
+            btn: ['确定', '取消'],
+            yes: function (index) {
+                $.ajax({
+                    type: "get",
+                    // offset: '-500px',
+                    async: false,
+                    url: "{:url('base_drop')}?id=" + id,
+                    success: function (data) {
+                        if (data) {
+                            $(o).parent().parent().remove();
+                            layer.msg('删除成功');
+                            if (($('#tr').next()[0]) == undefined) {
+                                $('#tr').show();
+                            }
+                        }
+                    }
+                })
+            },
+        })
+    }
+
+
+    function sort(option) {
+        option.sort = option.sort == 'asc' ? 'desc' : 'asc';
+    }
+
+    function deletes(id) {
+        layer.confirm('确定要删除', {
+            time: 0,
+            btn: ['确定', '取消'],
+            yes: function (index) {
+                $.ajax({
+                    type: "POST",
+                    data: {ids: id},
+                    url: '{:url("balance_delete")}',
+                    async: true,
+                    success: function (res) {
+                        alert(res.msg);
+                        if (res.code == 1) {
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500)
+                        }
+                    }
+                });
+            },
+        })
+    }
+</script>
